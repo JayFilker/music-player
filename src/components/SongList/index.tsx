@@ -6,7 +6,13 @@ interface Props{
     songList : Array<{
         title: string,
         imgPic: string,
-        content:Array<object>,
+        content:Array<{
+            title: string,
+            artist: Array<string>,
+            imgPic: string,
+            song: string,
+            from: string
+        }>,
         des: string,
     }>
 }
