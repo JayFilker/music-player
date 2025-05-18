@@ -3,19 +3,36 @@ import { Link } from 'react-router-dom'
 import { ButtonIcon } from '../ButtonIcon'
 import { SvgIcon } from '../SvgIcon'
 import { TopSpace } from '../TopSpace'
+import { ContextMenu } from './ContextMenu'
 import './index.less'
 import 'vscode-codicons/dist/codicon.css'
 
 export function TopList() {
     const [act, setAct] = useState(false)
     const [check, setCheck] = useState([true, false, false])
+    const [show, setShow] = useState(false)
     return (
         <div>
             <nav className="has-custom-titlebar">
                 <TopSpace />
                 <div className="navigation-buttons">
                     <ButtonIcon>
-                        <SvgIcon><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" className="svg-inline--fa fa-angle-left fa-w-8" role="img" viewBox="0 0 256 512" id="icon-arrow-left"><path fill="currentColor" d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"></path></svg></SvgIcon>
+                        <SvgIcon>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                                className="svg-inline--fa fa-angle-left fa-w-8"
+                                role="img"
+                                viewBox="0 0 256 512"
+                                id="icon-arrow-left"
+                            >
+                                <path
+                                    fill="currentColor"
+                                    d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"
+                                >
+                                </path>
+                            </svg>
+                        </SvgIcon>
                     </ButtonIcon>
                     <ButtonIcon>
                         <SvgIcon>
@@ -110,29 +127,16 @@ export function TopList() {
                         className="avatar"
                         loading="lazy"
                         alt=""
+                        tabIndex={0} // 使元素可聚焦
+                        onClick={() => {
+                            setShow(true)
+                        }}
+                        onBlur={() => setShow(false)}
                     />
                 </div>
             </nav>
-
-            {/* <ContextMenu ref="userProfileMenu"> */}
-            {/*    <div className="item" > */}
-            {/* <svg-icon icon-class="settings" /> */}
-            {/* {{ $t('library.userProfileMenu.settings') }} */}
-            {/* </div> */}
-            {/* <div  className="item" > */}
-            {/* <svg-icon icon-class="login" /> */}
-            {/* {{ $t('login.login') }} */}
-            {/* </div> */}
-            {/*    <div  className="item" > */}
-            {/* <svg-icon icon-class="logout" /> */}
-            {/* {{ $t('library.userProfileMenu.logout') }} */}
-            {/* </div> */}
-            {/*    <hr /> */}
-            {/*    <div className="item" > */}
-            {/* <svg-icon icon-class="github" /> */}
-            {/* {{ $t('nav.github') }} */}
-            {/* </div> */}
-            {/* // </ContextMenu> */}
+            <ContextMenu style={{ display: show ? 'block' : 'none' }}>
+            </ContextMenu>
         </div>
     )
 }

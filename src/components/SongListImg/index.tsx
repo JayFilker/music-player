@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai'
 import { useState } from 'react'
-import { badLike, countDemo, isPlayingDemo, isPlayingDemoTwo, link, songList } from '../../store/store.ts'
+import { BadLike, CountDemo, IsPlayingDemo, IsPlayingDemoTwo, Link, SongList } from '../../store/store.ts'
 import eventBus from '../../utils/eventBus.ts'
 import { SvgIcon } from '../SvgIcon'
 import './index.less'
@@ -16,12 +16,12 @@ export function SongListImg(props: {
     }>
 }) {
     const { img, content } = props
-    const [, setCount] = useAtom(countDemo)
-    const [, setBadLikeDemo] = useAtom(badLike)
-    const [, setIsPlayingTwo] = useAtom(isPlayingDemoTwo)
-    const [, setLinkDemo] = useAtom(link)
-    const [, setSong] = useAtom(songList)
-    const [isPlaying] = useAtom(isPlayingDemo)
+    const [, setCount] = useAtom(CountDemo)
+    const [, setBadLikeDemo] = useAtom(BadLike)
+    const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
+    const [, setLinkDemo] = useAtom(Link)
+    const [, setSong] = useAtom(SongList)
+    const [isPlaying] = useAtom(IsPlayingDemo)
     const [show, setShow] = useState<boolean>(false)
     return (
         <div
@@ -78,8 +78,6 @@ export function SongListImg(props: {
                     loading="lazy"
                     alt=""
                 />
-                {/* :src="imageUrl" :style="imageStyles" */}
-                {/* <transition v-if="coverHover || alwaysShowShadow" name="fade"> */}
                 <div
 
                     className="shadow"
@@ -90,8 +88,6 @@ export function SongListImg(props: {
 
                 >
                 </div>
-                {/* :style="shadowStyles" */}
-                {/* </transition> */}
             </div>
         </div>
     )

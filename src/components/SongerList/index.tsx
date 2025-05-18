@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai/index'
 import { useState } from 'react'
-import { badLike, countDemo, isPlayingDemo, isPlayingDemoTwo, link, songList } from '../../store/store.ts'
+import { BadLike, CountDemo, IsPlayingDemo, IsPlayingDemoTwo, Link, SongList } from '../../store/store.ts'
 import eventBus from '../../utils/eventBus.ts'
 import { SvgIcon } from '../SvgIcon'
 import '../SongList/index.less'
@@ -21,12 +21,12 @@ interface Props {
 export function SongerList(props: Props) {
     const { artist } = props
     const [show, setShow] = useState<boolean>(false)
-    const [,setCount] = useAtom(countDemo)
-    const [,setBadLikeDemo] = useAtom(badLike)
-    const [, setIsPlayingTwo] = useAtom(isPlayingDemoTwo)
-    const [,setLinkDemo] = useAtom(link)
-    const [,setSong] = useAtom(songList)
-    const [isPlaying] = useAtom(isPlayingDemo)
+    const [,setCount] = useAtom(CountDemo)
+    const [,setBadLikeDemo] = useAtom(BadLike)
+    const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
+    const [,setLinkDemo] = useAtom(Link)
+    const [,setSong] = useAtom(SongList)
+    const [isPlaying] = useAtom(IsPlayingDemo)
     return (
         <div
             className="cover-row"

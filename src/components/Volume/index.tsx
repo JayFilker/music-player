@@ -47,13 +47,6 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
             audioRef.volume = Number.parseFloat(finalValue.toFixed(2))
         }
     }
-    const handleMouseDown = (e: React.MouseEvent) => {
-        if (!sliderRef.current)
-            return
-
-        setIsDragging(true)
-        updateVolumeFromClientX(e.clientX)
-    }
 
     const handleMouseMove = (e: MouseEvent) => {
         if (!isDragging)
@@ -82,7 +75,13 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
             className="vue-slider vue-slider-ltr"
             style={{ padding: '6px 0', width: 'auto', height: '4px' }}
             ref={sliderRef}
-            onMouseDown={handleMouseDown}
+            onMouseDown={(e) => {
+                if (!sliderRef.current)
+                    return
+
+                setIsDragging(true)
+                updateVolumeFromClientX(e.clientX)
+            }}
         >
             <div className="vue-slider-rail">
                 <div

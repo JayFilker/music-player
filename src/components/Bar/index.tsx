@@ -38,16 +38,6 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, formatT
             audioRef.currentTime = percentage / 100 * player.currentTrackDuration
         }
     }
-    const handleMouseDown = (e: React.MouseEvent) => {
-        if (!sliderRef.current)
-            return
-
-        setIsDragging(true)
-        updateProgressFromClientX(e.clientX)
-
-        // 防止拖动选中文本
-        e.preventDefault()
-    }
 
     const handleMouseMove = (e: MouseEvent) => {
         if (!isDragging)
@@ -58,15 +48,6 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, formatT
 
     const handleMouseUp = () => {
         setIsDragging(false)
-    }
-
-    const handleMouseEnter = () => {
-        setShowTooltip(true)
-    }
-
-    const handleMouseLeave = () => {
-        setShowTooltip(false)
-        // if (isDragging) setIsDragging(false);
     }
 
     useEffect(() => {
@@ -86,7 +67,16 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, formatT
             className="vue-slider vue-slider-ltr"
             style={{ padding: '6px 0', width: 'auto', height: '2px' }}
             ref={sliderRef}
-            onMouseDown={handleMouseDown}
+            onMouseDown={(e) => {
+                if (!sliderRef.current)
+                    return
+
+                setIsDragging(true)
+                updateProgressFromClientX(e.clientX)
+
+                // 防止拖动选中文本
+                e.preventDefault()
+            }}
 
         >
             <div className="vue-slider-rail">
@@ -118,8 +108,12 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, formatT
                         left: `${(player.progress / player.currentTrackDuration) * 100}%`,
                         transition: isDragging ? 'none' : 'left 0s ease 0s',
                     }}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
+                    onMouseEnter={() => {
+                        setShowTooltip(true)
+                    }}
+                    onMouseLeave={() => {
+                        setShowTooltip(false)
+                    }}
                 >
                     <div className="vue-slider-dot-handle"></div>
                     {showTooltip && (
