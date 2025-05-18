@@ -20,11 +20,11 @@ export const Router: React.FC = () => {
                 {/* 应用1的路由 */}
                 <Route path="/firstpage/*" element={<FirstPage />} />
 
-                {/*/!* 应用2的路由 *!/*/}
-                {/*<Route path="/app2/*" element={<App2 />} />*/}
-                
-                {/*/!* 应用3的路由 *!/*/}
-                {/*<Route path="/app3/*" element={<App3 />} />*/}
+                {/* /!* 应用2的路由 *!/ */}
+                {/* <Route path="/app2/*" element={<App2 />} /> */}
+
+                {/* /!* 应用3的路由 *!/ */}
+                {/* <Route path="/app3/*" element={<App3 />} /> */}
 
                 {/* 404 页面 */}
                 <Route path="*" element={<div>404 - Page Not Found</div>} />
@@ -32,4 +32,3 @@ export const Router: React.FC = () => {
         </Suspense>
     )
 }
-

@@ -1,3 +1,3 @@
-export function Player(){
-    return
+export function Player() {
+
 }

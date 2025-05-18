@@ -13,6 +13,7 @@
     "electron:build": "npm run build && electron-builder"
   },
   "dependencies": {
+    "@antfu/eslint-config": "^4.13.1",
     "i18next": "^25.1.3",
     "jotai": "^2.12.4",
     "less": "^4.3.0",
