@@ -1,0 +1,72 @@
+.vue-slider {
+    position: relative;
+    cursor: pointer;
+}
+
+.vue-slider-rail {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    //background-color: #e0e0e0;
+    background-color: hsla(0,0%,50.2%,.18);
+    border-radius: 15px;
+    transition: background-color 0.3s;
+}
+
+.vue-slider-process {
+    position: absolute;
+    background-color: #335eea;
+    border-radius: 15px;
+}
+
+#volume-left{
+    background-color: white;
+}
+.volume-control:hover #volume-left{
+    background-color: #335eea;
+}
+
+
+
+.vue-slider-dot {
+    position: absolute;
+    will-change: transform;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.vue-slider-dot-handle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0.5px 0.5px 2px 1px rgba(0, 0, 0, 0.32);
+}
+
+.vue-slider-dot-tooltip {
+    position: absolute;
+    visibility: visible;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 6px;
+}
+
+.vue-slider-dot-tooltip-inner {
+    //font-size: 13px;
+}
+
+.vue-slider-dot-tooltip-text {
+    display: block;
+}
+
+.vue-slider-dot-tooltip-top .vue-slider-dot-tooltip-inner:after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 6px;
+    height: 6px;
+    background-color: inherit;
+}

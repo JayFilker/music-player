@@ -1,0 +1,30 @@
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    background: transparent;
+    margin: 4px;
+    border-radius: 25%;
+    transition: 0.2s;
+    border: none;
+    color: white;
+    .svg-icon {
+        color: var(--color-text);
+        height: 16px;
+        width: 16px;
+    }
+    &:first-child {
+        margin-left: 0;
+    }
+    &:hover {
+        background: var(--color-secondary-bg-for-transparent);
+    }
+    &:active {
+        transform: scale(0.92);
+    }
+}
+.button-icon:hover {
+    background-color: hsla(0,0%,50.2%,.18);
+    border-radius: 25%;
+}
