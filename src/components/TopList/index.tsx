@@ -11,6 +11,20 @@ export function TopList() {
     const [act, setAct] = useState(false)
     const [check, setCheck] = useState([true, false, false])
     const [show, setShow] = useState(false)
+    const pageList = [
+        {
+            name: '首页',
+            link: '/firstpage',
+        },
+        {
+            name: '发现',
+            link: '/firstpage',
+        },
+        {
+            name: '音乐库',
+            link: '/firstpage',
+        },
+    ]
     return (
         <div>
             <nav className="has-custom-titlebar">
@@ -54,39 +68,22 @@ export function TopList() {
                     </ButtonIcon>
                 </div>
                 <div className="navigation-links">
-                    <Link
-                        to="/firstpage"
-                        style={{
-                            color: check[0] ? '#335eea' : '',
-                        }}
-                        onClick={() => {
-                            setCheck(check.map((_item, index) => index === 0))
-                        }}
-                    >
-                        首页
-                    </Link>
-                    <Link
-                        to="/firstpage"
-                        style={{
-                            color: check[1] ? '#335eea' : '',
-                        }}
-                        onClick={() => {
-                            setCheck(check.map((_item, index) => index === 1))
-                        }}
-                    >
-                        发现
-                    </Link>
-                    <Link
-                        to="/firstpage"
-                        style={{
-                            color: check[2] ? '#335eea' : '',
-                        }}
-                        onClick={() => {
-                            setCheck(check.map((_item, index) => index === 2))
-                        }}
-                    >
-                        音乐库
-                    </Link>
+                    {
+                        pageList.map((page, index: number) => (
+                            <Link
+                                key={index}
+                                to={page.link}
+                                style={{
+                                    color: check[index] ? '#335eea' : '',
+                                }}
+                                onClick={() => {
+                                    setCheck(check.map((_item, _index) => _index === index))
+                                }}
+                            >
+                                {page.name}
+                            </Link>
+                        ))
+                    }
                 </div>
                 <div className="right-part">
                     <div className="search-box">

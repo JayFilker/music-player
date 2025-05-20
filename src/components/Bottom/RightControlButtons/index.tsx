@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { ButtonIcon } from '../../ButtonIcon'
 import { SvgIcon } from '../../SvgIcon'
 import { VolumeSlider } from '../../Volume'
@@ -7,96 +8,104 @@ interface Props {
     audioRef: HTMLAudioElement | null
     volume: number
     setVolume: (volume: number) => void
-    temporaryVolume: number
-    setTemporaryVolume: (volume: number) => void
     musicList: boolean[]
     setMusicList: (musicList: boolean[]) => void
 }
 
 export function RightControlButtons(props: Props) {
-    const { audioRef, volume, setVolume, temporaryVolume, setTemporaryVolume, musicList, setMusicList } = props
+    const { audioRef, volume, setVolume, musicList, setMusicList } = props
+    const [temporaryVolume, setTemporaryVolume] = useState(0)
+    const functions = [
+        {
+            title: '播放列表',
+            meth: () => {
+            },
+            style: {},
+            icon: svgList.playList,
+        },
+        {
+            title: '循环播放',
+            meth: () => {
+                setMusicList(musicList.map((item, index) => index === 1 ? !item : item))
+            },
+            style: { color: musicList[1] ? 'white' : '#335eea' },
+            icon: svgList.loopPlayback,
+        },
+        {
+            title: '随机播放',
+            meth: () => {
+                setMusicList(musicList.map((item, index) => index === 2 ? !item : item))
+            },
+            style: { color: musicList[2] ? 'white' : '#335eea' },
+            icon: svgList.randomPlay,
+        },
+    ]
+    const volumnLogo = [
+        {
+            style: { display: volume === 0 ? '' : 'none' },
+            icon: svgList.volumeOne,
+            meth: () => {
+                if (audioRef) {
+                    setVolume(temporaryVolume)
+                }
+            },
+        },
+        {
+            style: { display: (volume <= 0.5 && volume !== 0) ? '' : 'none' },
+            icon: svgList.volumeTwo,
+            meth: () => {
+                if (audioRef) {
+                    setTemporaryVolume(volume)
+                }
+
+                setVolume(0)
+            },
+        },
+        {
+            style: { display: volume > 0.5 ? '' : 'none' },
+            icon: svgList.volumeThree,
+            meth: () => {
+                if (audioRef) {
+                    setTemporaryVolume(volume)
+                }
+
+                setVolume(0)
+            },
+        },
+    ]
     return (
         <div className="right-control-buttons">
             <div className="blank"></div>
             <div className="container">
-                <ButtonIcon
-                    title="播放列表"
-                >
-                    <SvgIcon>
-                        {svgList.playList}
-                    </SvgIcon>
-                </ButtonIcon>
-                <ButtonIcon
-                    title="循环播放"
-                    sty={{ color: musicList[1] ? 'white' : '#335eea' }}
-                    onClick={() => {
-                        setMusicList(musicList.map((item, index) => index === 1 ? !item : item))
-                    }}
-                >
-                    <SvgIcon>
-                        {svgList.loopPlayback}
-                    </SvgIcon>
-                </ButtonIcon>
-                <ButtonIcon
-                    title="随机播放"
-                    sty={{ color: musicList[2] ? 'white' : '#335eea' }}
-                    onClick={() => {
-                        setMusicList(musicList.map((item, index) => index === 2 ? !item : item))
-                    }}
-                >
-                    <SvgIcon>
-                        {svgList.randomPlay}
-                    </SvgIcon>
-                </ButtonIcon>
+                {
+                    functions.map((item, index) => (
+                        <ButtonIcon
+                            key={index}
+                            title={item.title}
+                            onClick={item.meth}
+                            sty={item.style}
+                        >
+                            <SvgIcon>
+                                {item.icon}
+                            </SvgIcon>
+                        </ButtonIcon>
+                    ))
+                }
                 <div className="volume-control">
-                    <ButtonIcon
-                        title="静音"
-                        sty={{ display: volume === 0 ? '' : 'none' }}
-                        onClick={() => {
-                            if (audioRef) {
-                                setVolume(temporaryVolume)
-                                audioRef.volume = temporaryVolume
-                            }
-                        }}
-
-                    >
-                        <SvgIcon>
-                            {svgList.volumeOne}
-                        </SvgIcon>
-                    </ButtonIcon>
-                    {' '}
-                    <ButtonIcon
-                        title="静音"
-                        sty={{ display: (volume <= 0.5 && volume !== 0) ? '' : 'none' }}
-                        onClick={() => {
-                            if (audioRef) {
-                                setTemporaryVolume(volume)
-                                audioRef.volume = 0
-                            }
-
-                            setVolume(0)
-                        }}
-                    >
-                        <SvgIcon>
-                            {svgList.volumeTwo}
-                        </SvgIcon>
-                    </ButtonIcon>
-                    <ButtonIcon
-                        title="静音"
-                        sty={{ display: volume > 0.5 ? '' : 'none' }}
-                        onClick={() => {
-                            if (audioRef) {
-                                setTemporaryVolume(volume)
-                                audioRef.volume = 0
-                            }
-
-                            setVolume(0)
-                        }}
-                    >
-                        <SvgIcon>
-                            {svgList.volumeThree}
-                        </SvgIcon>
-                    </ButtonIcon>
+                    {
+                        volumnLogo.map((item, index) => (
+                            <ButtonIcon
+                                key={index}
+                                title="静音"
+                                onClick={item.meth}
+                                sty={item.style}
+                            >
+                                <SvgIcon>
+                                    {item.icon}
+                                </SvgIcon>
+                            </ButtonIcon>
+                        ))
+                    }
                     <div
                         className="volume-bar"
                     >
@@ -106,7 +115,6 @@ export function RightControlButtons(props: Props) {
                             min={0}
                             max={1}
                             interval={0.01}
-                            audioRef={audioRef}
                         />
                     </div>
                 </div>

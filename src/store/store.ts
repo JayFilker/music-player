@@ -7,6 +7,7 @@ interface Song {
     song: string
     from: string
 }
+
 export const SongList = atom<Array<Song>>([{
     title: 'Song 1',
     artist: ['Artist 1', 'ddd'],
@@ -21,8 +22,16 @@ export const SongList = atom<Array<Song>>([{
     from: 'The Band CAMINO',
 }])
 
+export const CurrentSongList = atom<any>({})
+
 export const CountDemo = atom(0)
 export const BadLike = atom(false)
 export const IsPlayingDemo = atom(false)
 export const IsPlayingDemoTwo = atom(false)
 export const Link = atom(false)
+export const Device = atom('')
+
+export const PlayerDemo = atom({
+    progress: 0,
+    currentTrackDuration: 100,
+})

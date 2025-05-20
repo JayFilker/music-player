@@ -1,4 +1,7 @@
+import { useAtom } from 'jotai/index'
 import React, { useEffect, useRef, useState } from 'react'
+import { Device } from '../../store/store'
+// 使用lodash的throttle函数
 import '../Bar/index.less'
 
 // 复用之前的CSS样式
@@ -8,7 +11,6 @@ interface VolumeSliderProps {
     min?: number
     max?: number
     interval?: number
-    audioRef?: HTMLAudioElement | null
 }
 
 export const VolumeSlider: React.FC<VolumeSliderProps> = ({
@@ -17,11 +19,11 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
     min = 0,
     max = 1,
     interval = 0.01,
-    audioRef,
 }) => {
     const [isDragging, setIsDragging] = useState(false)
     const sliderRef = useRef<HTMLDivElement>(null)
-
+    const getToken = () => localStorage.getItem('spotify_access_token') as string
+    const [deviceId] = useAtom(Device)
     // 计算百分比值，用于CSS显示
     const getPercentage = () => ((volume - min) / (max - min)) * 100
     const updateVolumeFromClientX = (clientX: number) => {
@@ -43,9 +45,6 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
 
         // 更新音量值
         setVolume(Number.parseFloat(finalValue.toFixed(2))) // 保留两位小数
-        if (audioRef) {
-            audioRef.volume = Number.parseFloat(finalValue.toFixed(2))
-        }
     }
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -69,6 +68,22 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
             document.removeEventListener('mouseup', handleMouseUp)
         }
     }, [isDragging])
+
+    const adjustVolume = async (volumeDecimal: number) => {
+        if (!deviceId)
+            return
+        const safeVolumeDecimal = Math.max(0, Math.min(1, volumeDecimal))
+        const volumePercent = Math.round(safeVolumeDecimal * 100)
+        await fetch(`https://api.spotify.com/v1/me/player/volume?volume_percent=${volumePercent}&device_id=${deviceId}`, {
+            method: 'PUT',
+            headers: {
+                Authorization: `Bearer ${getToken()}`,
+            },
+        })
+    }
+    useEffect(() => {
+        adjustVolume(volume)
+    }, [volume])
 
     return (
         <div

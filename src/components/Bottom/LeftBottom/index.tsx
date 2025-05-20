@@ -1,37 +1,101 @@
-import type { SongType } from '../../../type'
 import { useAtom } from 'jotai/index'
-import { CountDemo, SongList } from '../../../store/store.ts'
+import { useEffect } from 'react'
+import { CountDemo, CurrentSongList, Device, IsPlayingDemo } from '../../../store/store.ts'
+import eventBus from '../../../utils/eventBus'
 import { ButtonIcon } from '../../ButtonIcon'
 import { SvgIcon } from '../../SvgIcon'
 
-export function LeftBottom() {
-    const [song] = useAtom<Array<SongType>>(SongList)
+interface Props {
+    playTrack: (trackUri: string) => Promise<string | void>
+}
+
+export function LeftBottom(props: Props) {
     const [count] = useAtom(CountDemo)
+    const { playTrack } = props
+    const [deviceId] = useAtom(Device)
+    const [, setIsPlaying] = useAtom(IsPlayingDemo)
+    const [currentSong] = useAtom<{
+        items: Array<{ name: string, artists: Array<any> }>
+        imgPic: string
+    }>(CurrentSongList)
+    const pausePlayback = async () => {
+        if (!deviceId)
+            return
+        const token = localStorage.getItem('spotify_access_token') as string
+        await fetch(`https://api.spotify.com/v1/me/player/pause`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+        console.log('已暂停播放')
+        setIsPlaying(false)
+    }
+    const resumePlayback = async () => {
+        if (!deviceId)
+            return
+        const token = localStorage.getItem('spotify_access_token') as string
+        await fetch(`https://api.spotify.com/v1/me/player/play`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+        console.log('继续播放')
+        setIsPlaying(true)
+    }
+    useEffect(() => {
+        const handlePlaySong = (trackUri?: string) => {
+            if (trackUri) {
+                playTrack(trackUri)
+            }
+            else {
+                resumePlayback()
+            }
+        }
+        const handleStop = () => {
+            pausePlayback()
+        }
+        // @ts-ignore
+        eventBus.on('play-track', handlePlaySong)
+        // @ts-ignore
+        eventBus.on('play-stop', handleStop)
+        return () => {
+            // @ts-ignore
+            eventBus.off('play-track', handlePlaySong)
+            // @ts-ignore
+            eventBus.off('play-stop', handleStop)
+        }
+    }, [deviceId])
     return (
         <div className="playing">
             <div className="container">
-                <img loading="lazy" alt="" src={song[count].imgPic} />
+                <img loading="lazy" alt="" src={currentSong?.items ? currentSong.imgPic : ''} />
                 <div className="track-info">
                     <div
                         className="name"
                     >
-                        {song[count].title}
+                        {currentSong?.items ? currentSong.items[count]?.name : ''}
                     </div>
                     <div className="artist">
 
                         {
-                            song[count].artist.map((item: string, index: number) => {
-                                return (
-                                    <span key={index}>
-                                        <span className="ar">
-                                            {' '}
-                                            {item}
-                                            {' '}
+                            currentSong?.items
+                                ? currentSong.items[count]?.artists.map((item: {
+                                    name: string
+                                }, index: number) => {
+                                    return (
+                                        <span key={index}>
+                                            <span className="ar">
+                                                {item.name}
+                                            </span>
+                                            {index !== currentSong.items[count]?.artists.length - 1 && <span>, </span>}
                                         </span>
-                                        {index !== song[count].artist.length - 1 && <span>, </span>}
-                                    </span>
-                                )
-                            })
+                                    )
+                                })
+                                : ''
 
                         }
                     </div>

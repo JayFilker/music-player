@@ -1,28 +1,43 @@
 import { useAtom } from 'jotai'
-import { useState } from 'react'
-import { BadLike, CountDemo, IsPlayingDemo, IsPlayingDemoTwo, Link, SongList } from '../../store/store.ts'
-import eventBus from '../../utils/eventBus.ts'
+import { useEffect, useState } from 'react'
+import { BadLike, CountDemo, CurrentSongList, IsPlayingDemoTwo, Link } from '../../store/store.ts'
+import eventBus from '../../utils/eventBus'
 import { SvgIcon } from '../SvgIcon'
 import './index.less'
 
 export function SongListImg(props: {
     img: string
-    content: Array<{
-        title: string
-        artist: Array<string>
-        imgPic: string
-        song: string
-        from: string
-    }>
+    id: string
+    number?: number
+    index: number
 }) {
-    const { img, content } = props
+    const { img, id, index, number } = props
     const [, setCount] = useAtom(CountDemo)
     const [, setBadLikeDemo] = useAtom(BadLike)
     const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
     const [, setLinkDemo] = useAtom(Link)
-    const [, setSong] = useAtom(SongList)
-    const [isPlaying] = useAtom(IsPlayingDemo)
+    const [, setCurrentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
     const [show, setShow] = useState<boolean>(false)
+    const initTwo = async (id: string, play?: any) => {
+        const tokenOne = localStorage.getItem('spotify_access_token')
+        const albumId = id
+        const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
+            headers: { Authorization: `Bearer ${tokenOne}` },
+        })
+        const tracksData = await response.json()
+        setCount(0)
+        setCurrentSong({ ...tracksData, imgPic: img })
+        if (play) {
+            // @ts-ignore
+            eventBus.emit('play-track', tracksData?.items[0].uri)
+        }
+    }
+
+    useEffect(() => {
+        if (number === 0 && index === 0) {
+            initTwo(id)
+        }
+    }, [])
     return (
         <div
             className="cover cover-hover"
@@ -46,13 +61,7 @@ export function SongListImg(props: {
                             setLinkDemo(false)
                             setBadLikeDemo(false)
                             setIsPlayingTwo(false)
-                            setSong(content)
-                            setCount(0)
-                            setTimeout(() => {
-                                if (!isPlaying) {
-                                    eventBus.emit('play-song', { id: 0 })
-                                }
-                            }, 0)
+                            initTwo(id, index + 1)
                         }}
                     >
                         <SvgIcon>

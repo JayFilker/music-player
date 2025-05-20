@@ -1,5 +1,7 @@
+import { useAtom } from 'jotai/index'
 import React, { useEffect, useRef, useState } from 'react'
-import './index.less' // 你需要创建对应的CSS文件
+import { Device } from '../../store/store' // 你需要创建对应的CSS文件
+import './index.less'
 
 interface PlayerState {
     progress: number
@@ -9,33 +11,53 @@ interface PlayerState {
 interface SliderProps {
     player: PlayerState
     setPlayer: (player: PlayerState) => void
-    formatTrackTime: (value: number) => string
-    audioRef: HTMLAudioElement | null
+    audioRef?: HTMLAudioElement | null
 }
 
-export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, formatTrackTime, audioRef }) => {
+export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer }) => {
     const [isDragging, setIsDragging] = useState(false)
     const [showTooltip, setShowTooltip] = useState(false)
     const sliderRef = useRef<HTMLDivElement>(null)
+    const [deviceId] = useAtom(Device)
+    const lastUpdateTimeRef = useRef(Date.now())
+    const formatTrackTime = (value: number) => {
+        return `${Math.floor(value / 60)}:${String(Math.floor(value % 60)).padStart(2, '0')}`
+    }
     const updateProgressFromClientX = (clientX: number) => {
         if (!sliderRef.current)
             return
-
         const rect = sliderRef.current.getBoundingClientRect()
         const sliderWidth = rect.width
         const offsetX = clientX - rect.left
-
         // 计算百分比位置
         let percentage = (offsetX / sliderWidth) * 100
         percentage = Math.max(0, Math.min(100, percentage))
-
-        if (audioRef) {
-            // 更新进度值
+        // 更新进度值
+        setPlayer({
+            ...player,
+            progress: percentage / 100 * player.currentTrackDuration,
+        })
+        // seekToPosition(percentage / 100 * player.currentTrackDuration)
+        return percentage / 100 * player.currentTrackDuration
+    }
+    const getToken = () => localStorage.getItem('spotify_access_token') as string
+    const seekToPosition = async (positionSec: number) => {
+        if (!deviceId)
+            return
+        try {
+            const positionMs = Math.floor(positionSec * 1000)
             setPlayer({
                 ...player,
-                progress: percentage / 100 * player.currentTrackDuration,
+                progress: positionSec,
             })
-            audioRef.currentTime = percentage / 100 * player.currentTrackDuration
+            lastUpdateTimeRef.current = Date.now()
+            await fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${positionMs}&device_id=${deviceId}`, {
+                method: 'PUT',
+                headers: { Authorization: `Bearer ${getToken()}` },
+            })
+        }
+        catch (error) {
+            console.error('调整进度失败:', error)
         }
     }
 
@@ -46,7 +68,11 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, formatT
         updateProgressFromClientX(e.clientX)
     }
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (e: { clientX: number }) => {
+        const percentage = updateProgressFromClientX(e.clientX)
+        if (percentage) {
+            seekToPosition(percentage)
+        }
         setIsDragging(false)
     }
 
@@ -73,7 +99,6 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, formatT
 
                 setIsDragging(true)
                 updateProgressFromClientX(e.clientX)
-
                 // 防止拖动选中文本
                 e.preventDefault()
             }}
