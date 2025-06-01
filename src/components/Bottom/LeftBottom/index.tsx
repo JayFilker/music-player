@@ -21,30 +21,40 @@ export function LeftBottom(props: Props) {
     const pausePlayback = async () => {
         if (!deviceId)
             return
-        const token = localStorage.getItem('spotify_access_token') as string
-        await fetch(`https://api.spotify.com/v1/me/player/pause`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        })
-        console.log('已暂停播放')
-        setIsPlaying(false)
+        try {
+            setIsPlaying(false)
+            const token = localStorage.getItem('spotify_access_token') as string
+            await fetch(`https://api.spotify.com/v1/me/player/pause`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            })
+            console.log('已暂停播放')
+        }
+        catch (e) {
+            console.log(`暂停失败，原因为：${e}`)
+        }
     }
     const resumePlayback = async () => {
         if (!deviceId)
             return
-        const token = localStorage.getItem('spotify_access_token') as string
-        await fetch(`https://api.spotify.com/v1/me/player/play`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        })
-        console.log('继续播放')
-        setIsPlaying(true)
+        try {
+            setIsPlaying(true)
+            const token = localStorage.getItem('spotify_access_token') as string
+            await fetch(`https://api.spotify.com/v1/me/player/play`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            })
+            console.log('继续播放')
+        }
+        catch (e) {
+            console.log(`播放失败，原因为：${e}`)
+        }
     }
     useEffect(() => {
         const handlePlaySong = (trackUri?: string) => {

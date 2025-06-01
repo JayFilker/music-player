@@ -26,6 +26,7 @@ export function Player() {
             return '失败'
         }
         try {
+            setIsPlaying(true)
             await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
                 method: 'PUT',
                 headers: {
@@ -37,7 +38,6 @@ export function Player() {
                 }),
             })
             console.log('现在播放:', trackUri)
-            setIsPlaying(true)
         }
         catch (error) {
             console.error('播放失败:', error)
@@ -57,6 +57,12 @@ export function Player() {
                 'Content-Type': 'application/json',
             },
         })
+        // const response = await fetch(`http://localhost:3000/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
+        //     method: 'GET',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        // })
         const data = await response.json()
         localStorage.setItem('spotify_refresh_token', data.refresh_token)
         localStorage.setItem('spotify_access_token', data.access_token)

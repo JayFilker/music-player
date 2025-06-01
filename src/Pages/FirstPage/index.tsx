@@ -59,6 +59,26 @@ export default function FirstPage() {
         }
         initTwofun()
     }, [])
+
+    useEffect(() => {
+        async function fetchUsers() {
+            const token = localStorage.getItem('spotify_access_token')
+            const response = await fetch(
+                `https://api.spotify.com/666`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            )
+            const data = await response.json()
+            console.log(data) // 现在这里才是响应数据l
+        }
+
+        fetchUsers()
+    }, [])
     return (
         <div className="home">
             <div className="index-row first-row">
