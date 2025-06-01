@@ -8,6 +8,7 @@
             "path": "./tsconfig.node.json"
         }
     ],
+
 //    //    以下都为自己添加的
 //    "compilerOptions": {
 //        // 其他选项...
@@ -20,5 +21,21 @@
 //        "src/**/*.ts",
 //        "src/**/*.tsx",
 //        "src/**/*.d.ts"
+//    ]
+//    "compilerOptions": {
+//        // 其他选项...
+//        "types": ["vite/client", "node", "mockjs"],
+//        // 确保可以解析路径
+//        "baseUrl": ".",
+//        "paths": {
+//            "@/*": ["src/*"]
+//        }
+//    },
+//    "include": [
+//        "src/**/*.ts",
+//        "src/**/*.tsx",
+//        "mock/**/*.ts",
+//        "types/**/*.d.ts",
+//        "vite.config.ts"
 //    ]
 }
