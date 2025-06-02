@@ -22,6 +22,12 @@ export const SongList = atom<Array<Song>>([{
     from: 'The Band CAMINO',
 }])
 
+export const FirstPlay = atom<boolean>(true)
+
+export const Playing = atom<Array<boolean>>([])
+
+export const AlbumList = atom<any>()
+
 export const CurrentSongList = atom<any>({})
 
 export const CountDemo = atom(0)
@@ -35,3 +41,8 @@ export const PlayerDemo = atom({
     progress: 0,
     currentTrackDuration: 100,
 })
+
+export const CurrentMovie = atom<any>()
+export const MovieList = atom<any>([])
+
+export const PlayingTrack = atom(Array.from({ length: 100 }).fill(false))

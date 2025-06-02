@@ -1,6 +1,14 @@
 import { useAtom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
-import { BadLike, CountDemo, CurrentSongList, IsPlayingDemo, IsPlayingDemoTwo, Link } from '../../store/store.ts'
+import {
+    BadLike,
+    CountDemo,
+    CurrentSongList,
+    FirstPlay,
+    IsPlayingDemo,
+    IsPlayingDemoTwo,
+    Link,
+} from '../../store/store.ts'
 import eventBus from '../../utils/eventBus.ts'
 import { ButtonIcon } from '../ButtonIcon'
 import { SvgIcon } from '../SvgIcon'
@@ -10,6 +18,7 @@ import { svgList } from './svg.tsx'
 import './index.less'
 
 export function Foryou() {
+    const [, setFirstPlay] = useAtom(FirstPlay)
     const [, setCount] = useAtom(CountDemo)
     const [, setBadLikeDemo] = useAtom(BadLike)
     const [, setIsPlaying] = useAtom(IsPlayingDemo)
@@ -24,6 +33,7 @@ export function Foryou() {
    rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}),
    rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}))`, [])
     function nextSong() {
+        setFirstPlay(false)
         setLinkDemo(true)
         setIsPlayingTwo(true)
         setBadLikeDemo(true)
@@ -47,6 +57,7 @@ export function Foryou() {
         if (randomAlbumSong) {
             if (play === true) {
                 if (!linkDemo) {
+                    setFirstPlay(false)
                     setCurrentSong({
                         ...randomAlbumSong,
                         imgPic: randomAlbum?.albums?.items[0].images[0].url,

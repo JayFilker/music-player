@@ -1,10 +1,10 @@
 import type { SongType } from '../../../types'
 import { useAtom } from 'jotai/index'
-import { useState } from 'react'
 import {
     CountDemo,
     CurrentSongList,
     Device,
+    FirstPlay,
     IsPlayingDemo,
     IsPlayingDemoTwo,
     Link,
@@ -17,7 +17,7 @@ import { svgList } from './svg.tsx'
 
 export function MiddleControlButtons() {
     const [count, setCount] = useAtom(CountDemo)
-    const [firstPlay, setFirstPlay] = useState<boolean>(true)
+    const [firstPlay, setFirstPlay] = useAtom(FirstPlay)
     const [deviceId] = useAtom(Device)
     const [isPlaying] = useAtom(IsPlayingDemo)
     const [linkDemo] = useAtom(Link)

@@ -4,21 +4,22 @@ import './index.less'
 
 interface Props {
     songList: Array<{
-        id: string
+        id?: string
+        playListId?: string
         number?: number
         title: string
         imgPic: string
         des: string
     }>
+    style?: object
 }
 
 export function SongList(props: Props) {
-    const { songList } = props
-
+    const { songList, style } = props
     return (
         <div
             className="cover-row"
-            style={{ gridTemplateColumns: 'repeat(5, 1fr)', gap: '44px 24px' }}
+            style={style || { gridTemplateColumns: 'repeat(5, 1fr)', gap: '44px 24px' }}
         >
             {
                 songList?.map((item, index) => {
@@ -31,7 +32,8 @@ export function SongList(props: Props) {
                                 img={item.imgPic}
                                 number={item.number}
                                 index={index}
-                                id={item.id}
+                                check={!!item.playListId}
+                                id={(item.id ? item.id : item.playListId) as string}
                             >
                             </SongListImg>
                             <div className="text">

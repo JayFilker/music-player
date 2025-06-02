@@ -1,7 +1,8 @@
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
-import { BadLike, CountDemo, CurrentSongList, IsPlayingDemoTwo, Link } from '../../store/store.ts'
-import eventBus from '../../utils/eventBus'
+import { useNavigate } from 'react-router-dom'
+import { BadLike, CountDemo, CurrentSongList, FirstPlay, IsPlayingDemoTwo, Link } from '../../store/store.ts'
+import eventBus from '../../utils/eventBus.ts'
 import { SvgIcon } from '../SvgIcon'
 import './index.less'
 
@@ -10,32 +11,71 @@ export function SongListImg(props: {
     id: string
     number?: number
     index: number
+    check?: boolean
+    size?: string
+    newAlbum?: boolean
 }) {
-    const { img, id, index, number } = props
+    const { img, id, index, number, check, size, newAlbum } = props
     const [, setCount] = useAtom(CountDemo)
+    const [, setFirstPlay] = useAtom(FirstPlay)
     const [, setBadLikeDemo] = useAtom(BadLike)
     const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
     const [, setLinkDemo] = useAtom(Link)
+    const navigate = useNavigate()
     const [, setCurrentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
     const [show, setShow] = useState<boolean>(false)
-    const initTwo = async (id: string, play?: any) => {
+    const initTwo = async (id: string, imgDemo: string, play: any, count?: number) => {
         const tokenOne = localStorage.getItem('spotify_access_token')
         const albumId = id
-        const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
-            headers: { Authorization: `Bearer ${tokenOne}` },
-        })
+        const response = check
+            ? await fetch(`https://api.spotify.com/v1/playlists/${albumId}/tracks`, {
+                headers: { Authorization: `Bearer ${tokenOne}` },
+            })
+            : await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
+                headers: { Authorization: `Bearer ${tokenOne}` },
+            })
+
         const tracksData = await response.json()
-        setCount(0)
-        setCurrentSong({ ...tracksData, imgPic: img })
+        count ? setCount(count) : setCount(0)
+        console.log(tracksData)
+        setCurrentSong({
+            ...tracksData,
+            items: tracksData.items.map((item: any) => item.track || item),
+            imgPic: imgDemo,
+        })
         if (play) {
-            // @ts-ignore
-            eventBus.emit('play-track', tracksData?.items[0].uri)
+            setFirstPlay(false)
+            if (count) {
+                // @ts-ignore
+                check ? eventBus.emit('play-track', tracksData?.items[count].track.uri) : eventBus.emit('play-track', tracksData?.items[count].uri)
+            }
+            else {
+                // @ts-ignore
+                check ? eventBus.emit('play-track', tracksData?.items[0].track.uri) : eventBus.emit('play-track', tracksData?.items[0].uri)
+            }
         }
     }
 
     useEffect(() => {
         if (number === 0 && index === 0) {
-            initTwo(id)
+            initTwo(id, img, false)
+        }
+    }, [])
+
+    function handleClick(data: { e: React.MouseEvent, id: any, index: any, img: string, count?: number }) {
+        data.e.stopPropagation()
+        setLinkDemo(false)
+        setBadLikeDemo(false)
+        setIsPlayingTwo(false)
+        data.count ? initTwo(data.id, data.img, true, data.count) : initTwo(data.id, data.img, true)
+    }
+
+    useEffect(() => {
+        eventBus.on('playList-playing', ({ e, id, img, count }) => {
+            handleClick({ e, id, index: 1, img, count })
+        })
+        return () => {
+            eventBus.off('playList-playing') // 记得清理
         }
     }, [])
     return (
@@ -47,24 +87,41 @@ export function SongListImg(props: {
             onMouseOut={() => {
                 setShow(false)
             }}
+            onClick={() => {
+                navigate(`/playsList?id=${id}&type=${check ? 'playlists' : 'albums'}`)
+            }}
         >
-            <div className="cover-container">
+            <div
+                className="cover-container"
+                onClick={(e) => {
+                    if (size && !newAlbum) {
+                        handleClick({ e, id, index, img })
+                    }
+                }}
+            >
                 <div className="shade">
                     <button
                         // v-show="focus"
                         className="play-button"
-                        style={{
-                            display: show ? 'block' : 'none',
-                        }}
+                        style={
+                            size
+                                ? {
+                                        display: show ? 'block' : 'none',
+                                        width: newAlbum ? '30%' : '18%',
+                                        height: newAlbum ? '30%' : '18%',
+                                    }
+                                : {
+                                        display: show ? 'block' : 'none',
+                                        width: '22%',
+                                        height: '22%',
+                                    }
+                        }
 
-                        onClick={() => {
-                            setLinkDemo(false)
-                            setBadLikeDemo(false)
-                            setIsPlayingTwo(false)
-                            initTwo(id, index + 1)
+                        onClick={(e) => {
+                            handleClick({ e, id, index, img })
                         }}
                     >
-                        <SvgIcon>
+                        <SvgIcon sty={{ width: '65%', height: '65%' }}>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 aria-hidden="true"
@@ -86,13 +143,14 @@ export function SongListImg(props: {
                     src={img}
                     loading="lazy"
                     alt=""
+                    style={{ width: size || '100%', height: size || '100%' }}
                 />
                 <div
 
                     className="shadow"
                     style={{
                         backgroundImage: `url(${img})`,
-                        display: show ? 'block' : 'none',
+                        display: show || size ? 'block' : 'none',
                     }}
 
                 >

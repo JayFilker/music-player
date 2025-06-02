@@ -7,7 +7,7 @@ import './index.less'
 
 export default function FirstPage() {
     const [keyList] = useState<Array<{ name: string, limit: number }>>([{
-        name: 'Apple Music',
+        name: 'Apple',
         limit: 5,
     }, { name: 'recommend', limit: 10 }, { name: 'new', limit: 10 }])
     const [contentList, setContentList] = useState<Array<any>>([])
@@ -15,9 +15,9 @@ export default function FirstPage() {
     const searchTerms = ['recommended', 'popular', 'top']
     const randomTerm = searchTerms[Math.floor(Math.random() * searchTerms.length)]
 
-    async function fetchProfile(key: string, limit: number): Promise<any> {
+    async function fetchProfile(key: string, limit: number, type: string): Promise<any> {
         const token = localStorage.getItem('spotify_access_token')
-        const result = await fetch(`https://api.spotify.com/v1/search?q=label:"${key}"&type=album&limit=${limit}`, {
+        const result = await fetch(`https://api.spotify.com/v1/search?q=label:"${key}"&type=${type}&limit=${limit}`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         })
@@ -45,11 +45,20 @@ export default function FirstPage() {
 
     useEffect(() => {
         const init = async () => {
-            const promises = keyList.map(async (item: { name: string, limit: number }) => {
-                return await fetchProfile(item.name, item.limit)
-            })
+            const promises = keyList.filter((_item, index) => index < 2).map(async (item: {
+                name: string
+                limit: number
+            }) => {
+                return await fetchProfile(item.name, item.limit, 'playlist')
+            },
+            )
 
-            const results = await Promise.all(promises)
+            const promise = await fetchProfile(keyList[2].name, keyList[2].limit, 'album')
+
+            const results = contentList.map(item => item)
+            results[0] = await promises[0] // 更新第一个元素
+            results[1] = await promises[1] // 更新第二个元素
+            results[2] = promise // 更新第三个元素
             setContentList(results) // 一次性更新整个数组
         }
         init()
@@ -59,26 +68,6 @@ export default function FirstPage() {
         }
         initTwofun()
     }, [])
-
-    useEffect(() => {
-        async function fetchUsers() {
-            const token = localStorage.getItem('spotify_access_token')
-            const response = await fetch(
-                `https://api.spotify.com/666`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                },
-            )
-            const data = await response.json()
-            console.log(data) // 现在这里才是响应数据l
-        }
-
-        fetchUsers()
-    }, [])
     return (
         <div className="home">
             <div className="index-row first-row">
@@ -87,22 +76,37 @@ export default function FirstPage() {
                     by Apple Music
                 </div>
                 <SongList
-                    songList={contentList[0]?.albums.items.map((item: {
+                    songList={contentList[0]?.playlists.items.filter((_itemDemo: any) => _itemDemo !== null).filter((_itemDemo: any, index: number) => index < 12).map((item: {
                         id: string
                         name: string
                         images: Array<any>
                     }) => {
                         return {
-                            number: 0,
-                            id: item.id,
+                            playListId: item.id,
                             title: item.name,
-                            des: 'by Apple Music',
                             imgPic: item.images[0].url,
                             content: [],
                         }
                     })}
                 >
                 </SongList>
+                {/* <SongList */}
+                {/*    songList={contentList[0]?.albums.items.map((item: { */}
+                {/*        id: string */}
+                {/*        name: string */}
+                {/*        images: Array<any> */}
+                {/*    }) => { */}
+                {/*        return { */}
+                {/*            number: 0, */}
+                {/*            id: item.id, */}
+                {/*            title: item.name, */}
+                {/*            des: 'by Apple Music', */}
+                {/*            imgPic: item.images[0].url, */}
+                {/*            content: [], */}
+                {/*        } */}
+                {/*    })} */}
+                {/* > */}
+                {/* </SongList> */}
             </div>
             <div className="index-row">
                 <div className="title">
@@ -110,13 +114,13 @@ export default function FirstPage() {
                     <a href="" className="title-all">查看全部</a>
                 </div>
                 <SongList
-                    songList={contentList[1]?.albums.items.map((item: {
+                    songList={contentList[1]?.playlists.items.filter((_itemDemo: any) => _itemDemo !== null).filter((_itemDemo: any, index: number) => index < 12).map((item: {
                         id: string
                         name: string
                         images: Array<any>
                     }) => {
                         return {
-                            id: item.id,
+                            playListId: item.id,
                             title: item.name,
                             imgPic: item.images[0].url,
                             content: [],
@@ -124,6 +128,21 @@ export default function FirstPage() {
                     })}
                 >
                 </SongList>
+                {/* <SongList */}
+                {/*    songList={contentList[1]?.albums.items.map((item: { */}
+                {/*        id: string */}
+                {/*        name: string */}
+                {/*        images: Array<any> */}
+                {/*    }) => { */}
+                {/*        return { */}
+                {/*            id: item.id, */}
+                {/*            title: item.name, */}
+                {/*            imgPic: item.images[0].url, */}
+                {/*            content: [], */}
+                {/*        } */}
+                {/*    })} */}
+                {/* > */}
+                {/* </SongList> */}
             </div>
             <div className="index-row">
                 <div className="title"> For You</div>

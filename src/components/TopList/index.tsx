@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { ButtonIcon } from '../ButtonIcon'
 import { SvgIcon } from '../SvgIcon'
 import { TopSpace } from '../TopSpace'
@@ -11,6 +11,8 @@ export function TopList() {
     const [act, setAct] = useState(false)
     const [check, setCheck] = useState([true, false, false])
     const [show, setShow] = useState(false)
+    const [keywords, setKeywords] = useState('')
+    const navigate = useNavigate()
     const pageList = [
         {
             name: '首页',
@@ -18,13 +20,36 @@ export function TopList() {
         },
         {
             name: '发现',
-            link: '/firstpage',
+            link: '/discover',
         },
         {
             name: '音乐库',
-            link: '/firstpage',
+            link: '/login',
         },
     ]
+    // 根据当前路径更新选中状态
+    useEffect(() => {
+        const currentPath = location.pathname
+        const newCheckState = pageList.map(page => page.link === currentPath)
+
+        // 如果没有匹配的路径，默认选中第一个
+        if (!newCheckState.includes(true)) {
+            newCheckState[0] = true
+        }
+
+        setCheck(newCheckState)
+    }, [location.pathname]) // 当路径变化时重新执行
+
+    useEffect(() => {
+        const handleClickOutside = (e: any) => {
+            if (show && !e.target.closest('.context-menu') && !e.target.closest('.avatar')) {
+                setShow(false)
+            }
+        }
+
+        document.addEventListener('click', handleClickOutside)
+        return () => document.removeEventListener('click', handleClickOutside)
+    }, [show])
     return (
         <div>
             <nav className="has-custom-titlebar">
@@ -112,9 +137,18 @@ export function TopList() {
                                     // ref="searchInput"
                                     v-model="keywords"
                                     type="search"
+                                    value={keywords}
                                     placeholder={act ? '' : '搜索'}
                                     onFocus={() => setAct(true)}
                                     onBlur={() => setAct(false)}
+                                    style={{ marginTop: '-4px' }}
+                                    onChange={e => setKeywords(e.target.value)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            // 执行提交操作
+                                            navigate(`/search?q=${encodeURIComponent(keywords) || '*'}`)
+                                        }
+                                    }}
                                 />
                             </div>
                         </div>
@@ -128,11 +162,11 @@ export function TopList() {
                         onClick={() => {
                             setShow(true)
                         }}
-                        onBlur={() => setShow(false)}
+                        // onBlur={() => setShow(false)}
                     />
                 </div>
             </nav>
-            <ContextMenu style={{ display: show ? 'block' : 'none' }}>
+            <ContextMenu style={{ display: show ? 'block' : 'none', right: '25px', top: '52px' }} setShow={setShow}>
             </ContextMenu>
         </div>
     )

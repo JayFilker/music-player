@@ -1,17 +1,14 @@
 import { useAtom } from 'jotai/index'
 import { useState } from 'react'
-import {
-    BadLike,
-    CountDemo,
-    CurrentSongList,
-    IsPlayingDemoTwo,
-    Link,
-} from '../../store/store.ts'
+import { useNavigate } from 'react-router-dom'
+import { BadLike, CountDemo, CurrentSongList, FirstPlay, IsPlayingDemoTwo, Link } from '../../store/store.ts'
 import eventBus from '../../utils/eventBus.ts'
 import { SvgIcon } from '../SvgIcon'
 import '../SongList/index.less'
 
 interface Props {
+    gap?: string
+    gridTemplateColumns?: string
     artist: Array<{
         name: string
         imgPic: string
@@ -27,7 +24,7 @@ interface Props {
 }
 
 export function SongerList(props: Props) {
-    const { artist } = props
+    const { artist, gap, gridTemplateColumns } = props
     const [show, setShow] = useState<Array<boolean>>(
         Array.from({ length: 10 }).fill([]).map(() => false),
     )
@@ -36,6 +33,8 @@ export function SongerList(props: Props) {
     const [, setBadLikeDemo] = useAtom(BadLike)
     const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
     const [, setLinkDemo] = useAtom(Link)
+    const [, setFirstPlay] = useAtom(FirstPlay)
+    const navigate = useNavigate()
     const [songList, setSongList] = useState<Array<any>>([{}, {}, {}, {}, {}, {}])
 
     const getArtistSongList = async (artistId: string, index: number) => {
@@ -95,17 +94,19 @@ export function SongerList(props: Props) {
                     imgPic: artist[index].imgPic,
                 })
                 setCount(0)
-
+                setFirstPlay(false)
                 // @ts-ignore
                 eventBus.emit('play-track', tracksData.items[0].uri)
             }
         }
     }
-
     return (
         <div
             className="cover-row"
-            style={{ gridTemplateColumns: 'repeat(6, 1fr)', gap: '44px 24px' }}
+            style={{
+                gridTemplateColumns: gridTemplateColumns || 'repeat(6, 1fr)',
+                gap: gap || '44px 24px',
+            }}
         >
             {artist.map((item, index: number) => {
                 return (
@@ -122,6 +123,9 @@ export function SongerList(props: Props) {
                                 demo[index] = false
                                 setShow(demo)
                             }}
+                            onClick={() => {
+                                navigate(`/artist?id=${item.id}`)
+                            }}
                         >
                             <div className="cover-container">
                                 <div className="shade">
@@ -132,7 +136,8 @@ export function SongerList(props: Props) {
                                             height: '26%',
                                             display: show[index] ? 'block' : 'none',
                                         }}
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation()
                                             setLinkDemo(false)
                                             setBadLikeDemo(false)
                                             setIsPlayingTwo(false)

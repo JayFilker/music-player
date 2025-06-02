@@ -30,11 +30,12 @@ export function RankingList() {
     const [keyList] = useState<Array<{ name?: string, nation?: string }>>([{
         name: 'rank',
     }, { nation: 'UK' }, { nation: 'USA' }, { name: 'electronic' }, { nation: 'Japan' }])
+
     async function fetchProfileByName(name: string): Promise<any> {
         try {
             // 按名称/标签搜索
             const encodedKey = encodeURIComponent(`label:"${name}"`)
-            const result = await fetch(`https://api.spotify.com/v1/search?q=${encodedKey}&type=album&limit=10`, {
+            const result = await fetch(`https://api.spotify.com/v1/search?q=${encodedKey}&type=playlist&limit=10`, {
                 method: 'GET',
                 headers: { Authorization: `Bearer ${token}` },
             })
@@ -50,14 +51,18 @@ export function RankingList() {
             return { albums: { items: [] } }
         }
     }
+
     async function fetchProfileByNation(nation: string): Promise<any> {
         try {
             // 按国家搜索 - 这里使用market参数
-            const result = await fetch(`https://api.spotify.com/v1/browse/new-releases?country=${nation}&limit=10`, {
+            // const result = await fetch(`https://api.spotify.com/v1/browse/new-releases?country=${nation}&limit=10`, {
+            //     method: 'GET',
+            //     headers: { Authorization: `Bearer ${token}` },
+            // })
+            const result = await fetch(`https://api.spotify.com/v1/search?q=label:"${nation}"&type=playlist&limit=10&market=${nation}`, {
                 method: 'GET',
                 headers: { Authorization: `Bearer ${token}` },
             })
-
             if (!result.ok) {
                 throw new Error(`API请求失败: ${result.status}`)
             }
@@ -69,6 +74,7 @@ export function RankingList() {
             return { albums: { items: [] } }
         }
     }
+
     useEffect(() => {
         const init = async () => {
             const promises = keyList.map(async (item: { name?: string, nation?: string }) => {
@@ -90,35 +96,33 @@ export function RankingList() {
             className="cover-row"
             style={{ gridTemplateColumns: 'repeat(5, 1fr)', gap: '44px 24px' }}
         >
-
-            {
-                songList?.map((item, index) => {
-                    return (
-                        <div
-                            key={index}
-                            className="item"
+            {songList?.map((item, index) => {
+                return (
+                    <div
+                        key={index}
+                        className="item"
+                    >
+                        <SongListImg
+                            img={imgList[index]}
+                            index={index}
+                            check={true}
+                            id={item.playlists.items.filter((item: any) => item !== null)[0].id}
                         >
-                            <SongListImg
-                                img={imgList[index]}
-                                index={index}
-                                id={item.albums.items[index].id}
+                        </SongListImg>
+                        <div className="text">
+                            <div
+                                className="title"
+                                style={{ fontSize: '16px', margin: '0 0' }}
                             >
-                            </SongListImg>
-                            <div className="text">
-                                <div
-                                    className="title"
-                                    style={{ fontSize: '16px', margin: '0 0' }}
-                                >
-                                    <Link to="/" style={{ color: 'white' }}>{rankName[index]}</Link>
-                                </div>
-                                <div className="info">
-                                    <span>{upDate[index]}</span>
-                                </div>
+                                <Link to="/" style={{ color: 'white' }}>{rankName[index]}</Link>
+                            </div>
+                            <div className="info">
+                                <span>{upDate[index]}</span>
                             </div>
                         </div>
-                    )
-                })
-            }
+                    </div>
+                )
+            })}
 
         </div>
     )
