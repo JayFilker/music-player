@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai/index'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import defaultImg from '../../assets/img/default.png'
 import { ArtistAlbum } from '../../components/ArtistAlbum'
 import { Shade } from '../../components/shade'
 import { SongListImg } from '../../components/SongListImg'
@@ -40,11 +41,11 @@ export default function PlaysList() {
         const tokenOne = localStorage.getItem('spotify_access_token')
         const response = searchParams.get('type') === 'playlists'
             ? await fetch(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
-                headers: { Authorization: `Bearer ${tokenOne}` },
-            })
+                    headers: { Authorization: `Bearer ${tokenOne}` },
+                })
             : await fetch(`https://api.spotify.com/v1/albums/${id}/tracks`, {
-                headers: { Authorization: `Bearer ${tokenOne}` },
-            })
+                    headers: { Authorization: `Bearer ${tokenOne}` },
+                })
 
         const tracksData = await response.json()
         let time = 0
@@ -84,14 +85,13 @@ export default function PlaysList() {
         return () => document.removeEventListener('click', handleClickOutside)
     }, [twoShow])
     const list = ['保存到音乐库', '歌单内搜索']
-    console.log(songList)
     return (
         <div className={`playlist ${searchParams.get('type') !== 'playlists' ? 'album-page' : ''}`}>
             <div
                 className="playlist-info"
             >
                 <SongListImg
-                    img={songList?.images[0].url}
+                    img={songList?.images[0]?.url || defaultImg}
                     id={songList?.id}
                     index={666}
                     size="290px"
@@ -116,15 +116,15 @@ export default function PlaysList() {
                         {searchParams.get('type') === 'playlists'
                             ? <a target="blank">{songList?.owner.display_name}</a>
                             : songList?.artists.map((item: any, index: number) => {
-                                return (
-                                    <>
-                                        <a target="blank">{item.name}</a>
-                                        {
-                                            index < songList.artists.length - 1 && ', '
-                                        }
-                                    </>
-                                )
-                            })}
+                                    return (
+                                        <>
+                                            <a target="blank">{item.name}</a>
+                                            {
+                                                index < songList.artists.length - 1 && ', '
+                                            }
+                                        </>
+                                    )
+                                })}
                     </div>
                     <div className="date-and-count">
                         {searchParams.get('type') === 'playlists'
@@ -133,9 +133,9 @@ export default function PlaysList() {
 
                         {searchParams.get('type') === 'playlists'
                             ? songList?.tracks.items[songList?.tracks.items.length - 1].added_at.split('T')[0].split('-').map((part: any, index: number) => {
-                                const units = ['年', '月', '日']
-                                return part ? `${part}${units[index] || ''}` : ''
-                            }).join('')
+                                    const units = ['年', '月', '日']
+                                    return part ? `${part}${units[index] || ''}` : ''
+                                }).join('')
                             : songList?.release_date.split('-')[0]}
 
                         {' · '}

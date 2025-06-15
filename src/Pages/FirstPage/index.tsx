@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import defaultImg from '../../assets/img/default.png'
 import { Foryou } from '../../components/Foryou'
 import { RankingList } from '../../components/RankingList'
 import { SongerList } from '../../components/SongerList'
@@ -122,7 +123,7 @@ export default function FirstPage() {
                         return {
                             playListId: item.id,
                             title: item.name,
-                            imgPic: item.images[0].url,
+                            imgPic: item?.images[0]?.url,
                             content: [],
                         }
                     })}
@@ -159,7 +160,7 @@ export default function FirstPage() {
                                 name: item.name,
                                 personSongList: [],
                                 id: item.id,
-                                imgPic: item.images?.[0]?.url || 'https://p2.music.126.net/svHK8nEPa8J42tJ1by7jrw==/109951169875194361.jpg?param=512y512',
+                                imgPic: item.images?.[0]?.url || defaultImg,
                             }
                         }) || []
                     }
@@ -181,7 +182,7 @@ export default function FirstPage() {
                             id: item.id,
                             title: item.name,
                             des: contentList[2].albums.items[index].name,
-                            imgPic: item.images[0].url,
+                            imgPic: item?.images[0]?.url || defaultImg,
                             content: [],
                         }
                     })}
