@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { getCurrentMovieOne } from '../../api/movie'
 import { ButtonIcon } from '../../components/ButtonIcon'
 import { Movie } from '../../components/Movie'
 import { SvgIcon } from '../../components/SvgIcon'
@@ -38,19 +39,17 @@ export default function MoviePage() {
 
     const getCurrentMovie = async () => {
         if (videoKey) {
-            const response = await fetch(`http://localhost:3000/api/videos/info?key=${encodeURIComponent(videoKey)}`, {
-                method: 'GET',
+            getCurrentMovieOne(videoKey).then((data: any) => {
+                setMovieDetail(data)
             })
-            const data = await response.json()
-            setMovieDetail(data)
         }
     }
     useEffect(() => {
-        getMusic()
+        getMusic().then()
     }, [])
     useEffect(() => {
         if (videoKey) {
-            getCurrentMovie()
+            getCurrentMovie().then()
         }
     }, [currentMovie])
     useEffect(() => {

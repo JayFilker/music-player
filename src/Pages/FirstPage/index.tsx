@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { firstFetchProfile, recommendedArtists } from '../../api/search.ts'
 import defaultImg from '../../assets/img/default.png'
 import { Foryou } from '../../components/Foryou'
 import { RankingList } from '../../components/RankingList'
@@ -16,45 +17,18 @@ export default function FirstPage() {
     const searchTerms = ['recommended', 'popular', 'top']
     const randomTerm = searchTerms[Math.floor(Math.random() * searchTerms.length)]
 
-    async function fetchProfile(key: string, limit: number, type: string): Promise<any> {
-        const token = localStorage.getItem('spotify_access_token')
-        const result = await fetch(`https://api.spotify.com/v1/search?q=label:"${key}"&type=${type}&limit=${limit}`, {
-            method: 'GET',
-            headers: { Authorization: `Bearer ${token}` },
-        })
-
-        return await result.json()
-    }
-
-    async function recommendedArtists(): Promise<any> {
-        const token = localStorage.getItem('spotify_access_token')
-
-        // 正确的API端点
-        const response = await fetch(
-            `https://api.spotify.com/v1/search?q=${encodeURIComponent(randomTerm)}&type=artist&limit=6`,
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            },
-        )
-
-        return await response.json()
-    }
-
     useEffect(() => {
         const init = async () => {
+            const token = localStorage.getItem('spotify_access_token')
             const promises = keyList.filter((_item, index) => index < 2).map(async (item: {
                 name: string
                 limit: number
             }) => {
-                return await fetchProfile(item.name, item.limit, 'playlist')
+                return await firstFetchProfile(item.name, item.limit, 'playlist', token)
             },
             )
 
-            const promise = await fetchProfile(keyList[2].name, keyList[2].limit, 'album')
+            const promise = await firstFetchProfile(keyList[2].name, keyList[2].limit, 'album', token)
 
             const results = contentList.map(item => item)
             results[0] = await promises[0] // 更新第一个元素
@@ -62,12 +36,13 @@ export default function FirstPage() {
             results[2] = promise // 更新第三个元素
             setContentList(results) // 一次性更新整个数组
         }
-        init()
+        init().then()
         const initTwofun = async () => {
-            const a = await recommendedArtists()
+            const token = localStorage.getItem('spotify_access_token')
+            const a = await recommendedArtists(token, randomTerm)
             setArtists(a)
         }
-        initTwofun()
+        initTwofun().then()
     }, [])
     return (
         <div className="home">
@@ -91,23 +66,6 @@ export default function FirstPage() {
                     })}
                 >
                 </SongList>
-                {/* <SongList */}
-                {/*    songList={contentList[0]?.albums.items.map((item: { */}
-                {/*        id: string */}
-                {/*        name: string */}
-                {/*        images: Array<any> */}
-                {/*    }) => { */}
-                {/*        return { */}
-                {/*            number: 0, */}
-                {/*            id: item.id, */}
-                {/*            title: item.name, */}
-                {/*            des: 'by Apple Music', */}
-                {/*            imgPic: item.images[0].url, */}
-                {/*            content: [], */}
-                {/*        } */}
-                {/*    })} */}
-                {/* > */}
-                {/* </SongList> */}
             </div>
             <div className="index-row">
                 <div className="title">
@@ -129,21 +87,6 @@ export default function FirstPage() {
                     })}
                 >
                 </SongList>
-                {/* <SongList */}
-                {/*    songList={contentList[1]?.albums.items.map((item: { */}
-                {/*        id: string */}
-                {/*        name: string */}
-                {/*        images: Array<any> */}
-                {/*    }) => { */}
-                {/*        return { */}
-                {/*            id: item.id, */}
-                {/*            title: item.name, */}
-                {/*            imgPic: item.images[0].url, */}
-                {/*            content: [], */}
-                {/*        } */}
-                {/*    })} */}
-                {/* > */}
-                {/* </SongList> */}
             </div>
             <div className="index-row">
                 <div className="title"> For You</div>

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { fetchProfile } from '../../api/search'
 import { Movie } from '../../components/Movie'
 // import { SongerList } from '../../components/SongerList'
 import { SongerList } from '../../components/SongerList'
@@ -12,31 +13,10 @@ import '../../components/SongListImg/index.less'
 export default function Search() {
     const [searchParams] = useSearchParams()
 
-    async function fetchProfile(key: string): Promise<any> {
-        const token = localStorage.getItem('spotify_access_token')
-        // 指定多个类型，用逗号分隔
-        const types = 'artist,album,track,playlist'
-
-        // 对查询关键词进行编码
-        const query = encodeURIComponent(key)
-
-        const result = await fetch(
-            `https://api.spotify.com/v1/search?q=${query}&type=${types}&limit=20`,
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            },
-        )
-
-        return await result.json()
-    }
-
     const [content, setContent] = useState<any>()
 
     const [movie, setMovie] = useState<any>()
+
     // const [movie, setMovie] = useAtom<any>(MovieList)
 
     async function getMusic() {

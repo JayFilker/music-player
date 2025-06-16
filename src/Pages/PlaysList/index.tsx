@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai/index'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { getPlaysList, internalInit } from '../../api/check.ts'
 import defaultImg from '../../assets/img/default.png'
 import { ArtistAlbum } from '../../components/ArtistAlbum'
 import { Shade } from '../../components/shade'
@@ -23,40 +24,29 @@ export default function PlaysList() {
     const [playingTrack, setPlayingTrack] = useAtom(PlayingTrack)
     const [demo, setDemo] = useState<any>()
 
-    async function getPlaysList() {
-        const tokenOne = localStorage.getItem('spotify_access_token')
-        const albumResponse = await fetch(`https://api.spotify.com/v1/${searchParams.get('type')}/${searchParams.get('id')}`, {
-            headers: { Authorization: `Bearer ${tokenOne}` },
-        })
-        const albumData = await albumResponse.json()
-        setSongList(albumData)
-    }
-
     useEffect(() => {
-        getPlaysList()
+        const type = searchParams.get('type')
+        const id = searchParams.get('id')
+        getPlaysList(type, id)
+            .then((data) => {
+                setSongList(data)
+            })
     }, [searchParams.get('id')])
     const [songListInfo, setSongListInfo] = useState<any>()
 
     async function inIt(id: string) {
         const tokenOne = localStorage.getItem('spotify_access_token')
-        const response = searchParams.get('type') === 'playlists'
-            ? await fetch(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
-                    headers: { Authorization: `Bearer ${tokenOne}` },
+        internalInit(id, searchParams.get('type') === 'playlists', tokenOne as string).then((data: any) => {
+            let time = 0
+            setSongListInfo(data)
+            setDemo(data)
+            if (searchParams.get('type') === 'albums') {
+                data.items.forEach((track: any) => {
+                    time += track.duration_ms
                 })
-            : await fetch(`https://api.spotify.com/v1/albums/${id}/tracks`, {
-                    headers: { Authorization: `Bearer ${tokenOne}` },
-                })
-
-        const tracksData = await response.json()
-        let time = 0
-        setSongListInfo(tracksData)
-        setDemo(tracksData)
-        if (searchParams.get('type') === 'albums') {
-            tracksData.items.forEach((track: any) => {
-                time += track.duration_ms
-            })
-            setSongList({ ...songList, time: Math.floor(time / 60000) })
-        }
+                setSongList({ ...songList, time: Math.floor(time / 60000) })
+            }
+        })
     }
 
     useEffect(() => {

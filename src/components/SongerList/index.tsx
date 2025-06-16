@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai/index'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getArtistAlbum } from '../../api/artist.ts'
 import { BadLike, CountDemo, CurrentSongList, FirstPlay, IsPlayingDemoTwo, Link } from '../../store/store.ts'
 import eventBus from '../../utils/eventBus.ts'
 import { SvgIcon } from '../SvgIcon'
@@ -52,52 +53,42 @@ export function SongerList(props: Props) {
         else {
             // 获取艺术家的专辑
             const token = localStorage.getItem('spotify_access_token')
-            const albumsResponse = await fetch(
-                `https://api.spotify.com/v1/artists/${artistId}/albums?limit=1&include_groups=album,single`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                },
-            )
+            await getArtistAlbum(artistId, token).then(async (albumsData) => {
+                // 检查是否有专辑
+                if (albumsData?.items?.length > 0) {
+                    const albumId = albumsData.items[0].id
 
-            const albumsData = await albumsResponse.json()
-
-            // 检查是否有专辑
-            if (albumsData?.items?.length > 0) {
-                const albumId = albumsData.items[0].id
-
-                // 获取专辑的曲目
-                const tracksResponse = await fetch(
-                    `https://api.spotify.com/v1/albums/${albumId}/tracks?limit=10`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json',
+                    // 获取专辑的曲目
+                    const tracksResponse = await fetch(
+                        `https://api.spotify.com/v1/albums/${albumId}/tracks?limit=10`,
+                        {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Content-Type': 'application/json',
+                            },
                         },
-                    },
-                )
+                    )
 
-                const tracksData = await tracksResponse.json()
+                    const tracksData = await tracksResponse.json()
 
-                // 更新专辑列表状态
-                const updatedSongList = [...songList]
-                updatedSongList[index] = tracksData
-                setSongList(updatedSongList)
+                    // 更新专辑列表状态
+                    const updatedSongList = [...songList]
+                    updatedSongList[index] = tracksData
+                    setSongList(updatedSongList)
 
-                // 更新当前歌曲列表状态
-                setCurrentSong({
-                    ...tracksData,
-                    imgPic: artist[index].imgPic,
-                })
-                setCount(0)
-                setFirstPlay(false)
-                // @ts-ignore
-                eventBus.emit('play-track', tracksData.items[0].uri)
-            }
+                    // 更新当前歌曲列表状态
+                    setCurrentSong({
+                        ...tracksData,
+                        imgPic: artist[index].imgPic,
+                    })
+                    setCount(0)
+                    setFirstPlay(false)
+                    // @ts-ignore
+                    eventBus.emit('play-track', tracksData.items[0].uri)
+                }
+            })
+            // const albumsData = await albumsResponse.json()
         }
     }
     return (

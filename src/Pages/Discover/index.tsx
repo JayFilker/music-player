@@ -1,5 +1,6 @@
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
+import { getAlbumList } from '../../api/album.ts'
 import { ButtonIconTwo } from '../../components/ButtonIconTwo'
 import { SearchList } from '../../components/SearchList'
 import { SvgIcon } from '../../components/SvgIcon'
@@ -26,12 +27,7 @@ export default function Discover() {
 
     async function fetchProfile(key: string, offset: number): Promise<any> {
         const token = localStorage.getItem('spotify_access_token')
-
-        const result = await fetch(`https://api.spotify.com/v1/search?q=${key}&type=album&limit=50&offset=${offset}`, {
-            method: 'GET',
-            headers: { Authorization: `Bearer ${token}` },
-        })
-        const json = await result.json()
+        const json = await getAlbumList(token, key, offset)
         if (offset === 0) {
             setAlbumList(json)
         }

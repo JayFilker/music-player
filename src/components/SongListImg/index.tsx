@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { internalInit } from '../../api/check.ts'
 import { BadLike, CountDemo, CurrentSongList, FirstPlay, IsPlayingDemoTwo, Link } from '../../store/store.ts'
 import eventBus from '../../utils/eventBus.ts'
 import { SvgIcon } from '../SvgIcon'
@@ -26,34 +27,25 @@ export function SongListImg(props: {
     const [show, setShow] = useState<boolean>(false)
     const initTwo = async (id: string, imgDemo: string, play: any, count?: number) => {
         const tokenOne = localStorage.getItem('spotify_access_token')
-        const albumId = id
-        const response = check
-            ? await fetch(`https://api.spotify.com/v1/playlists/${albumId}/tracks`, {
-                headers: { Authorization: `Bearer ${tokenOne}` },
+        await internalInit(id, check || false, tokenOne as string).then((tracksData) => {
+            count ? setCount(count) : setCount(0)
+            setCurrentSong({
+                ...tracksData,
+                items: tracksData.items.map((item: any) => item.track || item),
+                imgPic: imgDemo,
             })
-            : await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
-                headers: { Authorization: `Bearer ${tokenOne}` },
-            })
-
-        const tracksData = await response.json()
-        count ? setCount(count) : setCount(0)
-        console.log(tracksData)
-        setCurrentSong({
-            ...tracksData,
-            items: tracksData.items.map((item: any) => item.track || item),
-            imgPic: imgDemo,
+            if (play) {
+                setFirstPlay(false)
+                if (count) {
+                    // @ts-ignore
+                    check ? eventBus.emit('play-track', tracksData?.items[count].track.uri) : eventBus.emit('play-track', tracksData?.items[count].uri)
+                }
+                else {
+                    // @ts-ignore
+                    check ? eventBus.emit('play-track', tracksData?.items[0].track.uri) : eventBus.emit('play-track', tracksData?.items[0].uri)
+                }
+            }
         })
-        if (play) {
-            setFirstPlay(false)
-            if (count) {
-                // @ts-ignore
-                check ? eventBus.emit('play-track', tracksData?.items[count].track.uri) : eventBus.emit('play-track', tracksData?.items[count].uri)
-            }
-            else {
-                // @ts-ignore
-                check ? eventBus.emit('play-track', tracksData?.items[0].track.uri) : eventBus.emit('play-track', tracksData?.items[0].uri)
-            }
-        }
     }
 
     useEffect(() => {

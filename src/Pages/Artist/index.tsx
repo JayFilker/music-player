@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai/index'
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { getArtistAlbums, getArtistDetails, getArtistSongs, getNewAlbums } from '../../api/artist.ts'
 import { Shade } from '../../components/shade'
 import { SongList } from '../../components/SongList'
 import { SongListImg } from '../../components/SongListImg'
@@ -21,80 +22,31 @@ export default function Artist() {
     const [showShade, setShowShade] = useState(false)
     const [twoShow, setTowShow] = useState(false)
     const list = ['复制链接', '在浏览器中打开']
-    const getArtistDetails = async () => {
-        const albumsResponse = await fetch(
-            `https://api.spotify.com/v1/artists/${searchParams.get('id')}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            },
-        )
-        setAlbumArtist(await albumsResponse.json())
-    }
     useEffect(() => {
         if (!albumsArtist) {
-            getArtistDetails()
+            getArtistDetails(searchParams.get('id'), token).then((data) => {
+                setAlbumArtist(data)
+            })
         }
     }, [])
     const [album, setAlbum] = useState<any>()
-    const getArtistAlbums = async () => {
-        const response = await fetch(
-            `https://api.spotify.com/v1/artists/${searchParams.get('id')}/albums`,
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            },
-        )
-
-        const data = await response.json()
-        console.log(data)
-        setAlbum(data)
-    }
     const [hotSongs, setHotSongs] = useState<any>()
     const [hotSongsDemo, setHotSongsDemo] = useState<any>()
-    const getArtistSongs = async () => {
-        const response = await fetch(
-            `https://api.spotify.com/v1/artists/${searchParams.get('id')}/top-tracks?market=US`,
-            {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            },
-        )
-
-        const data = await response.json()
-        setHotSongs(data)
-        console.log(data)
-        setHotSongsDemo({ items: data.tracks })
-    }
     const [newAlbums, setNewAlbums] = useState<any>()
-    const getNewAlbums = async () => {
-        const response = await fetch(
-            `https://api.spotify.com/v1/artists/${searchParams.get('id')}/albums?include_groups=album,single&country=US`,
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            },
-        )
-
-        const data = await response.json()
-        setNewAlbums(data)
-    }
     useEffect(() => {
         if (albumsArtist) {
-            getArtistAlbums()
-            getArtistSongs()
-            getNewAlbums()
+            getArtistAlbums(searchParams.get('id'), token).then((data) => {
+                setAlbum(data)
+            })
+            getArtistSongs(searchParams.get('id'), token).then(
+                (data) => {
+                    setHotSongs(data)
+                    setHotSongsDemo({ items: data.tracks })
+                },
+            )
+            getNewAlbums(searchParams.get('id'), token).then((data) => {
+                setNewAlbums(data)
+            })
         }
     }, [albumsArtist])
 
@@ -124,13 +76,11 @@ export default function Artist() {
                     </div>
                     <div className="statistics">
                         <a href="#popularTracks">
-                            {/* {{artist.musicSize}} {{$t('common.songs')}} */}
                             {`${hotSongs?.tracks.length} 首热门歌曲`}
                         </a
                         >
                         {` · `}
                         <a href="#albums">
-                            {/* {{artist.albumSize}} {{$t('artist.withAlbums')}} */}
                             {`${album?.items?.length} 张专辑`}
                         </a
                         >
@@ -255,10 +205,6 @@ export default function Artist() {
                                     <div className="info">
                                         <div className="name">
                                             <Link to="/firstPage">{newAlbums?.items[0]?.name}</Link>
-                                            {/*    <router-link */}
-                                            {/*    :to="`/album/${latestRelease.id}`">{{ */}
-                                            {/*    latestRelease.name */}
-                                            {/* }}</router-link> */}
                                         </div>
                                         <div className="date">
                                             {newAlbums?.items[0]?.release_date.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1年$2月$3日')}
@@ -273,29 +219,13 @@ export default function Artist() {
                                     <div
                                         className="cover"
                                     >
-                                        {/*        <img :src="latestMV.coverUrl" loading="lazy" /> */}
-                                        {/*        <transition name="fade"> */}
-                                        {/*            <div */}
-                                        {/*                v-show="mvHover" */}
-                                        {/*                class="shadow" */}
-                                        {/*            :style="{ */}
-                                        {/*            background: 'url(' + latestMV.coverUrl + ')', */}
-                                        {/*        }" */}
-                                        {/*            ></div> */}
-                                        {/* </transition> */}
                                     </div>
                                     <div className="info">
                                         <div className="name">
-                                            {/*    <router-link */}
-                                            {/*    :to="'/mv/' + latestMV.id">{{ */}
-                                            {/*    latestMV.name */}
-                                            {/* }}</router-link> */}
                                         </div>
                                         <div className="date">
-                                            {/* {{latestMV.publishTime | formatDate}} */}
                                         </div>
                                         <div className="type">
-                                            {/* {{$t('artist.latestMV')}} */}
                                         </div>
                                     </div>
                                 </div>
@@ -351,85 +281,11 @@ export default function Artist() {
                     })}
                 >
                 </SongList>
-                {/* <CoverRow */}
-                {/* :type="'album'" */}
-                {/* :items="albums" */}
-                {/* :sub-text="'releaseYear'" */}
-                {/* :show-play-button="true" */}
-                {/* /> */}
             </div>
-            {/* <div className="mvs"> */}
-            {/*    <div */}
-            {/*        className="section-title" */}
-            {/*    > */}
-            {/*        MVs */}
-            {/*        /!* <router-link v-show="hasMoreMV" :to="`/artist/${artist.id}/mv`">{{ *!/ */}
-            {/*        /!*    $t('home.seeMore') *!/ */}
-            {/*        /!* }}</router-link> *!/ */}
-            {/*    </div> */}
-            {/*    /!* <MvRow :mvs = 'mvs' *!/ */}
-            {/*    /!* subtitle = 'publishTime' / > *!/ */}
-            {/* </div> */}
             <div className="eps">
                 <div className="section-title">
-                    {/* {{$t('artist.EPsSingles')}} */}
                 </div>
-                {/* <CoverRow */}
-                {/* :type="'album'" */}
-                {/* :items="eps" */}
-                {/* :sub-text="'albumType+releaseYear'" */}
-                {/* :show-play-button="true" */}
-                {/* /> */}
             </div>
-
-            {/* <div className="similar-artists"> */}
-            {/*    <div className="section-title"> */}
-            {/*        /!* {{$t('artist.similarArtists')}} *!/ */}
-            {/*    </div> */}
-            {/*    /!* <CoverRow *!/ */}
-            {/*    /!*    type="artist" *!/ */}
-            {/*    /!* :column-number="6" *!/ */}
-            {/*    /!* gap="36px 28px" *!/ */}
-            {/*    /!* :items="similarArtists.slice(0, 12)" *!/ */}
-            {/*    /!* /> *!/ */}
-            {/* </div> */}
-
-            {/*    <Modal */}
-            {/*      :show = 'showFullDescription' */}
-            {/* : */}
-            {/*    close = 'toggleFullDescription' */}
-            {/* : */}
-            {/*    show - footer = 'false' */}
-            {/* : */}
-            {/*    click - outside - hide = 'true' */}
-            {/* : */}
-            {/*    title = '$t(\'artist.artistDesc\')' */}
-            {/*        > */}
-            {/*    < p */}
-            {/*        */}
-            {/*        class */}
-            {/*            */}
-            {/*            ="description-fulltext" */}
-            {/*    > */}
-            {/*        /!*        {*!/ */}
-            {/*        /!*    {*!/ */}
-            {/*        /!*        artist.briefDesc*!/ */}
-            {/*        /!*    }*!/ */}
-            {/*        /!*}*!/ */}
-            {/*    </p> */}
-            {/* </Modal> */}
-
-            {/* //     <ContextMenu ref="artistMenu"> */}
-            {/* //         <div class="item" */}
-            {/* //         @click="copyUrl(artist.id)">{{ */}
-            {/* //         $t('contextMenu.copyUrl') */}
-            {/* //     }}</div> */}
-            {/* //     <div class="item" @click = 'openInBrowser(artist.id)' > { */}
-            {/* //     { */}
-            {/* //         $t('contextMenu.openInBrowser') */}
-            {/* //     } */}
-            {/* // }</div> */}
-            {/* // </ContextMenu> */}
             <Shade
                 style={{ display: showShade ? '' : 'none' }}
                 artist={true}

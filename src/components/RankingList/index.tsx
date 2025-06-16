@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { fetchProfileByName, fetchProfileByNation } from '../../api/ranking.ts'
 import { SongListImg } from '../SongListImg'
 import './index.less'
 
@@ -31,58 +32,14 @@ export function RankingList() {
         name: 'rank',
     }, { nation: 'UK' }, { nation: 'USA' }, { name: 'electronic' }, { nation: 'Japan' }])
 
-    async function fetchProfileByName(name: string): Promise<any> {
-        try {
-            // 按名称/标签搜索
-            const encodedKey = encodeURIComponent(`label:"${name}"`)
-            const result = await fetch(`https://api.spotify.com/v1/search?q=${encodedKey}&type=playlist&limit=10`, {
-                method: 'GET',
-                headers: { Authorization: `Bearer ${token}` },
-            })
-
-            if (!result.ok) {
-                throw new Error(`API请求失败: ${result.status}`)
-            }
-
-            return await result.json()
-        }
-        catch (error) {
-            console.error(`搜索名称 ${name} 时出错:`, error)
-            return { albums: { items: [] } }
-        }
-    }
-
-    async function fetchProfileByNation(nation: string): Promise<any> {
-        try {
-            // 按国家搜索 - 这里使用market参数
-            // const result = await fetch(`https://api.spotify.com/v1/browse/new-releases?country=${nation}&limit=10`, {
-            //     method: 'GET',
-            //     headers: { Authorization: `Bearer ${token}` },
-            // })
-            const result = await fetch(`https://api.spotify.com/v1/search?q=label:"${nation}"&type=playlist&limit=10&market=${nation}`, {
-                method: 'GET',
-                headers: { Authorization: `Bearer ${token}` },
-            })
-            if (!result.ok) {
-                throw new Error(`API请求失败: ${result.status}`)
-            }
-
-            return await result.json()
-        }
-        catch (error) {
-            console.error(`搜索国家 ${nation} 时出错:`, error)
-            return { albums: { items: [] } }
-        }
-    }
-
     useEffect(() => {
         const init = async () => {
             const promises = keyList.map(async (item: { name?: string, nation?: string }) => {
                 if (item.name) {
-                    return await fetchProfileByName(item.name)
+                    return await fetchProfileByName(item.name, token)
                 }
                 else if (item.nation) {
-                    return await fetchProfileByNation(item.nation)
+                    return await fetchProfileByNation(item.nation, token)
                 }
             })
 

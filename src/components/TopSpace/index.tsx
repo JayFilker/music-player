@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Device, IsPlayingDemo, PlayerDemo } from '../../store/store'
 import 'vscode-codicons/dist/codicon.css'
 import './index.less'
+
 // import { ipcRenderer } from 'electron';
 const ipcRenderer = window.require?.('electron')?.ipcRenderer
 
@@ -68,7 +69,7 @@ export function TopSpace() {
                 lastUpdateTimeRef.current = Date.now()
                 updatePlayerState()
             }
-        }, 1000)
+        }, 5000)
         return () => {
             clearInterval(progressInterval)
             clearInterval(syncInterval)

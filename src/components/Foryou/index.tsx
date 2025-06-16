@@ -1,5 +1,6 @@
 import { useAtom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
+import { getAlbum, getAlbumSong } from '../../api/album.ts'
 import {
     BadLike,
     CountDemo,
@@ -32,6 +33,7 @@ export function Foryou() {
         `linear-gradient(to left top,
    rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}),
    rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}))`, [])
+
     function nextSong() {
         setFirstPlay(false)
         setLinkDemo(true)
@@ -53,6 +55,7 @@ export function Foryou() {
             setCount(countL)
         }
     }
+
     const getRandomAlbumFirstTrack = async (play?: boolean) => {
         if (randomAlbumSong) {
             if (play === true) {
@@ -83,40 +86,20 @@ export function Foryou() {
             const token = localStorage.getItem('spotify_access_token')
             const searchLetters = 'abcdefghijklmnopqrstuvwxyz'
             const randomLetter = searchLetters[Math.floor(Math.random() * searchLetters.length)]
-            const searchResponse = await fetch(
-                `https://api.spotify.com/v1/search?q=${randomLetter}&type=album&limit=1`,
-                {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                },
-            )
-            const searchData = await searchResponse.json()
-            setRandomAlbum(searchData)
-            if (searchData?.albums?.items?.length > 0) {
-                // 随机选择一个专辑
-                const albumId = searchData.albums.items[0].id
-
-                // 获取专辑的曲目
-                const tracksResponse = await fetch(
-                    `https://api.spotify.com/v1/albums/${albumId}/tracks?limit=10`,
-                    {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${token}`,
-                            'Content-Type': 'application/json',
-                        },
-                    },
-                )
-                const tracksData = await tracksResponse.json()
-                setRandomAlbumSong(tracksData)
-            }
+            await getAlbum(randomLetter, token as string).then(async (searchData) => {
+                setRandomAlbum(searchData)
+                if (searchData?.albums?.items?.length > 0) {
+                    // 随机选择一个专辑
+                    const albumId = searchData.albums.items[0].id
+                    await getAlbumSong(token, albumId).then(async (tracksResponse: any) => {
+                        setRandomAlbumSong(tracksResponse)
+                    })
+                }
+            })
         }
     }
     useEffect(() => {
-        getRandomAlbumFirstTrack()
+        getRandomAlbumFirstTrack().then()
     }, [])
     return (
         <div className="for-you-row">
