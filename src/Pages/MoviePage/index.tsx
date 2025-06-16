@@ -5,12 +5,15 @@ import { getCurrentMovieOne } from '../../api/movie'
 import { ButtonIcon } from '../../components/ButtonIcon'
 import { Movie } from '../../components/Movie'
 import { SvgIcon } from '../../components/SvgIcon'
+import { ContextMenu } from '../../components/TopList/ContextMenu'
 import './index.less'
 import 'plyr/dist/plyr.css'
 
 export default function MoviePage() {
     const [currentMovie, setCurrentMovie] = useState<any>()
     const [videoKey, setVideoKey] = useState()
+    const list = ['复制链接', '在浏览器中打开']
+    const [twoShow, setTowShow] = useState(false)
     const [searchParams] = useSearchParams()
     const [movieDemo, setMovie] = useState<Array<any>>([])
     const [moviesList, setMoviesList] = useState<any>([])
@@ -52,6 +55,16 @@ export default function MoviePage() {
             getCurrentMovie().then()
         }
     }, [currentMovie])
+    const handleClickOutside = () => {
+        if (twoShow) {
+            setTowShow(false)
+            document.removeEventListener('click', handleClickOutside)
+        }
+    }
+    useEffect(() => {
+        document.addEventListener('click', handleClickOutside)
+        return () => document.removeEventListener('click', handleClickOutside)
+    }, [twoShow])
     useEffect(() => {
         if (currentMovie && searchParams.get('title') !== currentMovie.title) {
             movieDemo.forEach((video: any) => {
@@ -141,7 +154,7 @@ export default function MoviePage() {
                                     -
                                     {currentMovie.name}
 
-                                    <div className="buttons">
+                                    <div className="buttons" style={{ position: 'relative' }}>
                                         <ButtonIcon classname="button">
                                             <SvgIcon>
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" id="icon-heart">
@@ -153,7 +166,13 @@ export default function MoviePage() {
                                                 </svg>
                                             </SvgIcon>
                                         </ButtonIcon>
-                                        <ButtonIcon classname="button">
+                                        <ButtonIcon
+                                            classname="button"
+                                            onClick={(e: any) => {
+                                                e.stopPropagation()
+                                                setTowShow(true)
+                                            }}
+                                        >
                                             <SvgIcon>
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -172,6 +191,17 @@ export default function MoviePage() {
                                                 </svg>
                                             </SvgIcon>
                                         </ButtonIcon>
+                                        <ContextMenu
+                                            style={{
+                                                display: twoShow ? 'block' : 'none',
+                                                top: '25px',
+                                                left: '60px',
+                                                position: 'absolute',
+                                            }}
+                                            setShow={setTowShow}
+                                            list={list}
+                                        >
+                                        </ContextMenu>
                                     </div>
                                 </div>
                                 <div className="info">

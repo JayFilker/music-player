@@ -1,5 +1,6 @@
 import { useAtom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { getAlbum, getAlbumSong } from '../../api/album.ts'
 import {
     BadLike,
@@ -21,6 +22,7 @@ import './index.less'
 export function Foryou() {
     const [, setFirstPlay] = useAtom(FirstPlay)
     const [, setCount] = useAtom(CountDemo)
+    const navigate = useNavigate()
     const [, setBadLikeDemo] = useAtom(BadLike)
     const [, setIsPlaying] = useAtom(IsPlayingDemo)
     const [isPlayingTwo, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
@@ -117,6 +119,9 @@ export function Foryou() {
                     loading="lazy"
                     className="cover"
                     alt=""
+                    onClick={() => {
+                        navigate(`/playsList?id=${randomAlbum?.albums?.items[0].id}&type=albums`)
+                    }}
                 />
                 <div className="right-part">
                     <Info randomAlbum={randomAlbum}></Info>

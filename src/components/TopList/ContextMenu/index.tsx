@@ -45,6 +45,9 @@ export function ContextMenu({ style, setShow, list, setShowSearch, showSearch, i
                                         if (i === 1) {
                                             navigate('/login')
                                         }
+                                        else if (i === 0) {
+                                            navigate('/set')
+                                        }
                                         setShow(false)
                                     }}
                                 >

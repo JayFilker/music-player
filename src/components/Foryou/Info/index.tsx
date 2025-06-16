@@ -1,5 +1,6 @@
 export function Info(props: any) {
     const { randomAlbum } = props
+    console.log(randomAlbum)
     return (
         <div className="info">
             <div className="title">{randomAlbum?.albums?.items[0].name}</div>
@@ -8,12 +9,31 @@ export function Info(props: any) {
                     className="artist-in-line"
                 >
                     <span>
-                        <a
-                            href="#/artist/12448205"
-                            id="info-span"
-                        >
-                            {randomAlbum?.albums?.items[0].artists[0].name}
-                        </a>
+                        {randomAlbum?.albums?.items[0].artists.map((artist: any, index: number) => {
+                            if (index < randomAlbum?.albums?.items[0].artists.length - 1) {
+                                return (
+                                    <>
+                                        <a
+                                            href={`/artist?id=${artist.id}`}
+                                            id="info-span"
+                                        >
+                                            {artist.name}
+                                        </a>
+                                        <span>，</span>
+                                    </>
+                                )
+                            }
+                            else {
+                                return (
+                                    <a
+                                        href={`/artist?id=${artist.id}`}
+                                        id="info-span"
+                                    >
+                                        {artist.name}
+                                    </a>
+                                )
+                            }
+                        })}
                     </span>
                 </span>
             </div>

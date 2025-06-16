@@ -1,5 +1,7 @@
 import { useAtom } from 'jotai/index'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { getPlaysList } from '../../../api/check.ts'
 import { CountDemo, CurrentSongList, Device, IsPlayingDemo } from '../../../store/store.ts'
 import eventBus from '../../../utils/eventBus'
 import { ButtonIcon } from '../../ButtonIcon'
@@ -13,9 +15,10 @@ export function LeftBottom(props: Props) {
     const [count] = useAtom(CountDemo)
     const { playTrack } = props
     const [deviceId] = useAtom(Device)
+    const navigate = useNavigate()
     const [, setIsPlaying] = useAtom(IsPlayingDemo)
     const [currentSong] = useAtom<{
-        items: Array<{ name: string, artists: Array<any> }>
+        items: Array<{ name: string, artists: Array<any>, id: string }>
         imgPic: string
     }>(CurrentSongList)
     const pausePlayback = async () => {
@@ -79,10 +82,25 @@ export function LeftBottom(props: Props) {
             eventBus.off('play-stop', handleStop)
         }
     }, [deviceId])
+    const [currentAlbum, setCurrentAlbum] = useState<any>()
+    useEffect(() => {
+        if (currentSong?.items && currentSong.items[count]?.id) {
+            getPlaysList('tracks', currentSong?.items[count]?.id).then((res) => {
+                setCurrentAlbum(res)
+            })
+        }
+    }, [currentSong])
     return (
         <div className="playing">
             <div className="container">
-                <img loading="lazy" alt="" src={currentSong?.items ? currentSong.imgPic : ''} />
+                <img
+                    loading="lazy"
+                    alt=""
+                    src={currentSong?.items ? currentSong.imgPic : ''}
+                    onClick={() => {
+                        navigate(`/playsList?id=${currentAlbum?.album?.id}&type=albums`)
+                    }}
+                />
                 <div className="track-info">
                     <div
                         className="name"
@@ -94,17 +112,23 @@ export function LeftBottom(props: Props) {
                         {
                             currentSong?.items
                                 ? currentSong.items[count]?.artists.map((item: {
-                                    name: string
-                                }, index: number) => {
-                                    return (
-                                        <span key={index}>
-                                            <span className="ar">
-                                                {item.name}
+                                        name: string
+                                        id: string
+                                    }, index: number) => {
+                                        return (
+                                            <span key={index}>
+                                                <span
+                                                    className="ar"
+                                                    onClick={() => {
+                                                        navigate(`/artist?id=${item.id}`)
+                                                    }}
+                                                >
+                                                    {item.name}
+                                                </span>
+                                                {index !== currentSong.items[count]?.artists.length - 1 && <span>, </span>}
                                             </span>
-                                            {index !== currentSong.items[count]?.artists.length - 1 && <span>, </span>}
-                                        </span>
-                                    )
-                                })
+                                        )
+                                    })
                                 : ''
 
                         }

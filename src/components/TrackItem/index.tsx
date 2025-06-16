@@ -102,10 +102,13 @@ export function TrackItem(props: Props) {
                         <span className="artist-in-line">
                             {track.artists.map((artist: any, index: number) => {
                                 return (
-                                    <a key={index}>
-                                        {artist.name}
+                                    <>
+                                        <a key={index} href={`/artist?id=${artist.id}`}>
+                                            {artist.name}
+
+                                        </a>
                                         {index < track.artists.length - 1 ? ', ' : ''}
-                                    </a>
+                                    </>
                                 )
                             })}
                         </span>

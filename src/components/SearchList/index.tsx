@@ -64,7 +64,7 @@ export function SearchList(props: Props) {
 
                                 </div>
                                 <div className="title">
-                                    <Link to="/" style={{ color: 'white' }}>{item.name}</Link>
+                                    <Link to={`/playsList?id=${item.id}&type=albums`} style={{ color: 'white' }}>{item.name}</Link>
 
                                 </div>
 

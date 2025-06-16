@@ -71,7 +71,7 @@ export function RankingList() {
                                 className="title"
                                 style={{ fontSize: '16px', margin: '0 0' }}
                             >
-                                <Link to="/" style={{ color: 'white' }}>{rankName[index]}</Link>
+                                <Link to={`/playsList?id=${item.playlists.items.filter((item: any) => item !== null)[0].id}&type=playlists`} style={{ color: 'white' }}>{rankName[index]}</Link>
                             </div>
                             <div className="info">
                                 <span>{upDate[index]}</span>

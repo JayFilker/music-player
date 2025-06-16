@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai/index'
 import React, { useEffect, useRef, useState } from 'react'
-import { Device } from '../../store/store' // 你需要创建对应的CSS文件
+import { Device, StopUpdateBar } from '../../store/store' // 你需要创建对应的CSS文件
 import './index.less'
 
 interface PlayerState {
@@ -23,6 +23,7 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer }) => {
     const formatTrackTime = (value: number) => {
         return `${Math.floor(value / 60)}:${String(Math.floor(value % 60)).padStart(2, '0')}`
     }
+    const [, setStopUpdateBar] = useAtom(StopUpdateBar)
     const updateProgressFromClientX = (clientX: number) => {
         if (!sliderRef.current)
             return
@@ -72,6 +73,9 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer }) => {
         const percentage = updateProgressFromClientX(e.clientX)
         if (percentage) {
             seekToPosition(percentage)
+            setTimeout(() => {
+                setStopUpdateBar(false)
+            }, 1000) // 延时1秒恢复更新
         }
         setIsDragging(false)
     }
@@ -94,13 +98,13 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer }) => {
             style={{ padding: '6px 0', width: 'auto', height: '2px' }}
             ref={sliderRef}
             onMouseDown={(e) => {
-                if (!sliderRef.current)
-                    return
-
-                setIsDragging(true)
-                updateProgressFromClientX(e.clientX)
                 // 防止拖动选中文本
                 e.preventDefault()
+                if (!sliderRef.current)
+                    return
+                setStopUpdateBar(true)
+                setIsDragging(true)
+                updateProgressFromClientX(e.clientX)
             }}
 
         >

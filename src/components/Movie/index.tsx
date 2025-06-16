@@ -8,17 +8,19 @@ import './index.less'
 interface Props {
     movie: Array<any>
     keyValue?: string
+    limitNumber?: number
 }
 
 export function Movie(props: Props) {
-    const { movie, keyValue } = props
+    const { movie, keyValue, limitNumber } = props
     // const [, setCurrentMovieAtom] = useAtom(CurrentMovie)
     const navigate = useNavigate()
     const [show, setShow] = useState<Array<any>>([false, false, false, false, false])
     const [movieList, setMovieList] = useState<Array<{ title: string, artist: string, name: string, img?: string }>>([])
     const [currentMovie, setCurrentMovie] = useState<any>([])
     useEffect(() => {
-        const currentMovieDemo = movie?.filter((item: any) => item.title.includes(keyValue))?.filter((_itemDemoTwo: any, index: number) => index < 5) || []
+        const currentMovieDemo = limitNumber !== 0 ? (movie?.filter((item: any) => item.title.includes(keyValue))?.filter((_itemDemoTwo: any, index: number) => index < 5) || []) : (movie?.filter((item: any) => item.title.includes(keyValue)) || [])
+
         setCurrentMovie(currentMovieDemo)
         setMovieList(
             currentMovieDemo.map((item: any) => {

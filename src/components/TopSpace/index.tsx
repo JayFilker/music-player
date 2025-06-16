@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai/index'
 import { useEffect, useRef, useState } from 'react'
-import { Device, IsPlayingDemo, PlayerDemo } from '../../store/store'
+import { Device, IsPlayingDemo, PlayerDemo, StopUpdateBar } from '../../store/store'
 import 'vscode-codicons/dist/codicon.css'
 import './index.less'
 
@@ -11,9 +11,9 @@ export function TopSpace() {
     const [small, setSmall] = useState(false)
     const [deviceId] = useAtom(Device)
     const lastUpdateTimeRef = useRef(Date.now())
-    const [isDragging] = useState(false)
     const [, setPlayer] = useAtom(PlayerDemo)
     const [isPlaying] = useAtom(IsPlayingDemo)
+    const [stopUpdateBar] = useAtom(StopUpdateBar)
     const logo = [
         {
             className: 'button minimize codicon codicon-chrome-minimize',
@@ -40,7 +40,7 @@ export function TopSpace() {
             return
         }
         const data = await response.json()
-        if (data) {
+        if (data && !stopUpdateBar) {
             setPlayer({
                 progress: Math.floor(data.progress_ms / 1000) || 0,
                 currentTrackDuration: Math.floor(data.item?.duration_ms / 1000) || 0,
@@ -53,7 +53,7 @@ export function TopSpace() {
         updatePlayerState()
         lastUpdateTimeRef.current = Date.now()
         const progressInterval = setInterval(() => {
-            if (isPlaying && !isDragging) { // 添加!isDragging条件
+            if (isPlaying) { // 添加!isDragging条件
                 const now = Date.now()
                 const elapsedSec = (now - lastUpdateTimeRef.current) / 1000
                 lastUpdateTimeRef.current = now
@@ -74,7 +74,7 @@ export function TopSpace() {
             clearInterval(progressInterval)
             clearInterval(syncInterval)
         }
-    }, [deviceId, isPlaying])
+    }, [deviceId, isPlaying, stopUpdateBar])
     return (
         <div className="win32-titlebar">
             <div className="title"> MyYesPlayMusic</div>

@@ -10,8 +10,10 @@ interface Props {
         title: string
         imgPic: string
         des: string
+        artists?: any
     }>
     style?: object
+
 }
 
 export function SongList(props: Props) {
@@ -41,10 +43,35 @@ export function SongList(props: Props) {
                                     className="title"
                                     style={{ fontSize: '16px', margin: '0 0' }}
                                 >
-                                    <Link to="/" style={{ color: 'white' }}>{item.title}</Link>
+                                    <Link
+                                        to={`/playsList?id=${(item.id ? item.id : item.playListId) as string}&type=${item.playListId ? 'playlists' : 'albums'}`}
+                                        style={{ color: 'white' }}
+                                    >
+                                        {item.title}
+                                    </Link>
                                 </div>
                                 <div className="info">
-                                    <span>{item.des ? item.des : ''}</span>
+                                    {
+                                        item?.artists
+                                            ? item?.artists.map((artists: any, index: number) => {
+                                                    if (index < item?.artists.length - 1) {
+                                                        return (
+                                                            <>
+                                                                <Link to={`/artist?id=${artists?.id}`}>{artists?.name}</Link>
+                                                                <span>，</span>
+                                                            </>
+                                                        )
+                                                    }
+                                                    else {
+                                                        return (
+                                                            <Link to={`/artist?id=${artists?.id}`}>{artists?.name}</Link>
+                                                        )
+                                                    }
+                                                })
+
+                                            : <span>{item.des ? item.des : ''}</span>
+                                    }
+
                                 </div>
                             </div>
                         </div>

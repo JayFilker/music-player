@@ -6,10 +6,13 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 const FirstPage = lazy(() => import('./Pages/FirstPage/index.tsx'))
 const Discover = lazy(() => import('./Pages/Discover/index.tsx'))
 const Artist = lazy(() => import('./Pages/Artist/index.tsx'))
+const More = lazy(() => import('./Pages/More/index.tsx'))
+const Set = lazy(() => import('./Pages/Set/index.tsx'))
 const PlaysList = lazy(() => import('./Pages/PlaysList/index.tsx'))
 const Login = lazy(() => import('./Pages/Login/index.tsx'))
 const MoviePage = lazy(() => import('./Pages/MoviePage/index.tsx'))
 const Search = lazy(() => import('./Pages/Search/index.tsx'))
+const SearchDemo = lazy(() => import('./Pages/SearchDemo/index.tsx'))
 const CallbackPage = lazy(() => import('./Pages/CallbackPage'))
 // const App2 = lazy(() => import('./apps/swiper/App'))
 // const App3 = lazy(() => import('./apps/axios/App.tsx'))
@@ -28,9 +31,12 @@ export const Router: React.FC = () => {
                 <Route path="/firstpage/*" element={<FirstPage />} />
                 <Route path="/discover/*" element={<Discover />} />
                 <Route path="/login/*" element={<Login />} />
+                <Route path="/more/*" element={<More />} />
+                <Route path="/set/*" element={<Set />} />
                 <Route path="/artist/*" element={<Artist />} />
                 <Route path="/moviePage/*" element={<MoviePage />} />
                 <Route path="/search/*" element={<Search />} />
+                <Route path="/searchDemo/*" element={<SearchDemo />} />
                 <Route path="/playsList*" element={<PlaysList />} />
                 <Route path="/callback/*" element={<CallbackPage />} />
 

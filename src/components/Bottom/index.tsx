@@ -51,18 +51,18 @@ export function Player() {
     }
     const getRefreshToken = async () => {
         const refreshToken = localStorage.getItem('spotify_refresh_token') as string
-        const response = await fetch(`https://musicplayernodejs-production.up.railway.app/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        // const response = await fetch(`http://localhost:3000/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
+        // const response = await fetch(`https://musicplayernodejs-production.up.railway.app/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
         //     method: 'GET',
         //     headers: {
         //         'Content-Type': 'application/json',
         //     },
         // })
+        const response = await fetch(`http://localhost:3000/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
         const data = await response.json()
         localStorage.setItem('spotify_refresh_token', data.refresh_token)
         localStorage.setItem('spotify_access_token', data.access_token)

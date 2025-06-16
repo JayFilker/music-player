@@ -26,7 +26,6 @@ export function ArtistAlbum(props: Props) {
     }, [artist])
     useEffect(() => {
         if (id) {
-            console.log(artist)
             getArtistAlbum(id as string, localStorage.getItem('spotify_access_token') as string, 5).then((data) => {
                 setAlbum(data)
             })
@@ -59,7 +58,7 @@ export function ArtistAlbum(props: Props) {
                                     className="title"
                                     style={{ fontSize: '16px', margin: '0 0' }}
                                 >
-                                    <Link to="/" style={{ color: 'white' }}>{item.name}</Link>
+                                    <Link to={`/playsList?id=${(item.id ? item.id : item.playListId) as string}&type=albums`} style={{ color: 'white' }}>{item.name}</Link>
                                 </div>
                                 <div className="info">
                                     <span>{`Album · ${item.release_date.split('-')[0]}`}</span>

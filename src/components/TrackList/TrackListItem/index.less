@@ -85,6 +85,19 @@
         .container {
             display: flex;
             flex-direction: column;
+            >.title>.featured{
+                >.artist-in-line{
+                    >span{
+                        >a{
+                            text-decoration: none;
+                            color: #fff;
+                        }
+                        >a:hover{
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
             .artist {
             margin-top: 2px;
             font-size: 13px;
@@ -255,5 +268,23 @@
     }
     .album>a{
         color: #335eea;
+    }
+    .title-and-artist {
+        .container {
+            > .title > .featured {
+                > .artist-in-line {
+                    > span {
+                        > a {
+                            text-decoration: none;
+                            color: #335eea;
+                        }
+
+                        > a:hover {
+                            text-decoration: underline;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

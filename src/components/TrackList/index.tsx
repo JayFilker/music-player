@@ -1,23 +1,29 @@
 import { useAtom } from 'jotai'
 import { useEffect } from 'react'
 import { PlayingTrack } from '../../store/store.ts'
+import { TrackListDemo } from './TrackListDemo'
 import { TrackListItem } from './TrackListItem'
 import './index.less'
 
 export function TrackList(props: {
-    songListInfo: any
+    songListInfo?: any
     tracks?: any[]
     itemKey?: string
     highlightPlayingTrack?: boolean
     extraContextMenuItem?: string[]
     songList?: any
+    trackDemo?: any
 }) {
-    const { songListInfo, songList } = props
+    const { songListInfo, songList, trackDemo } = props
     const [playingTrack, setPlayingTrack] = useAtom(PlayingTrack)
     useEffect(() => {
-        setPlayingTrack(Array.from({ length: songList?.items?.length }).fill(false))
-    }, [])
-    // console.log(songListInfo)
+        if (songListInfo) {
+            setPlayingTrack(Array.from({ length: songListInfo?.items?.length }).fill(false))
+        }
+        else if (trackDemo) {
+            setPlayingTrack(Array.from({ length: trackDemo?.items?.length }).fill(false))
+        }
+    }, [songListInfo, trackDemo])
     return (
         <div className="track-list">
             {/*        <ContextMenu ref="menu"> */}
@@ -92,6 +98,19 @@ export function TrackList(props: {
                             setPlayingTrack={setPlayingTrack}
                         >
                         </TrackListItem>
+                    )
+                })}
+                {trackDemo && trackDemo.items?.map((track: any, index: number) => {
+                    return (
+                        <TrackListDemo
+                            key={index}
+                            content={track}
+                            songList={trackDemo}
+                            playingTrack={playingTrack}
+                            index={index}
+                            setPlayingTrack={setPlayingTrack}
+                        >
+                        </TrackListDemo>
                     )
                 })}
 

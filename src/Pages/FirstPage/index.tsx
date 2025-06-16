@@ -58,6 +58,7 @@ export default function FirstPage() {
                         images: Array<any>
                     }) => {
                         return {
+                            des: 'by Apple Music',
                             playListId: item.id,
                             title: item.name,
                             imgPic: item.images[0].url,
@@ -70,7 +71,7 @@ export default function FirstPage() {
             <div className="index-row">
                 <div className="title">
                     推荐歌单
-                    <a href="" className="title-all">查看全部</a>
+                    <a href="/discover?key=推荐歌单" className="title-all">查看全部</a>
                 </div>
                 <SongList
                     songList={contentList[1]?.playlists.items.filter((_itemDemo: any) => _itemDemo !== null).filter((_itemDemo: any, index: number) => index < 12).map((item: {
@@ -113,20 +114,22 @@ export default function FirstPage() {
             <div className="index-row">
                 <div className="title">
                     新专速递
-                    <a href="" className="title-all">查看全部</a>
+                    <a href="/more?key=new" className="title-all">查看全部</a>
                 </div>
                 <SongList
                     songList={contentList[2]?.albums.items.map((item: {
                         id: string
                         name: string
                         images: Array<any>
-                    }, index: number) => {
+                        artists: Array<any>
+                    }) => {
                         return {
                             id: item.id,
                             title: item.name,
-                            des: contentList[2].albums.items[index].name,
+                            des: item?.artists[0]?.name,
                             imgPic: item?.images[0]?.url || defaultImg,
                             content: [],
+                            artists: item?.artists,
                         }
                     })}
                 >
@@ -135,7 +138,7 @@ export default function FirstPage() {
             <div className="index-row">
                 <div className="title">
                     排行榜
-                    <a href="" className="title-all">查看全部</a>
+                    <a href="/discover?key=排行榜" className="title-all">查看全部</a>
                 </div>
                 <RankingList>
                 </RankingList>

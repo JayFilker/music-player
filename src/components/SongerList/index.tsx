@@ -172,7 +172,7 @@ export function SongerList(props: Props) {
                         <div className="text">
                             <div className="title" style={{ fontSize: '16px' }}>
                                 <a
-                                    href="#/artist/12138269"
+                                    href={`/artist?id=${item.id}`}
                                 >
                                     {item.name}
                                 </a>

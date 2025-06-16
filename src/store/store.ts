@@ -46,3 +46,4 @@ export const CurrentMovie = atom<any>()
 export const MovieList = atom<any>([])
 
 export const PlayingTrack = atom(Array.from({ length: 100 }).fill(false))
+export const StopUpdateBar = atom(false)

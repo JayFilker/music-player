@@ -1,6 +1,7 @@
 import { BrowserRouter } from 'react-router-dom'
 // import {FirstPage} from './Pages/FirstPage'
 import { Player } from './components/Bottom'
+// import { Lyrics } from './components/Lyrics'
 import { TopList } from './components/TopList'
 import { Router } from './Router'
 // import { useState } from 'react'
@@ -16,6 +17,7 @@ function App() {
                 </main>
 
                 <Player></Player>
+                {/* <Lyrics></Lyrics> */}
             </div>
         </BrowserRouter>
     )

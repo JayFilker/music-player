@@ -1,5 +1,6 @@
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { getAlbumList } from '../../api/album.ts'
 import { ButtonIconTwo } from '../../components/ButtonIconTwo'
 import { SearchList } from '../../components/SearchList'
@@ -8,6 +9,7 @@ import { AlbumList } from '../../store/store.ts'
 import './index.less'
 
 export default function Discover() {
+    const [searchParams] = useSearchParams()
     const [showSmallKey, setShowSmallKey] = useState(false)
     const [searchKey, setSearchKey] = useState(['全部', '推荐歌单', '精品歌单', '官方', '排行榜', '欧美', '流行', '摇滚', '电子', '说唱', 'ACG'])
     const smallSearchKey = [{ mainType: '语种', content: ['华语', '欧美', '日语', '韩语', '粤语'] }, {
@@ -27,7 +29,7 @@ export default function Discover() {
 
     async function fetchProfile(key: string, offset: number): Promise<any> {
         const token = localStorage.getItem('spotify_access_token')
-        const json = await getAlbumList(token, key, offset)
+        const json = await getAlbumList(token, key === '推荐歌单' ? 'recommend' : key, offset)
         if (offset === 0) {
             setAlbumList(json)
         }
@@ -48,9 +50,33 @@ export default function Discover() {
 
     const [currentKey, setCurrentKey] = useState('\'\'')
     const [currentNumber, setCurrentNumber] = useState(0)
+    const location = useLocation()
     useEffect(() => {
-        fetchProfile(currentKey, currentNumber)
-    }, [])
+        const keyFromUrl = searchParams.get('key')
+        if (keyFromUrl && searchKey.includes(keyFromUrl)) {
+            // 直接设置当前key并执行对应逻辑
+            setShowSmallKey(false)
+            document.querySelectorAll('.button.active').forEach((el) => {
+                el.classList.remove('active')
+            })
+            fetchProfile(keyFromUrl, 0)
+            setCurrentNumber(0)
+            setCurrentKey(keyFromUrl)
+
+            // 延迟一帧后设置active类
+            const index = searchKey.findIndex(item => item === keyFromUrl)
+            const buttons = document.querySelectorAll('.buttons>.button')
+            if (buttons[index]) {
+                console.log(buttons[index])
+                buttons[index].classList.add('active')
+            }
+        }
+        else {
+            fetchProfile('\'\'', 0)
+            setCurrentNumber(0)
+            setCurrentKey('\'\'')
+        }
+    }, [location])
 
     // console.log(albumList)
     return (

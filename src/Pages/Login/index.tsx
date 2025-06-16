@@ -86,13 +86,6 @@ export default function Login() {
                                         handleOnFocus(0)
                                     }}
                                 />
-                                {/* v-model="countryCode"                       */}
-                                {/* :placeholder=" */}
-                                {/* inputFocus === 'countryCode' ? '' : $t('login.countryCode') */}
-                                {/* " */}
-                                {/* @focus="inputFocus = 'countryCode'" */}
-                                {/* @blur="inputFocus = ''" */}
-                                {/* @keyup.enter="login" */}
                                 <input
                                     id="phoneNumber"
                                     placeholder={focus[0].name}
@@ -106,15 +99,9 @@ export default function Login() {
                                         handleOnFocus(0)
                                     }}
                                 />
-                                {/* v-model="phoneNumber" */}
-                                {/* :placeholder="inputFocus === 'phone' ? '' : $t('login.phone')" */}
-                                {/* @focus="inputFocus = 'phone'" */}
-                                {/* @blur="inputFocus = ''" */}
-                                {/* @keyup.enter="login" */}
                             </div>
                         </div>
                     </div>
-
                     <div className="input-box" style={{ display: show[1].state ? 'none' : '' }}>
                         <div className={`container ${focus[1].show ? 'active' : ''}`}>
                             <SvgIcon>
@@ -148,10 +135,6 @@ export default function Login() {
                                         handleOnFocus(1)
                                     }}
                                 />
-                                {/* :placeholder="inputFocus === 'email' ? '' : $t('login.email')" */}
-                                {/* @focus="inputFocus = 'email'" */}
-                                {/* @blur="inputFocus = ''" */}
-                                {/* @keyup.enter="login" */}
                             </div>
                         </div>
                     </div>
@@ -177,7 +160,6 @@ export default function Login() {
                             <div className="inputs">
                                 <input
                                     id="password"
-
                                     type="password"
                                     placeholder={focus[2].name}
                                     onChange={(e) => {
@@ -190,17 +172,9 @@ export default function Login() {
                                         handleOnFocus(2)
                                     }}
                                 />
-                                {/* v-model="password"  */}
-                                {/* :placeholder=" */}
-                                {/* inputFocus === 'password' ? '' : $t('login.password') */}
-                                {/* " */}
-                                {/* @focus="inputFocus = 'password'" */}
-                                {/* @blur="inputFocus = ''" */}
-                                {/* @keyup.enter="login" */}
                             </div>
                         </div>
                     </div>
-                    t
                     <div style={{ display: show[2].state ? 'none' : '' }}>
                         <div className="qr-code-container">
                             <img
@@ -258,10 +232,7 @@ export default function Login() {
                         )
                     })}
                 </div>
-                <div
-                    className="notice"
-                    style={{ display: 'none' }}
-                >
+                <div className="notice" style={{ display: 'none' }}>
                 </div>
             </div>
         </div>

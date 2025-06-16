@@ -9,7 +9,6 @@ import './index.less'
 export function TrackListItem(track: any) {
     const { content, playingTrack, index, setPlayingTrack, songList } = track
     const [searchParams] = useSearchParams()
-    const [show] = useState(searchParams.get('type') === 'playlists')
     const [showIcon, setShowIcon] = useState(false)
     const [showRow, setShowRow] = useState(false)
     // const [, setCount] = useAtom(CountDemo)
@@ -20,7 +19,7 @@ export function TrackListItem(track: any) {
     }
     return (
         <div
-            className={`track ${show ? 'playlist' : 'album'} ${showRow ? 'focus' : ''} ${playingTrack[index] ? 'playing' : ''}`}
+            className={`track ${searchParams.get('type') === 'playlists' ? 'playlist' : 'album'} ${showRow ? 'focus' : ''} ${playingTrack[index] ? 'playing' : ''}`}
             onMouseEnter={() => {
                 setShowIcon(true)
                 setShowRow(true)
@@ -45,8 +44,8 @@ export function TrackListItem(track: any) {
             {searchParams.get('type') === 'playlists'
                 ? (
                         <img
-                            src={content?.track.album.images[0].url}
-                            style={{ display: show ? '' : 'none' }}
+                            src={content?.track?.album?.images[0]?.url}
+                            style={{ display: searchParams.get('type') === 'playlists' ? '' : 'none' }}
                             loading="lazy"
                             alt=""
                         />
@@ -54,7 +53,7 @@ export function TrackListItem(track: any) {
                 : ''}
             <div
                 className="no"
-                style={{ display: show ? 'none' : '' }}
+                style={{ display: searchParams.get('type') === 'playlists' ? 'none' : '' }}
             >
                 <button
                     style={
@@ -118,16 +117,31 @@ export function TrackListItem(track: any) {
             <div className="title-and-artist">
                 <div className="container" style={{ alignItems: 'normal' }}>
                     <div className="title">
-                        {searchParams.get('type') === 'playlists' ? content?.track.name : content?.name}
+                        {searchParams.get('type') === 'playlists' ? content?.track?.name : content?.name}
                         {/* <span className="sub-title"> */}
                         {/*    25 */}
                         {/* </span> */}
 
-                        <span v-if="isAlbum" className="featured">
+                        {searchParams.get('type') !== 'playlists'
+                            ? (
+                                    <span className="featured">
+                                        <span className="artist-in-line">
+                                            -
+                                            {content?.artists?.map((track: any, index: number) => (
 
-                        </span>
+                                                <span>
+                                                    <a href={`/artist?id=${track.id}`}>
+                                                        {track.name}
+                                                    </a>
+                                                    {index < content?.artists.length - 1
+                                                        && <span className="separator">，</span>}
+                                                </span>
+                                            ))}
+                                        </span>
+                                    </span>
+                                )
+                            : ''}
                         <span
-                            v-if="isAlbum && (track.mark & 1048576) === 1048576"
                             className="explicit-symbol"
                         >
                         </span>
@@ -144,11 +158,13 @@ export function TrackListItem(track: any) {
                                         {/* /> */}
                                         <span className="artist-in-line">
                                             {' '}
-                                            {content?.track.artists.map((track: any, index: number) => (
+                                            {content?.track?.artists.map((track: any, index: number) => (
 
                                                 <span>
-                                                    <a>{track.name}</a>
-                                                    {index < content?.track.artists.length - 1
+                                                    <a href={`/artist?id=${track.id}`}>
+                                                        {track.name}
+                                                    </a>
+                                                    {index < content?.track?.artists.length - 1
                                                         && <span className="separator">，</span>}
                                                 </span>
                                             ))}
@@ -168,9 +184,9 @@ export function TrackListItem(track: any) {
                             <div
                                 v-if="showAlbumName"
                                 className="album"
-                                style={{ display: show ? '' : 'none' }}
+                                style={{ display: searchParams.get('type') === 'playlists' ? '' : 'none' }}
                             >
-                                <Link to="./firstPage">{content?.track.album.name}</Link>
+                                <Link to={`/playsList?id=${content?.track?.album?.id}&type=albums`}>{content?.track?.album?.name}</Link>
                                 {/*    <router-link v-if="album && album.id" :to="`/album/${album.id}`">{{ */}
                                 {/*    album.name */}
                                 {/* }}</router-link> */}
@@ -191,29 +207,13 @@ export function TrackListItem(track: any) {
                             </path>
                         </svg>
                     </SvgIcon>
-                    {/*    <svg-icon */}
-                    {/*        icon-class="heart" */}
-                    {/*    :style="{ */}
-                    {/*    visibility: focus && !isLiked ? 'visible' : 'hidden', */}
-                    {/* }" */}
-                    {/*    ></svg-icon> */}
-                    {/* <svg-icon v-show="isLiked" icon-class="heart-solid"></svg-icon> */}
                 </button>
             </div>
             <div v-if="showTrackTime" className="time">
                 {/* {{ track.dt | formatTime }} */}
-                {searchParams.get('type') === 'playlists' ? msToMinutes(content?.track.duration_ms) : msToMinutes(content?.duration_ms)}
+                {searchParams.get('type') === 'playlists' ? msToMinutes(content?.track?.duration_ms) : msToMinutes(content?.duration_ms)}
                 {/* 2duration_ms */}
             </div>
-
-            {/* <div v-if="track.playCount" className="count"> */
-            }
-            {/*    /!* {{ track.playCount }} *!/ */
-            }
-            {/*    2 */
-            }
-            {/* </div> */
-            }
         </div>
     )
 }

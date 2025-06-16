@@ -46,7 +46,6 @@ export async function getArtistAlbums(id: any, token: any) {
     const response = await axios.get(
         `https://api.spotify.com/v1/artists/${id}/albums`,
         {
-            method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json',
