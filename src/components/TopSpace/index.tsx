@@ -69,7 +69,7 @@ export function TopSpace() {
                 lastUpdateTimeRef.current = Date.now()
                 updatePlayerState()
             }
-        }, 5000)
+        }, 1000)
         return () => {
             clearInterval(progressInterval)
             clearInterval(syncInterval)
