@@ -1,20 +1,16 @@
 import type { SpotifyPlayer } from '../../types/spotify'
 import { useAtom } from 'jotai'
-import { useEffect, useRef, useState } from 'react'
-import { CountDemo, CurrentSongList, Device, IsPlayingDemo, PlayerDemo } from '../../store/store.ts'
-import { CustomSlider } from '../Bar'
-import { LeftBottom } from './LeftBottom'
-import { MiddleControlButtons } from './MiddleControlButtons'
-import { RightControlButtons } from './RightControlButtons'
+import { useEffect, useState } from 'react'
+import { CountDemo, CurrentSongList, Device, IsPlayingDemo, MusicList, PlayerDemo } from '../../store/store.ts'
+import { Middle } from './Middle'
 import '../../assets/css/slider.css'
 import './index.less'
 
-export function Player() {
-    const [musicList, setMusicList] = useState([true, true, true, true])
+export function Player(props: any) {
+    const { lyrics } = props
+    const [musicList] = useAtom(MusicList)
     const [count, setCount] = useAtom(CountDemo)
-    const [player, setPlayer] = useAtom(PlayerDemo)
-    const [volume, setVolume] = useState(0.7) // 默认音量0.5
-    const audioRef = useRef<HTMLAudioElement | null>(null)
+    const [player] = useAtom(PlayerDemo)
     const [, setIsPlaying] = useAtom(IsPlayingDemo)
     const [currentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
     const [playerSdk, setPlayerSdk] = useState<SpotifyPlayer | null>(null)
@@ -25,23 +21,17 @@ export function Player() {
         if (!deviceId) {
             return '失败'
         }
-        try {
-            setIsPlaying(true)
-            await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${getToken()}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    uris: [trackUri],
-                }),
-            })
-            console.log('现在播放:', trackUri)
-        }
-        catch (error) {
-            console.error('播放失败:', error)
-        }
+        setIsPlaying(true)
+        await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${getToken()}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                uris: [trackUri],
+            }),
+        })
     }
     const reconnectSdk = () => {
         if (playerSdk) {
@@ -51,18 +41,18 @@ export function Player() {
     }
     const getRefreshToken = async () => {
         const refreshToken = localStorage.getItem('spotify_refresh_token') as string
-        // const response = await fetch(`https://musicplayernodejs-production.up.railway.app/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
-        //     method: 'GET',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     },
-        // })
-        const response = await fetch(`http://localhost:3000/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
+        const response = await fetch(`https://musicplayernodejs-production.up.railway.app/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
         })
+        // const response = await fetch(`http://localhost:3000/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
+        //     method: 'GET',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //     },
+        // })
         const data = await response.json()
         localStorage.setItem('spotify_refresh_token', data.refresh_token)
         localStorage.setItem('spotify_access_token', data.access_token)
@@ -70,13 +60,13 @@ export function Player() {
     useEffect(() => {
         if ((player.currentTrackDuration - player.progress < 1) && (Date.now() - prevTime > 1000)) {
             setPrevTime(Date.now())
-            if (!musicList[1]) {
-                playTrack(currentSong.items[count].uri)
-            }
-            else if (!musicList[2]) {
+            if (!musicList[2]) {
                 const randomIndex = Math.floor(Math.random() * currentSong.items.length)
                 setCount(randomIndex)
                 playTrack(currentSong.items[randomIndex].uri)
+            }
+            else if (!musicList[1]) {
+                playTrack(currentSong.items[count].uri)
             }
             else {
                 if (count !== currentSong.items.length - 1) {
@@ -141,29 +131,6 @@ export function Player() {
         }
     }, [])
     return (
-        <div className="player">
-            <audio ref={audioRef} />
-            <div
-                className="progress-bar"
-            >
-                <CustomSlider
-                    player={player}
-                    setPlayer={setPlayer}
-                />
-            </div>
-            <div className="controls">
-                <LeftBottom playTrack={playTrack}></LeftBottom>
-                <MiddleControlButtons>
-                </MiddleControlButtons>
-                <RightControlButtons
-                    audioRef={audioRef.current}
-                    volume={volume}
-                    setVolume={setVolume}
-                    musicList={musicList}
-                    setMusicList={setMusicList}
-                >
-                </RightControlButtons>
-            </div>
-        </div>
+        <Middle lyrics={lyrics} playTrack={playTrack}></Middle>
     )
 }

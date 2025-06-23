@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { getPlaysList, internalInit } from '../../api/check.ts'
 import { ArtistAlbum } from '../../components/ArtistAlbum'
@@ -13,6 +14,7 @@ export default function PlaysList() {
     const [twoShow, setTowShow] = useState(false)
     const [showShade, setShowShade] = useState(false)
     const [demo, setDemo] = useState<any>()
+    const { t } = useTranslation()
     useEffect(() => {
         const type = searchParams.get('type')
         const id = searchParams.get('id')
@@ -54,7 +56,6 @@ export default function PlaysList() {
         document.addEventListener('click', handleClickOutside)
         return () => document.removeEventListener('click', handleClickOutside)
     }, [twoShow])
-
     return (
         <div className={`playlist ${searchParams.get('type') !== 'playlists' ? 'album-page' : ''}`}>
             <PlayListInfo
@@ -81,7 +82,7 @@ export default function PlaysList() {
             <div className="extra-info" style={{ display: searchParams.get('type') === 'playlists' ? 'none' : '' }}>
                 <div className="album-time"></div>
                 <div className="release-date" style={{ color: '#fff' }}>
-                    发行于
+                    {t('发行于')}
                     {songList?.release_date?.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1年$2月$3日')}
                 </div>
             </div>

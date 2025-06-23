@@ -10,7 +10,7 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    color: #fff;
+    color: var(--color-text);
 
     .modal {
         //background: rgba(255, 255, 255, 0.78);
@@ -46,7 +46,7 @@
 
     @supports (-moz-appearance: none) {
         .modal {
-            background: #222 !important;
+            background: var(--color-body-bg) !important;
         }
     }
 
@@ -68,7 +68,7 @@
         }
 
         button {
-            color: #fff;
+            color: var(--color-text);
             border-radius: 50%;
             height: 32px;
             width: 32px;
@@ -99,7 +99,7 @@
         margin-bottom: -8px;
 
         button {
-            color: #fff;
+            color: var(--color-text);
             background: hsla(0, 0%, 100%, 0.08);
             border-radius: 8px;
             padding: 6px 16px;
@@ -113,8 +113,8 @@
         }
 
         button.primary {
-            color: #bbcdff;
-            background: #335eea;
+            color: var(--color-primary-bg);
+            background: var(--color-primary);
             font-weight: 500;
         }
 
@@ -131,7 +131,7 @@
     [data-theme='dark'] {
         .shade {
             background: rgba(0, 0, 0, 0.38);
-            color: #fff;
+            color: var(--color-text);
         }
 
         .modal {

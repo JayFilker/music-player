@@ -7,12 +7,8 @@ import '../SongList/index.less'
 interface Props {
     songList: Array<{
         id: string
-        // number?: number
-        // title: string
-        // imgPic: string
         images: Array<{ url: string }>
         name: string
-        // des: string
     }>
 }
 
@@ -73,7 +69,6 @@ export function SearchList(props: Props) {
                     )
                 })
             }
-
         </div>
     )
 }

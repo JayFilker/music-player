@@ -1,8 +1,6 @@
-import axios from 'axios'
-// import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-// import { CurrentMovie } from '../../store/store.ts'
+import { getMovieImg } from '../../api/movie.ts'
 import './index.less'
 
 interface Props {
@@ -13,7 +11,6 @@ interface Props {
 
 export function Movie(props: Props) {
     const { movie, keyValue, limitNumber } = props
-    // const [, setCurrentMovieAtom] = useAtom(CurrentMovie)
     const navigate = useNavigate()
     const [show, setShow] = useState<Array<any>>([false, false, false, false, false])
     const [movieList, setMovieList] = useState<Array<{ title: string, artist: string, name: string, img?: string }>>([])
@@ -30,11 +27,9 @@ export function Movie(props: Props) {
     }, [movie, keyValue])
     const [img, setImg] = useState<Array<any>>([])
     useEffect(() => {
-        const response = async () => {
-            const responseDemo = await axios.get(`http://localhost:3000/api/imgs`)
-            setImg(responseDemo.data.videos)
-        }
-        response()
+        getMovieImg().then((res) => {
+            setImg(res)
+        })
     }, [currentMovie])
     useEffect(() => {
         // 如果任一数据为空，直接返回
@@ -84,15 +79,9 @@ export function Movie(props: Props) {
                             onMouseEnter={() => setShow(show.map((item, i) => i === index ? true : item))}
                             onMouseLeave={() => setShow(show.map((item, i) => i === index ? false : item))}
                             onClick={() => {
-                                // setCurrentMovieAtom({
-                                //     ...mv,
-                                //     name: movieList[index].title,
-                                //     artist: movieList[index].artist,
-                                // })
                                 navigate(`/moviePage?q=${keyValue || ''}&title=${mv.title}`)
                             }}
                         />
-                        {/* <transition name="fade"> */}
                         <div
                             className="shadow"
                             style={{
@@ -105,28 +94,13 @@ export function Movie(props: Props) {
                         <div className="title">
                             <Link
                                 to={`/moviePage?q=${keyValue || ''}&title=${mv.title}`}
-                                onClick={() => {
-                                    // setCurrentMovieAtom({
-                                    //     ...mv,
-                                    //     name: movieList[index].title,
-                                    //     artist: movieList[index].artist,
-                                    // })
-                                }}
                             >
                                 {movieList ? movieList[index].title : ''}
                             </Link>
-                            {/* <router-link :to="'/mv/' + getID(mv)">{{ getTitle(mv) }}</router-link> */}
                         </div>
                         <div className="artist">
                             <Link
                                 to={`/moviePage?q=${keyValue || ''}&title=${mv.title}`}
-                                onClick={() => {
-                                    // setCurrentMovieAtom({
-                                    //     ...mv,
-                                    //     name: movieList[index].title,
-                                    //     artist: movieList[index].artist,
-                                    // })
-                                }}
                             >
                                 {movieList ? movieList[index].artist : ''}
                             </Link>
@@ -134,7 +108,6 @@ export function Movie(props: Props) {
                     </div>
                 </div>
             ))}
-
         </div>
     )
 }

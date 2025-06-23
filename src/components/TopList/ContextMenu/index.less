@@ -34,13 +34,13 @@
         box-shadow: 0 0 6px rgba(255, 255, 255, 0.08);
     }
     .menu .item:hover {
-        color: #fff;
+        color: var(--color-text);
     }
 }
 
 @supports (-moz-appearance: none) {
     .menu {
-        background-color: #222 !important;
+        background-color: var(--color-body-bg) !important;
     }
 }
 
@@ -50,12 +50,12 @@
     padding: 10px 14px;
     border-radius: 8px;
     cursor: default;
-    color: #fff;
+    color: var(--color-text);
     display: flex;
     align-items: center;
     &:hover {
-        color:  #fff;
-        background: hsla(0,0%,100%,0.12);
+        color:  var(--color-text);
+        background: var(--color-primary-bg-for-transparent);
         transition: opacity 125ms ease-out, transform 125ms ease-out;
     }
     &:active {
@@ -82,7 +82,7 @@ hr {
     padding: 10px 10px;
     display: flex;
     align-items: center;
-    color: hsla(0,0%,100%,0.12);
+    color: var(--color-primary-bg-for-transparent);
     cursor: default;
     img {
         height: 38px;

@@ -12,9 +12,10 @@ interface SliderProps {
     player: PlayerState
     setPlayer: (player: PlayerState) => void
     audioRef?: HTMLAudioElement | null
+    lyrics?: boolean
 }
 
-export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer }) => {
+export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, lyrics }) => {
     const [isDragging, setIsDragging] = useState(false)
     const [showTooltip, setShowTooltip] = useState(false)
     const sliderRef = useRef<HTMLDivElement>(null)
@@ -95,7 +96,7 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer }) => {
     return (
         <div
             className="vue-slider vue-slider-ltr"
-            style={{ padding: '6px 0', width: 'auto', height: '2px' }}
+            style={{ padding: '6px 0', width: lyrics ? '80%' : 'auto', height: '2px' }}
             ref={sliderRef}
             onMouseDown={(e) => {
                 // 防止拖动选中文本

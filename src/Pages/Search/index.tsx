@@ -1,6 +1,7 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
+import { getMusic } from '../../api/movie.ts'
 import { fetchProfile } from '../../api/search'
 import { Movie } from '../../components/Movie'
 import { SongerList } from '../../components/SongerList'
@@ -13,11 +14,7 @@ export default function Search() {
     const [searchParams] = useSearchParams()
     const [content, setContent] = useState<any>()
     const [movie, setMovie] = useState<any>()
-
-    async function getMusic() {
-        const response = await axios.get(`http://localhost:3000/api/videos`)
-        setMovie(response.data.videos)
-    }
+    const { t } = useTranslation()
 
     useEffect(() => {
         const currentQuery = searchParams.get('q') || ''
@@ -31,15 +28,20 @@ export default function Search() {
             }
         }
         a()
-        getMusic()
+        getMusic().then((res) => {
+            setMovie(res)
+        })
     }, [searchParams])
     return (
         <div className="search-page">
             <div className="row">
                 <div className="artists">
                     <div className="section-title">
-                        艺人
-                        <Link to={`/searchDemo?type=artist&key=${searchParams.get('q')}`}>查看全部</Link>
+                        {t('艺人')}
+                        <Link to={`/searchDemo?type=artist&key=${searchParams.get('q')}`}>
+                            {' '}
+                            {t('查看全部')}
+                        </Link>
                     </div>
                     <SongerList
                         gap="34px 24px"
@@ -60,8 +62,8 @@ export default function Search() {
 
                 <div className="albums">
                     <div className="section-title">
-                        专辑
-                        <Link to={`/searchDemo?type=album&key=${searchParams.get('q')}`}>查看全部</Link>
+                        {t('专辑')}
+                        <Link to={`/searchDemo?type=album&key=${searchParams.get('q')}`}>{t('查看全部')}</Link>
                     </div>
                     <SongList
                         style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '34px 24px' }}
@@ -86,24 +88,24 @@ export default function Search() {
 
             <div className="tracks">
                 <div className="section-title">
-                    歌曲
-                    <Link to={`/searchDemo?type=track&key=${searchParams.get('q')}`}>查看全部</Link>
+                    {t('歌曲')}
+                    <Link to={`/searchDemo?type=track&key=${searchParams.get('q')}`}>{t('查看全部')}</Link>
                 </div>
                 <Track tracks={content?.tracks}></Track>
             </div>
 
             <div className="music-videos">
                 <div className="section-title">
-                    视频
-                    <Link to={`/searchDemo?type=movie&key=${searchParams.get('q')}`}>查看全部</Link>
+                    {t('视频')}
+                    <Link to={`/searchDemo?type=movie&key=${searchParams.get('q')}`}>{t('查看全部')}</Link>
                 </div>
                 <Movie movie={movie} keyValue={searchParams.get('q') || ''}></Movie>
             </div>
 
             <div className="playlists">
                 <div className="section-title">
-                    歌单
-                    <Link to={`/searchDemo?type=playlist&key=${searchParams.get('q')}`}>查看全部</Link>
+                    {t('歌单')}
+                    <Link to={`/searchDemo?type=playlist&key=${searchParams.get('q')}`}>{t('查看全部')}</Link>
                 </div>
                 <SongList
                     style={{ gridTemplateColumns: 'repeat(6, 1fr)', gap: '34px 24px' }}

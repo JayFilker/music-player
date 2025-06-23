@@ -1,5 +1,6 @@
 import { useAtom } from 'jotai/index'
 import { useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import defaultImg from '../../../assets/img/default.png'
 import { SongListImg } from '../../../components/SongListImg'
 import { SvgIcon } from '../../../components/SvgIcon'
@@ -24,7 +25,7 @@ export function PlayListInfo(props: any) {
     const inputRef = useRef<HTMLInputElement>(null)
     const [playingTrack, setPlayingTrack] = useAtom(PlayingTrack)
     const list = ['保存到音乐库', '歌单内搜索']
-
+    const { t } = useTranslation()
     function handleFocusInput() {
         if (inputRef.current) {
             setTimeout(() => {
@@ -59,15 +60,15 @@ export function PlayListInfo(props: any) {
                                 </a>
                             )
                         : songList?.artists?.map((item: any, index: number) => {
-                                return (
-                                    <>
-                                        <a target="blank" href={`/artist?id=${item.id}`}>{item.name}</a>
-                                        {
-                                            index < songList.artists.length - 1 && ', '
-                                        }
-                                    </>
-                                )
-                            })}
+                            return (
+                                <>
+                                    <a target="blank" href={`/artist?id=${item.id}`}>{item.name}</a>
+                                    {
+                                        index < songList.artists.length - 1 && ', '
+                                    }
+                                </>
+                            )
+                        })}
                 </div>
                 <div className="date-and-count">
                     {searchParams.get('type') === 'playlists'
@@ -75,15 +76,15 @@ export function PlayListInfo(props: any) {
                         : ''}
                     {searchParams.get('type') === 'playlists'
                         ? songList?.tracks.items[songList?.tracks.items.length - 1].added_at?.split('T')[0].split('-').map((part: any, index: number) => {
-                                const units = ['年', '月', '日']
-                                return part ? `${part}${units[index] || ''}` : ''
-                            }).join('')
+                            const units = ['年', '月', '日']
+                            return part ? `${part}${units[index] || ''}` : ''
+                        }).join('')
                         : songList?.release_date?.split('-')[0]}
 
                     {' · '}
                     {songList?.tracks.items.length}
-                    首歌
-                    {songList?.time ? `,${songList?.time} 分钟` : ''}
+                    {t('首歌')}
+                    {songList?.time ? `,${songList?.time} ${t('分钟')}` : ''}
                 </div>
                 <div
                     className="description"
@@ -112,7 +113,7 @@ export function PlayListInfo(props: any) {
                         <SvgIcon sty={{ marginRight: '8px' }}>
                             {playListSvg.play}
                         </SvgIcon>
-                        {' 播放 '}
+                        { ` ${t('播放')} ` }
                     </button>
                     <button className="grey" style={{ borderRadius: '8px', padding: '8px 0px', width: 'auto' }}>
                         <SvgIcon sty={{ marginRight: '0px' }}>
@@ -154,7 +155,7 @@ export function PlayListInfo(props: any) {
                     <div className="input">
                         <input
                             ref={inputRef}
-                            placeholder={inputFocus ? '' : '搜索歌单音乐'}
+                            placeholder={inputFocus ? '' : t('搜索歌单音乐')}
                             onFocus={() => {
                                 setInputFocus(true)
                             }}

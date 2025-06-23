@@ -21,8 +21,6 @@ export function ArtistAlbum(props: Props) {
                 setId(data.artists.items[0].id)
             })
         }
-
-        // const albums = getArtistAlbums(id, token as string)
     }, [artist])
     useEffect(() => {
         if (id) {
@@ -68,7 +66,6 @@ export function ArtistAlbum(props: Props) {
                     )
                 })
             }
-
         </div>
     )
 }

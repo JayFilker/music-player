@@ -15,7 +15,6 @@ export function TrackListDemo(track: any) {
     const [, setCurrentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
     const [, setFirstPlay] = useAtom(FirstPlay)
     const [showRow, setShowRow] = useState(false)
-    // const [, setCount] = useAtom(CountDemo)
     const msToMinutes = (ms: number): string => {
         const minutes = Math.floor(ms / 60000)
         const seconds = Math.floor((ms % 60000) / 1000)
@@ -25,7 +24,7 @@ export function TrackListDemo(track: any) {
         setCount(count)
         setCurrentSong({
             ...songList,
-            imgPic: content?.album?.images[0].url,
+            imgPic: content?.album?.images?.[0]?.url || songList?.imgPic,
         })
         setFirstPlay(false)
         // @ts-ignore
@@ -63,7 +62,7 @@ export function TrackListDemo(track: any) {
         >
 
             <img
-                src={content?.album.images[0].url}
+                src={content?.album?.images?.[0].url || songList?.imgPic}
                 loading="lazy"
                 alt=""
             />
@@ -71,26 +70,16 @@ export function TrackListDemo(track: any) {
                 <div className="container" style={{ alignItems: 'normal' }}>
                     <div className="title">
                         {content?.name}
-                        {/* <span className="sub-title"> */}
-                        {/*    25 */}
-                        {/* </span> */}
-
                         <span className="featured">
-
                         </span>
-                        <span
-                            className="explicit-symbol"
-                        >
+                        <span className="explicit-symbol">
                         </span>
-
                     </div>
                     <div className="artist">
                         <span
                             className="explicit-symbol before-artist"
                             style={{ opacity: '0.88' }}
                         >
-                            {/*    <ExplicitSymbol :size="15" */}
-                            {/* /> */}
                             <span className="artist-in-line">
                                 {' '}
                                 {content?.artists.map((track: any, index: number) => (
@@ -105,19 +94,14 @@ export function TrackListDemo(track: any) {
                                 ))}
                             </span>
                         </span>
-                        {/* <ArtistsInLine :artists="artists" /> */}
                     </div>
                 </div>
                 <div></div>
             </div>
-
-            <div
-                className="album"
-            >
-                <a href={`/playsList?id=${content?.album.id}&type=albums`}>{content?.album.name}</a>
+            <div className="album">
+                <a href={`/playsList?id=${content?.album?.id}&type=albums`}>{content?.album?.name}</a>
                 <div></div>
             </div>
-
             <div v-if="showLikeButton" className="actions">
                 <button style={{ display: showIcon ? 'block' : 'none' }}>
                     <SvgIcon>
@@ -132,9 +116,7 @@ export function TrackListDemo(track: any) {
                 </button>
             </div>
             <div v-if="showTrackTime" className="time">
-                {/* {{ track.dt | formatTime }} */}
                 {msToMinutes(content?.duration_ms)}
-                {/* 2duration_ms */}
             </div>
         </div>
     )

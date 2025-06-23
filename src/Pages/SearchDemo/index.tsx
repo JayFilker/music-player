@@ -1,6 +1,8 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
+import { getMusic } from '../../api/movie.ts'
+import { getContent } from '../../api/searchDemo.ts'
 import defaultImg from '../../assets/img/default.png'
 import { ButtonIconTwo } from '../../components/ButtonIconTwo'
 import { Movie } from '../../components/Movie'
@@ -17,23 +19,7 @@ export default function SearchDemo() {
     const [contentList, setContentList] = useState<any>()
     const [title, setTitle] = useState<any>()
     const [currentNumber, setCurrentNumber] = useState(0)
-
-    async function getMusic() {
-        const response = await axios.get(`http://localhost:3000/api/videos`)
-        // return response.data.videos
-        setMovie(response.data.videos)
-    }
-
-    async function getContent(type: string, key: string, token: string, offset?: number) {
-        const result = await axios.get(`https://api.spotify.com/v1/search?q=${encodeURIComponent(key)}&type=${type}&limit=50&offset=${offset || 0}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-
-        })
-        return result.data
-    }
+    const { t } = useTranslation()
 
     useEffect(() => {
         const demo = async () => {
@@ -43,7 +29,9 @@ export default function SearchDemo() {
                     setContentList(await getContent(searchParams.get('type') as string, searchParams.get('key') as string, tokenOne as string))
                 }
                 else {
-                    getMusic()
+                    getMusic().then((res) => {
+                        setMovie(res)
+                    })
                 }
             }
         }
@@ -53,13 +41,15 @@ export default function SearchDemo() {
         <div className="search">
             <h1>
                 <span>
-                    {`搜索 ${title} `}
+                    {t(`搜索`)}
+                    {' '}
+                    {t(title)}
+
                 </span>
                 "
                 {searchParams.get('key')}
                 "
             </h1>
-
             <div style={{ display: searchParams.get('type') === 'artist' ? '' : 'none' }}>
                 <SongerList
                     artist={
@@ -117,7 +107,6 @@ export default function SearchDemo() {
                 >
                 </SongList>
             </div>
-
             <div className="load-more">
                 <ButtonIconTwo
                     color="grey"

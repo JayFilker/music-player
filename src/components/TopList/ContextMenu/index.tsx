@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { SvgIcon } from '../../SvgIcon'
 import { svgList } from './svg.tsx'
@@ -12,6 +13,7 @@ export function ContextMenu({ style, setShow, list, setShowSearch, showSearch, i
     inputfocus?: () => void
 }) {
     const navigate = useNavigate()
+    const { t } = useTranslation()
     return (
         <div className="context-menu" style={{ width: '100px' }}>
             <div
@@ -33,7 +35,7 @@ export function ContextMenu({ style, setShow, list, setShowSearch, showSearch, i
                                             }
                                         }}
                                     >
-                                        {item}
+                                        {t(item)}
                                     </div>
                                 )
                             })
@@ -54,7 +56,7 @@ export function ContextMenu({ style, setShow, list, setShowSearch, showSearch, i
                                     <SvgIcon>
                                         {item.svg}
                                     </SvgIcon>
-                                    {item.name}
+                                    {t(item.name)}
                                 </div>
                             ))
                 }

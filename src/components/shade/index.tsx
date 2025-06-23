@@ -46,17 +46,10 @@ export function Shade(props: {
                             </svg>
                         </SvgIcon>
                     </button>
-
-                    {/*    < svg - icon */}
-                    {/* icon - class = 'x' */}
-                    {/*    / > */}
                 </div>
                 <div className="content">
                     <slot>{description}</slot>
                 </div>
-                {/* <div className="footer"> */}
-                {/*    <slot name="footer"></slot> */}
-                {/* </div> */}
             </div>
         </div>
     )

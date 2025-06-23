@@ -2,7 +2,7 @@
     h1 {
         display: block;
         margin: 37.520px auto;
-        color: #ffffff;
+        color: var(--color-text);
         font-size: 56px;
     }
 
@@ -22,27 +22,27 @@
         font-weight: 600;
         font-size: 18px;
         border-radius: 10px;
-        background-color: #323232;
-        color: #7a7a7b;
+        background-color: var(--color-secondary-bg);
+        color: var(--color-secondary);
         transition: 0.2s;
 
         &:hover {
-            background-color: #bbcdff;
-            color: #335eea;
+            background-color: var(--color-primary-bg);
+            color: var(--color-primary);
         }
     }
 
     .button.active {
-        background-color: #bbcdff;
-        color: #335eea;
+        background-color: var(--color-primary-bg);
+        color: var(--color-primary);
     }
 
     .panel {
         margin-top: 10px;
-        background: #323232;
+        background: var(--color-secondary-bg);
         border-radius: 10px;
         padding: 8px;
-        color: #ffffff;
+        color: var(--color-text);
 
         .big-cat {
             display: flex;
@@ -88,14 +88,14 @@
 
                 &:hover {
                     opacity: 1;
-                    background-color: #bbcdff;
-                    color: #335eea;
+                    background-color: var(--color-primary-bg);
+                    color: var(--color-primary);
                 }
             }
         }
 
         .cat.active {
-            color: #335eea;
+            color: var(--color-primary);
         }
     }
 

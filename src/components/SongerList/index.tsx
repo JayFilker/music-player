@@ -37,7 +37,6 @@ export function SongerList(props: Props) {
     const [, setFirstPlay] = useAtom(FirstPlay)
     const navigate = useNavigate()
     const [songList, setSongList] = useState<Array<any>>([{}, {}, {}, {}, {}, {}])
-
     const getArtistSongList = async (artistId: string, index: number) => {
         if (songList[index].items?.length > 0) {
             // 更新当前歌曲列表状态
@@ -181,7 +180,6 @@ export function SongerList(props: Props) {
                     </div>
                 )
             })}
-
         </div>
     )
 }

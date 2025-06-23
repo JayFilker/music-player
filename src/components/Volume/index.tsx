@@ -1,21 +1,17 @@
 import { useAtom } from 'jotai/index'
 import React, { useEffect, useRef, useState } from 'react'
-import { Device } from '../../store/store'
+import { Device, Volume } from '../../store/store'
 // 使用lodash的throttle函数
 import '../Bar/index.less'
 
 // 复用之前的CSS样式
 interface VolumeSliderProps {
-    volume: number
-    setVolume: (volume: number) => void
     min?: number
     max?: number
     interval?: number
 }
 
 export const VolumeSlider: React.FC<VolumeSliderProps> = ({
-    volume,
-    setVolume,
     min = 0,
     max = 1,
     interval = 0.01,
@@ -24,6 +20,7 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
     const sliderRef = useRef<HTMLDivElement>(null)
     const getToken = () => localStorage.getItem('spotify_access_token') as string
     const [deviceId] = useAtom(Device)
+    const [volume, setVolume] = useAtom(Volume)
     // 计算百分比值，用于CSS显示
     const getPercentage = () => ((volume - min) / (max - min)) * 100
     const updateVolumeFromClientX = (clientX: number) => {
@@ -46,29 +43,14 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
         // 更新音量值
         setVolume(Number.parseFloat(finalValue.toFixed(2))) // 保留两位小数
     }
-
     const handleMouseMove = (e: MouseEvent) => {
         if (!isDragging)
             return
         updateVolumeFromClientX(e.clientX)
     }
-
     const handleMouseUp = () => {
         setIsDragging(false)
     }
-
-    useEffect(() => {
-        if (isDragging) {
-            document.addEventListener('mousemove', handleMouseMove)
-            document.addEventListener('mouseup', handleMouseUp)
-        }
-
-        return () => {
-            document.removeEventListener('mousemove', handleMouseMove)
-            document.removeEventListener('mouseup', handleMouseUp)
-        }
-    }, [isDragging])
-
     const adjustVolume = async (volumeDecimal: number) => {
         if (!deviceId)
             return
@@ -81,6 +63,17 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
             },
         })
     }
+    useEffect(() => {
+        if (isDragging) {
+            document.addEventListener('mousemove', handleMouseMove)
+            document.addEventListener('mouseup', handleMouseUp)
+        }
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove)
+            document.removeEventListener('mouseup', handleMouseUp)
+        }
+    }, [isDragging])
     useEffect(() => {
         adjustVolume(volume)
     }, [volume])

@@ -22,7 +22,7 @@ export async function fetchProfile(key: string): Promise<any> {
 }
 
 export async function firstFetchProfile(key: string, limit: number, type: string, token: any): Promise<any> {
-    const result = await axios.get(`https://api.spotify.com/v1/search?q=label:"${key}"&type=${type}&limit=${limit}`, {
+    const result = await axios.get(`https://api.spotify.com/v1/search?q=label:"${key}"&type=${type}&limit=${limit}&market=JP`, {
         headers: { Authorization: `Bearer ${token}` },
     })
     return await result.data

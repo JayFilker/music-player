@@ -47,13 +47,6 @@ export function SongListImg(props: {
             }
         })
     }
-
-    useEffect(() => {
-        if (number === 0 && index === 0) {
-            initTwo(id, img, false)
-        }
-    }, [])
-
     function handleClick(data: { e: React.MouseEvent, id: any, index: any, img: string, count?: number }) {
         data.e.stopPropagation()
         setLinkDemo(false)
@@ -61,7 +54,11 @@ export function SongListImg(props: {
         setIsPlayingTwo(false)
         data.count ? initTwo(data.id, data.img, true, data.count) : initTwo(data.id, data.img, true)
     }
-
+    useEffect(() => {
+        if (number === 0 && index === 0) {
+            initTwo(id, img, false)
+        }
+    }, [])
     useEffect(() => {
         eventBus.on('playList-playing', ({ e, id, img, count }) => {
             handleClick({ e, id, index: 1, img, count })

@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { useAtom } from 'jotai'
+// import { useNavigate } from 'react-router-dom'
+import { TemporaryVolume } from '../../../store/store.ts'
 import { ButtonIcon } from '../../ButtonIcon'
 import { SvgIcon } from '../../SvgIcon'
 import { VolumeSlider } from '../../Volume'
@@ -10,36 +12,13 @@ interface Props {
     setVolume: (volume: number) => void
     musicList: boolean[]
     setMusicList: (musicList: boolean[]) => void
+    setShowLyrics: (showLyrics: boolean) => void
+    functions: Array<object>
 }
 
 export function RightControlButtons(props: Props) {
-    const { audioRef, volume, setVolume, musicList, setMusicList } = props
-    const [temporaryVolume, setTemporaryVolume] = useState(0)
-    const functions = [
-        {
-            title: '播放列表',
-            meth: () => {
-            },
-            style: {},
-            icon: svgList.playList,
-        },
-        {
-            title: '循环播放',
-            meth: () => {
-                setMusicList(musicList.map((item, index) => index === 1 ? !item : item))
-            },
-            style: { color: musicList[1] ? 'white' : '#335eea' },
-            icon: svgList.loopPlayback,
-        },
-        {
-            title: '随机播放',
-            meth: () => {
-                setMusicList(musicList.map((item, index) => index === 2 ? !item : item))
-            },
-            style: { color: musicList[2] ? 'white' : '#335eea' },
-            icon: svgList.randomPlay,
-        },
-    ]
+    const { audioRef, volume, setVolume, setShowLyrics, functions } = props
+    const [temporaryVolume, setTemporaryVolume] = useAtom(TemporaryVolume)
     const volumnLogo = [
         {
             style: { display: volume === 0 ? '' : 'none' },
@@ -78,14 +57,13 @@ export function RightControlButtons(props: Props) {
             <div className="blank"></div>
             <div className="container">
                 {
-                    functions.map((item, index) => (
+                    functions.map((item: any, index: number) => (
                         <ButtonIcon
                             key={index}
                             title={item.title}
                             onClick={item.meth}
-                            sty={item.style}
                         >
-                            <SvgIcon>
+                            <SvgIcon sty={item.style}>
                                 {item.icon}
                             </SvgIcon>
                         </ButtonIcon>
@@ -110,8 +88,6 @@ export function RightControlButtons(props: Props) {
                         className="volume-bar"
                     >
                         <VolumeSlider
-                            volume={volume}
-                            setVolume={setVolume}
                             min={0}
                             max={1}
                             interval={0.01}
@@ -122,6 +98,9 @@ export function RightControlButtons(props: Props) {
                 <ButtonIcon
                     sty={{ marginLeft: '12px' }}
                     title="歌词"
+                    onClick={() => {
+                        setShowLyrics(true)
+                    }}
                 >
                     <SvgIcon>
                         {svgList.lyric}

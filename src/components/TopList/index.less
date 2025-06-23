@@ -10,7 +10,7 @@ nav {
     padding-right:10vw;
      padding-left: 10vw;
     backdrop-filter: saturate(180%) blur(20px);
-    background-color: rgba(34,34,34,0.86);
+    background-color: var(--color-navbar-bg);
     z-index: 100;
     -webkit-app-region: drag;
 
@@ -71,7 +71,7 @@ nav.has-custom-titlebar {
         margin-right:12px;
         margin-left:12px;
         &:hover {
-        background: hsla(0,0%,100%,0.08);
+        background: var(--color-secondary-bg-for-transparent);
     }
         &:active {
             transform: scale(0.92);
@@ -99,7 +99,7 @@ nav.has-custom-titlebar {
         display: flex;
         align-items: center;
         height: 32px;
-        background: hsla(0,0%,100%,0.08);
+        background: var(--color-secondary-bg-for-transparent);
         border-radius: 8px;
         width: 200px;
         input {
@@ -129,11 +129,11 @@ nav.has-custom-titlebar {
         margin-right:4px;
     }
     .active {
-        background: hsla(0,0%,100%,0.12);;
+        background: var(--color-primary-bg-for-transparent);
         input,
         .svg-icon {
             opacity: 1;
-            color: var(--color-primary);
+            color: var(--color-text);
         }
     }
 }

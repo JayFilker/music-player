@@ -13,11 +13,11 @@ export async function getPlaysList(type: any, id: any) {
 export async function internalInit(id: string, check: boolean, tokenOne: string): Promise<any> {
     const response = check
         ? await axios.get(`https://api.spotify.com/v1/playlists/${id}/tracks`, {
-                headers: { Authorization: `Bearer ${tokenOne}` },
-            })
+            headers: { Authorization: `Bearer ${tokenOne}` },
+        })
         : await axios.get(`https://api.spotify.com/v1/albums/${id}/tracks`, {
-                headers: { Authorization: `Bearer ${tokenOne}` },
-            })
+            headers: { Authorization: `Bearer ${tokenOne}` },
+        })
 
     return await response.data
 }

@@ -7,6 +7,7 @@ const FirstPage = lazy(() => import('./Pages/FirstPage/index.tsx'))
 const Discover = lazy(() => import('./Pages/Discover/index.tsx'))
 const Artist = lazy(() => import('./Pages/Artist/index.tsx'))
 const More = lazy(() => import('./Pages/More/index.tsx'))
+const NextTracks = lazy(() => import('./Pages/NextTracks/index.tsx'))
 const Set = lazy(() => import('./Pages/Set/index.tsx'))
 const PlaysList = lazy(() => import('./Pages/PlaysList/index.tsx'))
 const Login = lazy(() => import('./Pages/Login/index.tsx'))
@@ -32,6 +33,7 @@ export const Router: React.FC = () => {
                 <Route path="/discover/*" element={<Discover />} />
                 <Route path="/login/*" element={<Login />} />
                 <Route path="/more/*" element={<More />} />
+                <Route path="/nextTracks/*" element={<NextTracks />} />
                 <Route path="/set/*" element={<Set />} />
                 <Route path="/artist/*" element={<Artist />} />
                 <Route path="/moviePage/*" element={<MoviePage />} />

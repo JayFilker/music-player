@@ -22,11 +22,11 @@
             .title {
                 font-size: 36px;
                 font-weight: 700;
-                color: #fff;
+                color: var(--color-text);
 
                 .lock-icon {
                     opacity: 0.28;
-                    color: #FFFFFF;
+                    color:var(--color-text);
                     margin-right: 8px;
 
                     .svg-icon {
@@ -39,12 +39,12 @@
             .artist {
                 font-size: 18px;
                 opacity: 0.88;
-                color: #fff;
+                color: var(--color-text);
                 margin-top: 24px;
 
                 a {
                     text-decoration: none;
-                    color: #fff;
+                    color: var(--color-text);
                     cursor: pointer;
                 }
 
@@ -56,14 +56,14 @@
             .date-and-count {
                 font-size: 14px;
                 opacity: 0.68;
-                color: #fff;
+                color: var(--color-text);
                 margin-top: 2px;
             }
 
             .description {
                 font-size: 14px;
                 opacity: 0.68;
-                color: #fff;
+                color: var(--color-text);
                 margin-top: 24px;
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
@@ -95,7 +95,7 @@
                     line-height: 18px;
                     font-weight: 600;
                     background-color: #eaeffd;
-                    color: #335eea;
+                    color: var(--color-primary);
                     margin-right: 12px;
                     transition: 0.2s;
                     user-select: none;
@@ -115,8 +115,8 @@
                 }
 
                 button.grey {
-                    background-color: #323232;
-                    color: #FFFFFF;
+                    background-color: var(--color-secondary-bg);
+                    color: var(--color-text);
                     opacity: 0.78;
                 }
 
@@ -127,13 +127,16 @@
                     font-size: 18px;
                     line-height: 18px;
                     font-weight: 600;
-                    background-color: #bbcdff;
-                    color: #335eea;
+                    background-color: var(--color-primary-bg);
+                    color: var(--color-primary);
                     margin-right: 12px;
                     transition: .2s;
                     -webkit-user-select: none;
                     -moz-user-select: none;
                     user-select: none;
+                    .svg-icon{
+                        color: var(--color-primary);
+                    }
                 }
 
                 button.transparent {
@@ -201,7 +204,7 @@
             animation-duration: 0.8s;
             animation-name: letterSpacing1;
             text-transform: uppercase;
-            color: #fff;
+            color: var(--color-text);
         }
 
         .buttons {
@@ -324,7 +327,7 @@
         h1 {
             font-size: 42px;
             position: relative;
-            color: #fff;
+            color: var(--color-text);
 
             .avatar {
                 height: 44px;
@@ -356,7 +359,7 @@
         .svg-icon {
             height: 15px;
             width: 15px;
-            color: #fff;
+            color: var(--color-text);
             opacity: 0.28;
             margin-left: 8px;
             margin-right: 4px;
@@ -369,7 +372,7 @@
             width: 96%;
             font-weight: 600;
             margin-top: -1px;
-            color: #fff;
+            color: var(--color-text);
         }
 
         .active {
@@ -378,7 +381,7 @@
             input,
             .svg-icon {
                 opacity: 1;
-                color: #FFFFFF;
+                color: var(--color-text);
             }
         }
     }
@@ -388,7 +391,7 @@
             .active {
                 input,
                 .svg-icon {
-                    color: #fff;
+                    color: var(--color-text);
                 }
             }
         }
@@ -417,7 +420,7 @@
         .svg-icon {
             height: 15px;
             width: 15px;
-            color: #fff;
+            color: var(--color-text);
             opacity: 0.28;
             margin-left: 8px;
             margin-right: 8px;
@@ -430,7 +433,7 @@
             width: 96%;
             font-weight: 600;
             margin-top: -1px;
-            color: #fff;
+            color:var(--color-text);
         }
 
         .active {
@@ -439,7 +442,7 @@
             input,
             .svg-icon {
                 opacity: 1;
-                color: #335eea;
+                color: var(--color-primary);
             }
         }
     }
@@ -449,7 +452,7 @@
             .active {
                 input,
                 .svg-icon {
-                    color: #fff;
+                    color: var(--color-text);
                 }
             }
         }
@@ -473,7 +476,7 @@
     .section-title{
         a{
             text-decoration: none;
-            color: #fff;
+            color: var(--color-text);
         }
         a:hover{
             text-decoration: underline;
@@ -587,7 +590,7 @@
             font-size: 22px;
             font-weight: 600;
             opacity: 0.88;
-            color: #FFFFFF;
+            color: var(--color-text);
             margin-bottom: 20px;
         }
     }

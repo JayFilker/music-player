@@ -1,6 +1,5 @@
 export function Info(props: any) {
     const { randomAlbum } = props
-    console.log(randomAlbum)
     return (
         <div className="info">
             <div className="title">{randomAlbum?.albums?.items[0].name}</div>

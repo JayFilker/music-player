@@ -5,7 +5,7 @@
         font-weight: 600;
         font-size: 22px;
         opacity: 0.88;
-        color: #fff;
+        color: var(--color-text);
         margin-bottom: 16px;
         padding-top: 46px;
 
@@ -24,7 +24,7 @@
         display: flex;
         align-items: center;
         margin-bottom: 26px;
-        color: #fff;
+        color: var(--color-text);
 
         img {
             height: 248px;
@@ -55,7 +55,7 @@
             }
 
             a {
-                color: #fff;
+                color: var(--color-text);
                 text-decoration: none;
             }
         }
@@ -109,7 +109,7 @@
                 line-height: 18px;
                 font-weight: 600;
                 background-color: #eaeffd;
-                color: #335eea;
+                color: var(--color-primary);
                 margin-right: 12px;
                 transition: 0.2s;
                 user-select: none;
@@ -129,8 +129,8 @@
             }
 
             button.grey {
-                background-color: #323232;
-                color: #FFFFFF;
+                background-color: var(--color-secondary-bg);
+                color: var(--color-text);
                 opacity: 0.78;
             }
 
@@ -141,13 +141,16 @@
                 font-size: 18px;
                 line-height: 18px;
                 font-weight: 600;
-                background-color: #bbcdff;
-                color: #335eea;
+                background-color: var(--color-primary-bg);
+                color: var(--color-primary);
                 margin-right: 12px;
                 transition: .2s;
                 -webkit-user-select: none;
                 -moz-user-select: none;
                 user-select: none;
+                .svg-icon{
+                    color: var(--color-primary);
+                }
             }
 
             button.transparent {
@@ -178,7 +181,7 @@
 //}
 
 .latest-release {
-    color: #fff;
+    color: var(--color-text);
 
     .release {
         display: flex;
@@ -206,7 +209,7 @@
         margin-bottom: 8px;
 
         a {
-            color: #FFFFFF;
+            color: var(--color-text);
             text-decoration: none;
         }
 
@@ -237,7 +240,7 @@
             border-radius: 6px;
             font-size: 12px;
             opacity: 0.78;
-            color: #7a7a7b;
+            color: var(--color-secondary);
             font-weight: 600;
 
             &:hover {
