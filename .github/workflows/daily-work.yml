@@ -2,7 +2,7 @@ name: Daily Todo to Project
 
 on:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -19,7 +19,7 @@ jobs:
             const issue = await github.rest.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `打字1小时 - ${today}`,
+              title: `打字半小时 - ${today}`,
               body: `
             *自动创建于 ${new Date().toLocaleString()}*
               `,
