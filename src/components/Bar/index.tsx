@@ -1,5 +1,6 @@
 import { useAtom } from 'jotai/index'
 import React, { useEffect, useRef, useState } from 'react'
+import { seekToPositionPut } from '../../api/system.ts'
 import { Device, StopUpdateBar } from '../../store/store' // 你需要创建对应的CSS文件
 import './index.less'
 
@@ -39,10 +40,8 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, lyrics 
             ...player,
             progress: percentage / 100 * player.currentTrackDuration,
         })
-        // seekToPosition(percentage / 100 * player.currentTrackDuration)
         return percentage / 100 * player.currentTrackDuration
     }
-    const getToken = () => localStorage.getItem('spotify_access_token') as string
     const seekToPosition = async (positionSec: number) => {
         if (!deviceId)
             return
@@ -53,10 +52,7 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, lyrics 
                 progress: positionSec,
             })
             lastUpdateTimeRef.current = Date.now()
-            await fetch(`https://api.spotify.com/v1/me/player/seek?position_ms=${positionMs}&device_id=${deviceId}`, {
-                method: 'PUT',
-                headers: { Authorization: `Bearer ${getToken()}` },
-            })
+            await seekToPositionPut(positionMs, deviceId)
         }
         catch (error) {
             console.error('调整进度失败:', error)

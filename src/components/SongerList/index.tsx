@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai/index'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getAlbumSong } from '../../api/album.ts'
 import { getArtistAlbum } from '../../api/artist.ts'
 import { BadLike, CountDemo, CurrentSongList, FirstPlay, IsPlayingDemoTwo, Link } from '../../store/store.ts'
 import eventBus from '../../utils/eventBus.ts'
@@ -38,7 +39,7 @@ export function SongerList(props: Props) {
     const navigate = useNavigate()
     const [songList, setSongList] = useState<Array<any>>([{}, {}, {}, {}, {}, {}])
     const getArtistSongList = async (artistId: string, index: number) => {
-        if (songList[index].items?.length > 0) {
+        if (songList[index]?.items?.length > 0) {
             // 更新当前歌曲列表状态
             setCurrentSong({
                 ...songList[index],
@@ -51,43 +52,30 @@ export function SongerList(props: Props) {
         }
         else {
             // 获取艺术家的专辑
-            const token = localStorage.getItem('spotify_access_token')
-            await getArtistAlbum(artistId, token).then(async (albumsData) => {
+            await getArtistAlbum(artistId).then(async (albumsData) => {
                 // 检查是否有专辑
                 if (albumsData?.items?.length > 0) {
                     const albumId = albumsData.items[0].id
+                    await getAlbumSong(albumId).then(async (tracksResponse: any) => {
+                        const tracksData = tracksResponse
 
-                    // 获取专辑的曲目
-                    const tracksResponse = await fetch(
-                        `https://api.spotify.com/v1/albums/${albumId}/tracks?limit=10`,
-                        {
-                            method: 'GET',
-                            headers: {
-                                'Authorization': `Bearer ${token}`,
-                                'Content-Type': 'application/json',
-                            },
-                        },
-                    )
+                        // 更新专辑列表状态
+                        const updatedSongList = [...songList]
+                        updatedSongList[index] = tracksData
+                        setSongList(updatedSongList)
 
-                    const tracksData = await tracksResponse.json()
-
-                    // 更新专辑列表状态
-                    const updatedSongList = [...songList]
-                    updatedSongList[index] = tracksData
-                    setSongList(updatedSongList)
-
-                    // 更新当前歌曲列表状态
-                    setCurrentSong({
-                        ...tracksData,
-                        imgPic: artist[index].imgPic,
+                        // 更新当前歌曲列表状态
+                        setCurrentSong({
+                            ...tracksData,
+                            imgPic: artist[index].imgPic,
+                        })
+                        setCount(0)
+                        setFirstPlay(false)
+                        // @ts-ignore
+                        eventBus.emit('play-track', tracksData.items[0].uri)
                     })
-                    setCount(0)
-                    setFirstPlay(false)
-                    // @ts-ignore
-                    eventBus.emit('play-track', tracksData.items[0].uri)
                 }
             })
-            // const albumsData = await albumsResponse.json()
         }
     }
     return (

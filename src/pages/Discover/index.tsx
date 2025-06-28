@@ -21,8 +21,7 @@ export default function Discover() {
     const location = useLocation()
 
     async function fetchProfile(key: string, offset: number): Promise<any> {
-        const token = localStorage.getItem('spotify_access_token')
-        const json = await getAlbumList(token, key === '推荐歌单' ? 'recommend' : key, offset)
+        const json = await getAlbumList(key === '推荐歌单' ? 'recommend' : key, offset)
         if (offset === 0) {
             setAlbumList(json)
         }

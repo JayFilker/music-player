@@ -16,18 +16,17 @@ export function ArtistAlbum(props: Props) {
     const [, setAlbumArtist] = useState([])
     useEffect(() => {
         if (artist && !id) {
-            const token = localStorage.getItem('spotify_access_token')
-            searchArtist(artist as string, token as string).then((data) => {
+            searchArtist(artist as string).then((data) => {
                 setId(data.artists.items[0].id)
             })
         }
     }, [artist])
     useEffect(() => {
         if (id) {
-            getArtistAlbum(id as string, localStorage.getItem('spotify_access_token') as string, 5).then((data) => {
+            getArtistAlbum(id as string, 5).then((data) => {
                 setAlbum(data)
             })
-            getArtistDetails(id as string, localStorage.getItem('spotify_access_token') as string).then((data) => {
+            getArtistDetails(id as string).then((data) => {
                 setAlbumArtist(data)
             })
         }

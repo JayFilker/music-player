@@ -6,7 +6,6 @@ import { rankingListImgList, rankingListName, rankingUpDate } from './rankingLis
 import './index.less'
 
 export function RankingList() {
-    const token = localStorage.getItem('spotify_access_token')
     const [songList, setSongList] = useState<Array<any>>()
     const [imgList] = useState<Array<any>>(rankingListImgList)
     const [rankName] = useState<Array<string>>(rankingListName)
@@ -19,10 +18,10 @@ export function RankingList() {
         const init = async () => {
             const promises = keyList.map(async (item: { name?: string, nation?: string }) => {
                 if (item.name) {
-                    return await fetchProfileByName(item.name, token)
+                    return await fetchProfileByName(item.name)
                 }
                 else if (item.nation) {
-                    return await fetchProfileByNation(item.nation, token)
+                    return await fetchProfileByNation(item.nation)
                 }
             })
 

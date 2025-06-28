@@ -26,8 +26,7 @@ export default function PlaysList() {
     const [songListInfo, setSongListInfo] = useState<any>()
 
     async function inIt(id: string) {
-        const tokenOne = localStorage.getItem('spotify_access_token')
-        internalInit(id, searchParams.get('type') === 'playlists', tokenOne as string).then((data: any) => {
+        internalInit(id, searchParams.get('type') === 'playlists').then((data: any) => {
             let time = 0
             setSongListInfo(data)
             setDemo(data)

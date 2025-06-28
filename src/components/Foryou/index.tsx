@@ -85,15 +85,14 @@ export function Foryou() {
             }
         }
         else {
-            const token = localStorage.getItem('spotify_access_token')
             const searchLetters = 'abcdefghijklmnopqrstuvwxyz'
             const randomLetter = searchLetters[Math.floor(Math.random() * searchLetters.length)]
-            await getAlbum(randomLetter, token as string).then(async (searchData) => {
+            await getAlbum(randomLetter).then(async (searchData) => {
                 setRandomAlbum(searchData)
                 if (searchData?.albums?.items?.length > 0) {
                     // 随机选择一个专辑
                     const albumId = searchData.albums.items[0].id
-                    await getAlbumSong(token, albumId).then(async (tracksResponse: any) => {
+                    await getAlbumSong(albumId).then(async (tracksResponse: any) => {
                         setRandomAlbumSong(tracksResponse)
                     })
                 }

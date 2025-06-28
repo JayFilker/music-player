@@ -54,20 +54,20 @@ export function SongList(props: Props) {
                                     {
                                         item?.artists
                                             ? item?.artists.map((artists: any, index: number) => {
-                                                if (index < item?.artists.length - 1) {
-                                                    return (
-                                                        <>
+                                                    if (index < item?.artists.length - 1) {
+                                                        return (
+                                                            <>
+                                                                <Link to={`/artist?id=${artists?.id}`}>{artists?.name}</Link>
+                                                                <span>，</span>
+                                                            </>
+                                                        )
+                                                    }
+                                                    else {
+                                                        return (
                                                             <Link to={`/artist?id=${artists?.id}`}>{artists?.name}</Link>
-                                                            <span>，</span>
-                                                        </>
-                                                    )
-                                                }
-                                                else {
-                                                    return (
-                                                        <Link to={`/artist?id=${artists?.id}`}>{artists?.name}</Link>
-                                                    )
-                                                }
-                                            })
+                                                        )
+                                                    }
+                                                })
 
                                             : <span>{item.des ? item.des : ''}</span>
                                     }

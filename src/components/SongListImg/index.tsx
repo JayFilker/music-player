@@ -26,8 +26,7 @@ export function SongListImg(props: {
     const [, setCurrentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
     const [show, setShow] = useState<boolean>(false)
     const initTwo = async (id: string, imgDemo: string, play: any, count?: number) => {
-        const tokenOne = localStorage.getItem('spotify_access_token')
-        await internalInit(id, check || false, tokenOne as string).then((tracksData) => {
+        await internalInit(id, check || false).then((tracksData) => {
             count ? setCount(count) : setCount(0)
             setCurrentSong({
                 ...tracksData,

@@ -2,6 +2,7 @@ import { useAtom } from 'jotai/index'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getPlaysList } from '../../../api/check.ts'
+import { pausePlaybackPut, resumePlaybackPut } from '../../../api/system.ts'
 import { CountDemo, CurrentAlum, CurrentSongList, Device, IsPlayingDemo } from '../../../store/store.ts'
 import eventBus from '../../../utils/eventBus'
 import { ButtonIcon } from '../../ButtonIcon'
@@ -26,14 +27,7 @@ export function LeftBottom(props: Props) {
             return
         try {
             setIsPlaying(false)
-            const token = localStorage.getItem('spotify_access_token') as string
-            await fetch(`https://api.spotify.com/v1/me/player/pause`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            })
+            await pausePlaybackPut()
             console.log('已暂停播放')
         }
         catch (e) {
@@ -45,14 +39,7 @@ export function LeftBottom(props: Props) {
             return
         try {
             setIsPlaying(true)
-            const token = localStorage.getItem('spotify_access_token') as string
-            await fetch(`https://api.spotify.com/v1/me/player/play`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            })
+            await resumePlaybackPut()
             console.log('继续播放')
         }
         catch (e) {
@@ -110,23 +97,23 @@ export function LeftBottom(props: Props) {
                         {
                             currentSong?.items
                                 ? currentSong.items[count]?.artists.map((item: {
-                                    name: string
-                                    id: string
-                                }, index: number) => {
-                                    return (
-                                        <span key={index}>
-                                            <span
-                                                className="ar"
-                                                onClick={() => {
-                                                    navigate(`/artist?id=${item.id}`)
-                                                }}
-                                            >
-                                                {item.name}
+                                        name: string
+                                        id: string
+                                    }, index: number) => {
+                                        return (
+                                            <span key={index}>
+                                                <span
+                                                    className="ar"
+                                                    onClick={() => {
+                                                        navigate(`/artist?id=${item.id}`)
+                                                    }}
+                                                >
+                                                    {item.name}
+                                                </span>
+                                                {index !== currentSong.items[count]?.artists.length - 1 && <span>, </span>}
                                             </span>
-                                            {index !== currentSong.items[count]?.artists.length - 1 && <span>, </span>}
-                                        </span>
-                                    )
-                                })
+                                        )
+                                    })
                                 : ''
                         }
                     </div>

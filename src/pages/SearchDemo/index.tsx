@@ -15,7 +15,6 @@ import './index.less'
 export default function SearchDemo() {
     const [searchParams] = useSearchParams()
     const [movie, setMovie] = useState<any>()
-    const tokenOne = localStorage.getItem('spotify_access_token')
     const [contentList, setContentList] = useState<any>()
     const [title, setTitle] = useState<any>()
     const [currentNumber, setCurrentNumber] = useState(0)
@@ -26,7 +25,7 @@ export default function SearchDemo() {
             if (searchParams.get('type') && searchParams.get('key')) {
                 setTitle(searchParams.get('type') === 'artist' ? '艺人' : searchParams.get('type') === 'album' ? '专辑' : searchParams.get('type') === 'playlist' ? '歌单' : searchParams.get('type') === 'movie' ? '视频' : '歌曲')
                 if (searchParams.get('type') !== 'movie') {
-                    setContentList(await getContent(searchParams.get('type') as string, searchParams.get('key') as string, tokenOne as string))
+                    setContentList(await getContent(searchParams.get('type') as string, searchParams.get('key') as string))
                 }
                 else {
                     getMusic().then((res) => {
@@ -117,7 +116,7 @@ export default function SearchDemo() {
                         }
                         const type = `${searchParams.get('type')}s`
                         const newOffset = currentNumber + 50
-                        await getContent(searchParams.get('type') as string, searchParams.get('key') as string, tokenOne as string, newOffset).then((res) => {
+                        await getContent(searchParams.get('type') as string, searchParams.get('key') as string, newOffset).then((res) => {
                             const contentListDemo = {
                                 ...contentList,
                             }

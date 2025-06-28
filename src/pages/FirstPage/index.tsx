@@ -28,15 +28,14 @@ export default function FirstPage() {
     const searchTerms = ['recommended', 'popular', 'top']
     const randomTerm = searchTerms[Math.floor(Math.random() * searchTerms.length)]
     const init = async () => {
-        const token = localStorage.getItem('spotify_access_token')
         const promises = keyList.filter((_item, index) => index < 2).map(async (item: {
             name: string
             limit: number
         }) => {
-            return await firstFetchProfile(item.name, item.limit, 'playlist', token)
+            return await firstFetchProfile(item.name, item.limit, 'playlist')
         },
         )
-        const promise = await firstFetchProfile(keyList[2].name, keyList[2].limit, 'album', token)
+        const promise = await firstFetchProfile(keyList[2].name, keyList[2].limit, 'album')
         const results = contentList.map(item => item)
         results[0] = await promises[0] // 更新第一个元素
         results[1] = await promises[1] // 更新第二个元素
@@ -46,8 +45,7 @@ export default function FirstPage() {
     useEffect(() => {
         init().then()
         const initTwofun = async () => {
-            const token = localStorage.getItem('spotify_access_token')
-            const a = await recommendedArtists(token, randomTerm)
+            const a = await recommendedArtists(randomTerm)
             setArtists(a)
         }
         initTwofun().then()

@@ -1,6 +1,7 @@
 import type { SpotifyPlayer } from '../../types/spotify'
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
+import { playTrackPut } from '../../api/system.ts'
 import { CountDemo, CurrentSongList, Device, IsPlayingDemo, MusicList, PlayerDemo } from '../../store/store.ts'
 import { Middle } from './Middle'
 import '../../assets/css/slider.css'
@@ -22,16 +23,7 @@ export function Player(props: any) {
             return '失败'
         }
         setIsPlaying(true)
-        await fetch(`https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${getToken()}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                uris: [trackUri],
-            }),
-        })
+        await playTrackPut(trackUri, deviceId)
     }
     const reconnectSdk = () => {
         if (playerSdk) {

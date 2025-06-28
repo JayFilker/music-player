@@ -12,7 +12,6 @@ import './index.less'
 export default function Artist() {
     const [searchParams] = useSearchParams()
     const [albumsArtist, setAlbumArtist] = useState<any>()
-    const token = localStorage.getItem('spotify_access_token')
     const [showShade, setShowShade] = useState(false)
     const [twoShow, setTowShow] = useState(false)
     const [album, setAlbum] = useState<any>()
@@ -28,23 +27,23 @@ export default function Artist() {
     }
     useEffect(() => {
         if (!albumsArtist) {
-            getArtistDetails(searchParams.get('id'), token).then((data) => {
+            getArtistDetails(searchParams.get('id') as string).then((data) => {
                 setAlbumArtist(data)
             })
         }
     }, [])
     useEffect(() => {
         if (albumsArtist) {
-            getArtistAlbums(searchParams.get('id'), token).then((data) => {
+            getArtistAlbums(searchParams.get('id') as string).then((data) => {
                 setAlbum(data)
             })
-            getArtistSongs(searchParams.get('id'), token).then(
+            getArtistSongs(searchParams.get('id') as string).then(
                 (data) => {
                     setHotSongs(data)
                     setHotSongsDemo({ items: data.tracks })
                 },
             )
-            getNewAlbums(searchParams.get('id'), token).then((data) => {
+            getNewAlbums(searchParams.get('id') as string).then((data) => {
                 setNewAlbums(data)
             })
         }
