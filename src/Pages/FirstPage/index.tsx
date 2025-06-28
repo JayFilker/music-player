@@ -29,6 +29,8 @@ export default function FirstPage() {
     const randomTerm = searchTerms[Math.floor(Math.random() * searchTerms.length)]
     const init = async () => {
         const token = localStorage.getItem('spotify_access_token')
+
+        // todo 使用 Promise.all() 优化，你现在的 3 个请求都是串行执行的，需要改成并行
         const promises = keyList.filter((_item, index) => index < 2).map(async (item: {
             name: string
             limit: number
