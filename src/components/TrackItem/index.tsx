@@ -7,34 +7,31 @@ import './index.less'
 interface Props {
     track?: any
     index: number
+    tracks?: any
 }
 
 export function TrackItem(props: Props) {
-    const { track, index } = props
+    const { track, index, tracks } = props
     const [play, setPlay] = useAtom(Playing)
-    useEffect(() => {
-        setPlay((prev) => {
-            const newPlay = [...prev]
-            newPlay[index] = false
-            return newPlay
-        })
-    }, [])
     const [focus, setFocus] = useState(false)
     const [, setCurrentSong] = useAtom<{ items: Array<any>, imgPic: string }>(CurrentSongList)
-    const [, setCount] = useAtom(CountDemo)
+    const [count, setCount] = useAtom(CountDemo)
+    useEffect(() => {
+        setPlay((prev) => {
+            const newPlay = prev.map(() => {
+                return false
+            })
+            newPlay[count] = true
+            return newPlay
+        })
+    }, [count])
+
     return (
         <div
             className={`track tracklist ${focus ? 'focus' : ''} ${play[index] ? 'track-playing' : ''}`}
             onDoubleClick={() => {
-                setCurrentSong({ items: [track], imgPic: track.album.images[0].url })
-                setCount(0)
-                setPlay((prev) => {
-                    const newPlay = prev.map(() => {
-                        return false
-                    })
-                    newPlay[index] = true
-                    return newPlay
-                })
+                setCurrentSong({ items: [...tracks], imgPic: track.album.images[0].url })
+                setCount(index)
                 // @ts-ignore
                 eventBus.emit('play-track', track.uri)
             }}

@@ -1,47 +1,44 @@
+import { useQuery } from '@tanstack/react-query'
 import { get } from './http.ts'
 
 export function getAlbumList(key: string, offset: number): Promise<any> {
     return get(`/search?q=${key}&type=album&limit=50&offset=${offset}`)
 }
 
+export function useAlbumList(key: string, offset: number = 0) {
+    return useQuery({
+        queryKey: ['albumList', key, offset], // 唯一标识这个查询的键
+        queryFn: () => getAlbumList(key, offset),
+        enabled: !!key, // 只有当token和key存在时才执行查询
+        staleTime: 5 * 60 * 1000, // 数据5分钟内被视为新鲜
+        // 可选：添加其他配置
+        // retry: 1, // 失败时重试次数
+        // refetchOnWindowFocus: false, // 窗口聚焦时是否重新获取
+    })
+}
+
 export function getAlbum(randomLetter: any): Promise<any> {
     return get(`/search?q=${randomLetter}&type=album&limit=1`)
+}
+
+export function useAlbum(randomLetter: any) {
+    return useQuery({
+        queryKey: ['album', randomLetter], // 唯一标识这个查询的键
+        queryFn: () => getAlbum(randomLetter),
+        enabled: !!randomLetter, // 只有当token和key存在时才执行查询
+        staleTime: 5 * 60 * 1000, // 数据5分钟内被视为新鲜
+    })
 }
 
 export function getAlbumSong(albumId: any): Promise<any> {
     return get(`/albums/${albumId}/tracks?limit=10`)
 }
 
-// export async function getAlbumList(token: any, key: string, offset: number): Promise<any> {
-//     const result = await axios.get(`https://api.spotify.com/v1/search?q=${key}&type=album&limit=50&offset=${offset}`, {
-//         headers: { Authorization: `Bearer ${token}` },
-//     })
-//     return result.data
-// }
-
-// export async function getAlbum(randomLetter: any, token: string): Promise<any> {
-//     const searchResponse = await axios.get(
-//         `https://api.spotify.com/v1/search?q=${randomLetter}&type=album&limit=1`,
-//         {
-//             headers: {
-//                 'Authorization': `Bearer ${token}`,
-//                 'Content-Type': 'application/json',
-//             },
-//         },
-//     )
-//     return await searchResponse.data
-// }
-
-// export async function getAlbumSong(token: any, albumId: any): Promise<any> {
-//     const tracksResponse = await axios.get(
-//         `https://api.spotify.com/v1/albums/${albumId}/tracks?limit=10`,
-//         {
-//             method: 'GET',
-//             headers: {
-//                 'Authorization': `Bearer ${token}`,
-//                 'Content-Type': 'application/json',
-//             },
-//         },
-//     )
-//     return tracksResponse.data
-// }
+export function useAlbumSong(albumId: any) {
+    return useQuery({
+        queryKey: ['albumSong', albumId], // 唯一标识这个查询的键
+        queryFn: () => getAlbumSong(albumId),
+        enabled: !!albumId, // 只有当token和key存在时才执行查询
+        staleTime: 5 * 60 * 1000, // 数据5分钟内被视为新鲜
+    })
+}

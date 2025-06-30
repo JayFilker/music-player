@@ -1,8 +1,8 @@
 import { useAtom } from 'jotai/index'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getPlaysList } from '../../../api/check.ts'
-import { pausePlaybackPut, resumePlaybackPut } from '../../../api/system.ts'
+import { usePlaysList } from '../../../api/check.ts'
+import { usePausePlaybackPut, useResumePlaybackPut } from '../../../api/system.ts'
 import { CountDemo, CurrentAlum, CurrentSongList, Device, IsPlayingDemo } from '../../../store/store.ts'
 import eventBus from '../../../utils/eventBus'
 import { ButtonIcon } from '../../ButtonIcon'
@@ -18,6 +18,8 @@ export function LeftBottom(props: Props) {
     const [deviceId] = useAtom(Device)
     const navigate = useNavigate()
     const [, setIsPlaying] = useAtom(IsPlayingDemo)
+    const { mutate: pausePlaybackPut } = usePausePlaybackPut()
+    const { mutate: resumePlaybackPut } = useResumePlaybackPut()
     const [currentSong] = useAtom<{
         items: Array<{ name: string, artists: Array<any>, id: string, album?: { images: Array<{ url: string }> } }>
         imgPic: string
@@ -27,7 +29,7 @@ export function LeftBottom(props: Props) {
             return
         try {
             setIsPlaying(false)
-            await pausePlaybackPut()
+            pausePlaybackPut()
             console.log('已暂停播放')
         }
         catch (e) {
@@ -39,7 +41,7 @@ export function LeftBottom(props: Props) {
             return
         try {
             setIsPlaying(true)
-            await resumePlaybackPut()
+            resumePlaybackPut()
             console.log('继续播放')
         }
         catch (e) {
@@ -70,13 +72,12 @@ export function LeftBottom(props: Props) {
         }
     }, [deviceId])
     const [currentAlbum, setCurrentAlbum] = useAtom<any>(CurrentAlum)
+    const { data } = usePlaysList('tracks', currentSong?.items?.[count]?.id)
     useEffect(() => {
-        if (currentSong?.items && currentSong.items[count]?.id) {
-            getPlaysList('tracks', currentSong?.items[count]?.id).then((res) => {
-                setCurrentAlbum(res)
-            })
+        if (data) {
+            setCurrentAlbum(data)
         }
-    }, [currentSong])
+    }, [data])
     return (
         <div className="playing">
             <div className="container">

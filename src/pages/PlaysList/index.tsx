@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
-import { getPlaysList, internalInit } from '../../api/check.ts'
+import { useInternalInit, usePlaysList } from '../../api/check.ts'
 import { ArtistAlbum } from '../../components/ArtistAlbum'
 import { Shade } from '../../components/shade'
 import { TrackList } from '../../components/TrackList'
@@ -15,33 +15,33 @@ export default function PlaysList() {
     const [showShade, setShowShade] = useState(false)
     const [demo, setDemo] = useState<any>()
     const { t } = useTranslation()
+    const { data: playList } = usePlaysList(searchParams.get('type'), searchParams.get('id'))
     useEffect(() => {
-        const type = searchParams.get('type')
-        const id = searchParams.get('id')
-        getPlaysList(type, id)
-            .then((data) => {
-                setSongList(data)
-            })
-    }, [searchParams.get('id')])
+        if (playList) {
+            setSongList(playList)
+        }
+    }, [playList])
     const [songListInfo, setSongListInfo] = useState<any>()
-
-    async function inIt(id: string) {
-        internalInit(id, searchParams.get('type') === 'playlists').then((data: any) => {
+    const [idDemo, setIdDemo] = useState<any>()
+    const { data: internalInit } = useInternalInit(idDemo, searchParams.get('type') === 'playlists')
+    useEffect(() => {
+        if (internalInit) {
             let time = 0
-            setSongListInfo(data)
-            setDemo(data)
+            setSongListInfo(internalInit)
+            setDemo(internalInit)
             if (searchParams.get('type') === 'albums') {
-                data.items.forEach((track: any) => {
+                internalInit.items.forEach((track: any) => {
                     time += track.duration_ms
                 })
                 setSongList({ ...songList, time: Math.floor(time / 60000) })
             }
-        })
-    }
+        }
+    }, [internalInit])
 
     useEffect(() => {
         if (songList && !songList.time) {
-            inIt(songList.id)
+            // inIt(songList.id)
+            setIdDemo(songList.id)
         }
     }, [songList])
 

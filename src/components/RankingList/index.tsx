@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { fetchProfileByName, fetchProfileByNation } from '../../api/ranking.ts'
+import { useFetchProfileByName, useFetchProfileByNation } from '../../api/ranking.ts'
 import { SongListImg } from '../SongListImg'
 import { rankingListImgList, rankingListName, rankingUpDate } from './rankingListAdditional.tsx'
 import './index.less'
@@ -13,23 +13,18 @@ export function RankingList() {
     const [keyList] = useState<Array<{ name?: string, nation?: string }>>([{
         name: 'rank',
     }, { nation: 'UK' }, { nation: 'USA' }, { name: 'electronic' }, { nation: 'Japan' }])
+    const { data: rank } = useFetchProfileByName(keyList[0].name)
+    const { data: electronic } = useFetchProfileByName(keyList[3].name)
+    const { data: uK } = useFetchProfileByNation(keyList[1].nation)
+    const { data: uSA } = useFetchProfileByNation(keyList[2].nation)
+    const { data: japan } = useFetchProfileByNation(keyList[4].nation)
 
     useEffect(() => {
-        const init = async () => {
-            const promises = keyList.map(async (item: { name?: string, nation?: string }) => {
-                if (item.name) {
-                    return await fetchProfileByName(item.name)
-                }
-                else if (item.nation) {
-                    return await fetchProfileByNation(item.nation)
-                }
-            })
-
-            const results = await Promise.all(promises)
-            setSongList(results) // 一次性更新整个数组
+        if (rank && electronic && uK && uSA && japan) {
+            const results = [rank, uK, uSA, electronic, japan]
+            setSongList(results)
         }
-        init()
-    }, [])
+    }, [rank, electronic, uK, uSA, japan])
     return (
         <div
             className="cover-row"
@@ -53,7 +48,12 @@ export function RankingList() {
                                 className="title"
                                 style={{ fontSize: '16px', margin: '0 0' }}
                             >
-                                <Link to={`/playsList?id=${item.playlists.items.filter((item: any) => item !== null)[0].id}&type=playlists`} style={{ color: 'white' }}>{rankName[index]}</Link>
+                                <Link
+                                    to={`/playsList?id=${item.playlists.items.filter((item: any) => item !== null)[0].id}&type=playlists`}
+                                    style={{ color: 'white' }}
+                                >
+                                    {rankName[index]}
+                                </Link>
                             </div>
                             <div className="info">
                                 <span>{upDate[index]}</span>

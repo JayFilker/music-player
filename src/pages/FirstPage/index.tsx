@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { firstFetchProfile, recommendedArtists } from '../../api/search.ts'
+import { useFirstFetchProfile, useRecommendedArtists } from '../../api/search.ts'
 import defaultImg from '../../assets/img/default.png'
 import { Foryou } from '../../components/Foryou'
 import { RankingList } from '../../components/RankingList'
@@ -27,29 +27,22 @@ export default function FirstPage() {
     const [artists, setArtists] = useState<{ artists: { items: Array<any> } }>()
     const searchTerms = ['recommended', 'popular', 'top']
     const randomTerm = searchTerms[Math.floor(Math.random() * searchTerms.length)]
-    const init = async () => {
-        const promises = keyList.filter((_item, index) => index < 2).map(async (item: {
-            name: string
-            limit: number
-        }) => {
-            return await firstFetchProfile(item.name, item.limit, 'playlist')
-        },
-        )
-        const promise = await firstFetchProfile(keyList[2].name, keyList[2].limit, 'album')
-        const results = contentList.map(item => item)
-        results[0] = await promises[0] // 更新第一个元素
-        results[1] = await promises[1] // 更新第二个元素
-        results[2] = promise // 更新第三个元素
-        setContentList(results) // 一次性更新整个数组
-    }
+
+    const { data: apple } = useFirstFetchProfile(keyList[0].name, keyList[0].limit, 'playlist')
+    const { data: recommend } = useFirstFetchProfile(keyList[1].name, keyList[1].limit, 'playlist')
+    const { data: linkMusic } = useFirstFetchProfile(keyList[2].name, keyList[2].limit, 'album')
+    const { data: recommendedArtists } = useRecommendedArtists(randomTerm)
     useEffect(() => {
-        init().then()
-        const initTwofun = async () => {
-            const a = await recommendedArtists(randomTerm)
-            setArtists(a)
+        if (recommendedArtists) {
+            setArtists(recommendedArtists)
         }
-        initTwofun().then()
-    }, [])
+    }, [recommendedArtists])
+    useEffect(() => {
+        if (apple && recommend && linkMusic) {
+            const results = [apple, recommend, linkMusic]
+            setContentList(results)
+        }
+    }, [apple, recommend, linkMusic])
     return (
         <div className="home">
             {set.showApple && (

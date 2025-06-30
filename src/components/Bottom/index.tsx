@@ -1,7 +1,7 @@
 import type { SpotifyPlayer } from '../../types/spotify'
 import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
-import { playTrackPut } from '../../api/system.ts'
+import { usePlayTrackPut } from '../../api/system.ts'
 import { CountDemo, CurrentSongList, Device, IsPlayingDemo, MusicList, PlayerDemo } from '../../store/store.ts'
 import { Middle } from './Middle'
 import '../../assets/css/slider.css'
@@ -18,12 +18,13 @@ export function Player(props: any) {
     const [deviceId, setDeviceId] = useAtom(Device)
     const getToken = () => localStorage.getItem('spotify_access_token') as string
     const [prevTime, setPrevTime] = useState(0)
+    const { mutate: playTrackDemo } = usePlayTrackPut()
     const playTrack = async (trackUri: string) => {
         if (!deviceId) {
             return '失败'
         }
         setIsPlaying(true)
-        await playTrackPut(trackUri, deviceId)
+        playTrackDemo({ trackUri, deviceId })
     }
     const reconnectSdk = () => {
         if (playerSdk) {
@@ -33,18 +34,18 @@ export function Player(props: any) {
     }
     const getRefreshToken = async () => {
         const refreshToken = localStorage.getItem('spotify_refresh_token') as string
-        const response = await fetch(`https://musicplayernodejs-production.up.railway.app/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        // const response = await fetch(`http://localhost:3000/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
+        // const response = await fetch(`https://musicplayernodejs-production.up.railway.app/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
         //     method: 'GET',
         //     headers: {
         //         'Content-Type': 'application/json',
         //     },
         // })
+        const response = await fetch(`http://localhost:3000/refresh_token?refresh_token=${encodeURIComponent(refreshToken)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
         const data = await response.json()
         localStorage.setItem('spotify_refresh_token', data.refresh_token)
         localStorage.setItem('spotify_access_token', data.access_token)

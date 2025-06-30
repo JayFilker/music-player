@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai'
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getAlbum, getAlbumSong } from '../../api/album.ts'
+import { useAlbum, useAlbumSong } from '../../api/album.ts'
 import {
     BadLike,
     CountDemo,
@@ -30,11 +30,31 @@ export function Foryou() {
     const [countL, setCountL] = useState(0)
     const [, setCurrentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
     const [randomAlbum, setRandomAlbum] = useState<any>()
+    const [randomLetter, setRandomLetter] = useState<any>()
     const [randomAlbumSong, setRandomAlbumSong] = useState<any>()
     const randomGradient = useMemo(() =>
         `linear-gradient(to left top,
    rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}),
    rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}))`, [])
+
+    const { data } = useAlbum(randomLetter)
+    const [id, setId] = useState()
+    const { data: albumSong } = useAlbumSong(id)
+    useEffect(() => {
+        if (albumSong) {
+            setRandomAlbumSong(albumSong)
+        }
+    }, [albumSong])
+    useEffect(() => {
+        if (data) {
+            setRandomAlbum(data)
+            if (data?.albums?.items?.length > 0) {
+                // 随机选择一个专辑
+                const albumId = data.albums.items[0].id
+                setId(albumId)
+            }
+        }
+    }, [data])
 
     function nextSong() {
         setFirstPlay(false)
@@ -86,17 +106,8 @@ export function Foryou() {
         }
         else {
             const searchLetters = 'abcdefghijklmnopqrstuvwxyz'
-            const randomLetter = searchLetters[Math.floor(Math.random() * searchLetters.length)]
-            await getAlbum(randomLetter).then(async (searchData) => {
-                setRandomAlbum(searchData)
-                if (searchData?.albums?.items?.length > 0) {
-                    // 随机选择一个专辑
-                    const albumId = searchData.albums.items[0].id
-                    await getAlbumSong(albumId).then(async (tracksResponse: any) => {
-                        setRandomAlbumSong(tracksResponse)
-                    })
-                }
-            })
+            const randomLetterDemo = searchLetters[Math.floor(Math.random() * searchLetters.length)]
+            setRandomLetter(randomLetterDemo)
         }
     }
     useEffect(() => {

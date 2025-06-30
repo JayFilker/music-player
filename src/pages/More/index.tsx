@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
-import { firstFetchProfile } from '../../api/search.ts'
+import { useFirstFetchProfile } from '../../api/search.ts'
 import defaultImg from '../../assets/img/default.png'
 import { SongList } from '../../components/SongList'
 import './index.less'
@@ -10,14 +10,12 @@ export default function More() {
     const [searchParams] = useSearchParams()
     const { t } = useTranslation()
     const [contentList, setContentList] = useState<any>()
-    const getContentList = async () => {
-        const result = await firstFetchProfile(searchParams.get('key') as string, 50, 'album')
-        setContentList(result)
-    }
-
+    const { data } = useFirstFetchProfile(searchParams.get('key') as string, 50, 'album')
     useEffect(() => {
-        getContentList()
-    }, [])
+        if (data) {
+            setContentList(data)
+        }
+    }, [data])
     return (
         <div className="newAlbum">
             <h1 style={{ color: '#fff' }}>

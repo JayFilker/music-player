@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getArtistAlbum, getArtistDetails, searchArtist } from '../../api/artist.ts'
+import { useArtistAlbum, useArtistDetails, useSearchArtist } from '../../api/artist.ts'
 import { SongListImg } from '../SongListImg'
 import '../SongList/index.less'
 
@@ -14,23 +14,24 @@ export function ArtistAlbum(props: Props) {
     const [id, setId] = useState()
     const [album, setAlbum] = useState<any>(null)
     const [, setAlbumArtist] = useState([])
+    const { data } = useArtistDetails(id)
+    const { data: artistAlbumDate } = useArtistAlbum(id, 5)
+    const { data: searchArtist } = useSearchArtist(artist)
     useEffect(() => {
-        if (artist && !id) {
-            searchArtist(artist as string).then((data) => {
-                setId(data.artists.items[0].id)
-            })
+        if (artistAlbumDate) {
+            setAlbum(artistAlbumDate)
         }
-    }, [artist])
+    }, [artistAlbumDate])
     useEffect(() => {
-        if (id) {
-            getArtistAlbum(id as string, 5).then((data) => {
-                setAlbum(data)
-            })
-            getArtistDetails(id as string).then((data) => {
-                setAlbumArtist(data)
-            })
+        if (data) {
+            setAlbumArtist(data)
         }
-    }, [id])
+    }, [data])
+    useEffect(() => {
+        if (searchArtist) {
+            setId(searchArtist.artists.items[0].id)
+        }
+    }, [searchArtist])
     return (
 
         <div
@@ -55,7 +56,12 @@ export function ArtistAlbum(props: Props) {
                                     className="title"
                                     style={{ fontSize: '16px', margin: '0 0' }}
                                 >
-                                    <Link to={`/playsList?id=${(item.id ? item.id : item.playListId) as string}&type=albums`} style={{ color: 'white' }}>{item.name}</Link>
+                                    <Link
+                                        to={`/playsList?id=${(item.id ? item.id : item.playListId) as string}&type=albums`}
+                                        style={{ color: 'white' }}
+                                    >
+                                        {item.name}
+                                    </Link>
                                 </div>
                                 <div className="info">
                                     <span>{`Album · ${item.release_date.split('-')[0]}`}</span>

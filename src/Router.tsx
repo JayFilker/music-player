@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 
 // 懒加载应用组件
 const FirstPage = lazy(() => import('./pages/FirstPage/index.tsx'))
-const Discover = lazy(() => import('./pages/Discover/index.tsx'))
+const Discover = lazy(() => import('./pages/Discover'))
 const Artist = lazy(() => import('./pages/Artist/index.tsx'))
 const More = lazy(() => import('./pages/More/index.tsx'))
 const NextTracks = lazy(() => import('./pages/NextTracks/index.tsx'))

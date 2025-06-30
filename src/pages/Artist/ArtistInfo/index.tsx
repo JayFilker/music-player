@@ -9,7 +9,7 @@ import { artistSvgList } from '../artistSvgList.tsx'
 export function ArtistInfo(props: any) {
     const { albumsArtist, hotSongs, album, setShowShade, setTowShow, twoShow } = props
     const { t } = useTranslation()
-    const list = ['复制链接', '在浏览器中打开']
+    const list = ['复制链接', '在浏览器中打开'] // todo 只用一次，可以内联到参数上
     const [, setPlay] = useAtom(Playing)
     const [, setCount] = useAtom(CountDemo)
     const [, setCurrentSong] = useAtom<{ items: Array<any>, imgPic: string }>(CurrentSongList)
@@ -52,7 +52,7 @@ export function ArtistInfo(props: any) {
 
                         onClick={() => {
                             setCurrentSong({
-                                items: [hotSongs?.tracks[0]],
+                                items: [...hotSongs?.tracks],
                                 imgPic: hotSongs?.tracks[0]?.album.images[0]?.url,
                             })
                             setCount(0)

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
-import { getMusic } from '../../api/movie.ts'
-import { getContent } from '../../api/searchDemo.ts'
+import { useMovie } from '../../api/movie.ts'
+import { useContent } from '../../api/searchDemo.ts'
 import defaultImg from '../../assets/img/default.png'
 import { ButtonIconTwo } from '../../components/ButtonIconTwo'
 import { Movie } from '../../components/Movie'
@@ -19,22 +19,36 @@ export default function SearchDemo() {
     const [title, setTitle] = useState<any>()
     const [currentNumber, setCurrentNumber] = useState(0)
     const { t } = useTranslation()
-
+    const { data } = useMovie()
+    const { data: content } = useContent(searchParams.get('type') as string, searchParams.get('key') as string, currentNumber)
+    useEffect(() => {
+        if (content && currentNumber === 0) {
+            setContentList(content)
+        }
+        else if (content) {
+            const type = `${searchParams.get('type')}s`
+            const contentListDemo = {
+                ...contentList,
+            }
+            contentListDemo[type] = {
+                ...contentList?.[type],
+                items: [...contentList?.[type]?.items, ...content?.[type]?.items],
+            }
+            setContentList(contentListDemo)
+        }
+    }, [content])
+    useEffect(() => {
+        if (data) {
+            setMovie(data)
+        }
+    }, [data])
     useEffect(() => {
         const demo = async () => {
             if (searchParams.get('type') && searchParams.get('key')) {
                 setTitle(searchParams.get('type') === 'artist' ? '艺人' : searchParams.get('type') === 'album' ? '专辑' : searchParams.get('type') === 'playlist' ? '歌单' : searchParams.get('type') === 'movie' ? '视频' : '歌曲')
-                if (searchParams.get('type') !== 'movie') {
-                    setContentList(await getContent(searchParams.get('type') as string, searchParams.get('key') as string))
-                }
-                else {
-                    getMusic().then((res) => {
-                        setMovie(res)
-                    })
-                }
             }
         }
-        demo()
+        demo().then()
     }, [])
     return (
         <div className="search">
@@ -114,18 +128,7 @@ export default function SearchDemo() {
                         if (searchParams.get('type') === 'movie') {
                             return
                         }
-                        const type = `${searchParams.get('type')}s`
                         const newOffset = currentNumber + 50
-                        await getContent(searchParams.get('type') as string, searchParams.get('key') as string, newOffset).then((res) => {
-                            const contentListDemo = {
-                                ...contentList,
-                            }
-                            contentListDemo[type] = {
-                                ...contentList[type],
-                                items: [...contentList[type]?.items, ...res[type]?.items],
-                            }
-                            setContentList(contentListDemo)
-                        })
                         setCurrentNumber(newOffset)
                     }}
                 >

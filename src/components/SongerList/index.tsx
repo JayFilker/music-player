@@ -1,8 +1,8 @@
 import { useAtom } from 'jotai/index'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getAlbumSong } from '../../api/album.ts'
-import { getArtistAlbum } from '../../api/artist.ts'
+import { useAlbumSong } from '../../api/album.ts'
+import { useArtistAlbum } from '../../api/artist.ts'
 import { BadLike, CountDemo, CurrentSongList, FirstPlay, IsPlayingDemoTwo, Link } from '../../store/store.ts'
 import eventBus from '../../utils/eventBus.ts'
 import { SvgIcon } from '../SvgIcon'
@@ -36,9 +36,45 @@ export function SongerList(props: Props) {
     const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
     const [, setLinkDemo] = useAtom(Link)
     const [, setFirstPlay] = useAtom(FirstPlay)
+    const [albumId, setAlbumId] = useState()
+    const [artistId, setArtistId] = useState<any>()
     const navigate = useNavigate()
     const [songList, setSongList] = useState<Array<any>>([{}, {}, {}, {}, {}, {}])
+    const [number, setNumber] = useState(0)
+    const { data } = useAlbumSong(albumId)
+    const { data: artistAlbum } = useArtistAlbum(artistId)
+    useEffect(() => {
+        if (artistAlbum) {
+            // 检查是否有专辑
+            if (artistAlbum?.items?.length > 0) {
+                const albumId = artistAlbum.items[0].id
+                setAlbumId(albumId)
+            }
+        }
+    }, [artistAlbum])
+    useEffect(() => {
+        if (data) {
+            const tracksData = data
+
+            // 更新专辑列表状态
+            const updatedSongList = [...songList]
+            updatedSongList[number] = tracksData
+            setSongList(updatedSongList)
+
+            // 更新当前歌曲列表状态
+            setCurrentSong({
+                ...tracksData,
+                imgPic: artist[number].imgPic,
+            })
+            setCount(0)
+            setFirstPlay(false)
+            // @ts-ignore
+            eventBus.emit('play-track', tracksData.items[0].uri)
+        }
+    }, [data])
+
     const getArtistSongList = async (artistId: string, index: number) => {
+        setNumber(index)
         if (songList[index]?.items?.length > 0) {
             // 更新当前歌曲列表状态
             setCurrentSong({
@@ -51,31 +87,7 @@ export function SongerList(props: Props) {
             eventBus.emit('play-track', songList[index].items[0].uri)
         }
         else {
-            // 获取艺术家的专辑
-            await getArtistAlbum(artistId).then(async (albumsData) => {
-                // 检查是否有专辑
-                if (albumsData?.items?.length > 0) {
-                    const albumId = albumsData.items[0].id
-                    await getAlbumSong(albumId).then(async (tracksResponse: any) => {
-                        const tracksData = tracksResponse
-
-                        // 更新专辑列表状态
-                        const updatedSongList = [...songList]
-                        updatedSongList[index] = tracksData
-                        setSongList(updatedSongList)
-
-                        // 更新当前歌曲列表状态
-                        setCurrentSong({
-                            ...tracksData,
-                            imgPic: artist[index].imgPic,
-                        })
-                        setCount(0)
-                        setFirstPlay(false)
-                        // @ts-ignore
-                        eventBus.emit('play-track', tracksData.items[0].uri)
-                    })
-                }
-            })
+            setArtistId(artistId)
         }
     }
     return (
@@ -119,7 +131,7 @@ export function SongerList(props: Props) {
                                             setLinkDemo(false)
                                             setBadLikeDemo(false)
                                             setIsPlayingTwo(false)
-                                            getArtistSongList(item.id, index)
+                                            getArtistSongList(item.id, index).then()
                                         }}
                                     >
                                         <SvgIcon>
@@ -144,6 +156,7 @@ export function SongerList(props: Props) {
                                     src={item.imgPic}
                                     loading="lazy"
                                     style={{ borderRadius: '50%' }}
+                                    alt=""
                                 />
                                 <div
                                     className="shadow"

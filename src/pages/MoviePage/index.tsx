@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
-import { getCurrentMovieOne, getMusic } from '../../api/movie'
+import { useCurrentMovieOne, useMovie } from '../../api/movie'
 import { ButtonIcon } from '../../components/ButtonIcon'
 import { Movie } from '../../components/Movie'
 import { SvgIcon } from '../../components/SvgIcon'
@@ -26,6 +26,23 @@ export default function MoviePage() {
         'mimeType': string
     }>({ 'x-qn-meta': { time: '', views: '' }, 'mimeType': '' })
 
+    const { data: currentMovieOne } = useCurrentMovieOne(videoKey)
+    const { data: movie } = useMovie()
+    useEffect(() => {
+        if (movie) {
+            setMovie(movie)
+            movie.forEach((video: any) => {
+                forEachTitle(video)
+            })
+            setMoviesList(movie.filter((item: any) => item.title !== searchParams.get('title')))
+        }
+    }, [movie])
+    useEffect(() => {
+        if (currentMovieOne) {
+            setMovieDetail(currentMovieOne)
+        }
+    }, [currentMovieOne])
+
     function forEachTitle(video: any) {
         if (video.title === searchParams.get('title')) {
             setCurrentMovie({
@@ -36,38 +53,12 @@ export default function MoviePage() {
             setVideoKey(video.key)
         }
     }
-
-    async function getMovie() {
-        getMusic().then((res) => {
-            setMovie(res)
-            res.forEach((video: any) => {
-                forEachTitle(video)
-            })
-            setMoviesList(res.filter((item: any) => item.title !== searchParams.get('title')))
-        })
-    }
-
-    const getCurrentMovie = async () => {
-        if (videoKey) {
-            getCurrentMovieOne(videoKey).then((data: any) => {
-                setMovieDetail(data)
-            })
-        }
-    }
     const handleClickOutside = () => {
         if (twoShow) {
             setTowShow(false)
             document.removeEventListener('click', handleClickOutside)
         }
     }
-    useEffect(() => {
-        getMovie().then()
-    }, [])
-    useEffect(() => {
-        if (videoKey) {
-            getCurrentMovie().then()
-        }
-    }, [currentMovie])
     useEffect(() => {
         document.addEventListener('click', handleClickOutside)
         return () => document.removeEventListener('click', handleClickOutside)

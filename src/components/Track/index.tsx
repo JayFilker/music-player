@@ -34,7 +34,7 @@ export function Track(props: Props) {
             </div>
             <div style={{ display: 'grid', gap: '4px', gridTemplateColumns: 'repeat(4, 1fr)' }}>
                 {tracks?.items.map((track: any, index: number) => {
-                    return <TrackItem track={track} key={index} index={index}></TrackItem>
+                    return <TrackItem tracks={tracks?.items} track={track} key={index} index={index}></TrackItem>
                 })}
             </div>
         </div>

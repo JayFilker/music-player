@@ -1,18 +1,15 @@
-// import axios from 'axios'
-
-// export async function getContent(type: string, key: string, token: string, offset?: number) {
-//     const result = await axios.get(`https://api.spotify.com/v1/search?q=${encodeURIComponent(key)}&type=${type}&limit=50&offset=${offset || 0}`, {
-//         headers: {
-//             'Authorization': `Bearer ${token}`,
-//             'Content-Type': 'application/json',
-//         },
-//
-//     })
-//     return result.data
-// }
-
+import { useQuery } from '@tanstack/react-query'
 import { get } from './http.ts'
 
 export function getContent(type: string, key: string, offset?: number) {
     return get(`/search?q=${encodeURIComponent(key)}&type=${type}&limit=50&offset=${offset || 0}`)
+}
+
+export function useContent(type: any, key: any, offset?: any) {
+    return useQuery({
+        queryKey: ['content', type, key, offset], // 唯一标识这个查询的键
+        queryFn: () => getContent(type, key, offset),
+        enabled: !!type && !!key, // 只有当token和key存在时才执行查询
+        staleTime: 5 * 60 * 1000, // 数据5分钟内被视为新鲜
+    })
 }

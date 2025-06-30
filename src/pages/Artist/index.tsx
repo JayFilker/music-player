@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
-import { getArtistAlbums, getArtistDetails, getArtistSongs, getNewAlbums } from '../../api/artist.ts'
+import { useArtistAlbums, useArtistDetails, useArtistSongs, useNewAlbums } from '../../api/artist.ts'
 import { Shade } from '../../components/shade'
 import { SongList } from '../../components/SongList'
 import { SongListImg } from '../../components/SongListImg'
@@ -25,36 +25,46 @@ export default function Artist() {
             document.removeEventListener('click', handleClickOutside)
         }
     }
+    const { data: artistDetails } = useArtistDetails(searchParams.get('id') as string)
+    const { data: artistSongs } = useArtistSongs(searchParams.get('id') as string)
+    const { data: newAlbumsDemo } = useNewAlbums(searchParams.get('id') as string)
+    const { data: artistAlbums } = useArtistAlbums(searchParams.get('id') as string)
     useEffect(() => {
-        if (!albumsArtist) {
-            getArtistDetails(searchParams.get('id') as string).then((data) => {
-                setAlbumArtist(data)
-            })
+        if (artistDetails) {
+            setAlbumArtist(artistDetails)
         }
-    }, [])
+    }, [artistDetails])
     useEffect(() => {
-        if (albumsArtist) {
-            getArtistAlbums(searchParams.get('id') as string).then((data) => {
-                setAlbum(data)
-            })
-            getArtistSongs(searchParams.get('id') as string).then(
-                (data) => {
-                    setHotSongs(data)
-                    setHotSongsDemo({ items: data.tracks })
-                },
-            )
-            getNewAlbums(searchParams.get('id') as string).then((data) => {
-                setNewAlbums(data)
-            })
+        if (artistSongs) {
+            setHotSongs(artistSongs)
+            setHotSongsDemo({ items: artistSongs.tracks })
         }
-    }, [albumsArtist])
+    }, [artistSongs])
+    useEffect(() => {
+        if (newAlbumsDemo) {
+            setNewAlbums(newAlbumsDemo)
+        }
+    }, [newAlbumsDemo])
+    useEffect(() => {
+        if (artistAlbums) {
+            setAlbum(artistAlbums)
+        }
+    }, [artistAlbums])
     useEffect(() => {
         document.addEventListener('click', handleClickOutside)
         return () => document.removeEventListener('click', handleClickOutside)
     }, [twoShow])
     return (
         <div className="artist-page">
-            <ArtistInfo albumsArtist={albumsArtist} hotSongs={hotSongs} album={album} setShowShade={setShowShade} setTowShow={setTowShow} twoShow={twoShow}></ArtistInfo>
+            <ArtistInfo
+                albumsArtist={albumsArtist}
+                hotSongs={hotSongs}
+                album={album}
+                setShowShade={setShowShade}
+                setTowShow={setTowShow}
+                twoShow={twoShow}
+            >
+            </ArtistInfo>
             <div className="latest-release">
                 <div className="section-title">
                     {t('最新发布')}

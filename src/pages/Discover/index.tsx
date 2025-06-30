@@ -2,7 +2,7 @@ import { useAtom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useSearchParams } from 'react-router-dom'
-import { getAlbumList } from '../../api/album.ts'
+import { useAlbumList } from '../../api/album.ts'
 import { ButtonIconTwo } from '../../components/ButtonIconTwo'
 import { SearchList } from '../../components/SearchList'
 import { SvgIcon } from '../../components/SvgIcon'
@@ -19,39 +19,37 @@ export default function Discover() {
     const [currentKey, setCurrentKey] = useState('\'\'')
     const [currentNumber, setCurrentNumber] = useState(0)
     const location = useLocation()
-
-    async function fetchProfile(key: string, offset: number): Promise<any> {
-        const json = await getAlbumList(key === '推荐歌单' ? 'recommend' : key, offset)
-        if (offset === 0) {
-            setAlbumList(json)
+    const { data } = useAlbumList(currentKey === '推荐歌单' ? 'recommend' : currentKey, currentNumber)
+    useEffect(() => {
+        if (currentNumber === 0) {
+            setAlbumList(data)
         }
         else {
-            const updatedList = {
-                ...albumList, // 复制原始对象的所有属性
-                albums: {
-                    ...albumList.albums, // 复制albums对象的所有属性
-                    items: [
-                        ...albumList.albums.items, // 保留原有的items
-                        ...json.albums.items, // 添加新的items
-                    ],
-                },
+            if (data) {
+                const updatedList = {
+                    ...albumList, // 复制原始对象的所有属性
+                    albums: {
+                        ...albumList?.albums, // 复制albums对象的所有属性
+                        items: [
+                            ...albumList?.albums?.items, // 保留原有的items
+                            ...data?.albums?.items, // 添加新的items
+                        ],
+                    },
+                }
+                setAlbumList(updatedList)
             }
-            setAlbumList(updatedList)
         }
-    }
+    }, [data])
 
     useEffect(() => {
         const keyFromUrl = searchParams.get('key')
         if (keyFromUrl && searchKey.includes(keyFromUrl)) {
-            // 直接设置当前key并执行对应逻辑
             setShowSmallKey(false)
             document.querySelectorAll('.button.active').forEach((el) => {
                 el.classList.remove('active')
             })
-            fetchProfile(keyFromUrl, 0).then()
             setCurrentNumber(0)
             setCurrentKey(keyFromUrl)
-            // 延迟一帧后设置active类
             const index = searchKey.findIndex(item => item === keyFromUrl)
             const buttons = document.querySelectorAll('.buttons>.button')
             if (buttons[index]) {
@@ -59,7 +57,6 @@ export default function Discover() {
             }
         }
         else {
-            fetchProfile('\'\'', 0).then()
             setCurrentNumber(0)
             setCurrentKey('\'\'')
         }
@@ -75,11 +72,9 @@ export default function Discover() {
                         onClick={(e) => {
                             setShowSmallKey(false)
                             if (e.currentTarget.classList.contains('active')) {
-                                // 如果有，则移除active类名
                                 e.currentTarget.classList.remove('active')
                             }
                             else {
-                                // 如果没有，则添加active类名
                                 document.querySelectorAll('.button.active').forEach((el) => {
                                     el.classList.remove('active')
                                 })
@@ -87,12 +82,10 @@ export default function Discover() {
                                 e.currentTarget.classList.add('active')
                                 const buttonContent = e.currentTarget.textContent as string
                                 if (buttonContent !== '全部') {
-                                    fetchProfile(buttonContent, 0).then()
                                     setCurrentNumber(0)
                                     setCurrentKey(buttonContent)
                                 }
                                 else {
-                                    fetchProfile('\'\'', 0).then()
                                     setCurrentNumber(0)
                                     setCurrentKey('\'\'')
                                 }
@@ -154,7 +147,6 @@ export default function Discover() {
                     style={{ borderRadius: '8px', padding: '8px 16px', width: 'auto' }}
                     onClick={() => {
                         const newOffset = currentNumber + 50
-                        fetchProfile(currentKey, newOffset).then()
                         setCurrentNumber(newOffset)
                     }}
                 >

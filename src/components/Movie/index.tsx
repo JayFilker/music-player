@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { getMovieImg } from '../../api/movie.ts'
+import { useMovieImg } from '../../api/movie.ts'
 import './index.less'
 
 interface Props {
@@ -26,11 +26,12 @@ export function Movie(props: Props) {
         )
     }, [movie, keyValue])
     const [img, setImg] = useState<Array<any>>([])
+    const { data } = useMovieImg()
     useEffect(() => {
-        getMovieImg().then((res) => {
-            setImg(res)
-        })
-    }, [currentMovie])
+        if (data) {
+            setImg(data)
+        }
+    }, [data])
     useEffect(() => {
         // 如果任一数据为空，直接返回
         if (!img?.length || !currentMovie?.length || !movieList?.length) {

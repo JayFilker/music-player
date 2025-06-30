@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai/index'
 import React, { useEffect, useRef, useState } from 'react'
-import { seekToPositionPut } from '../../api/system.ts'
+import { useSeekToPosition } from '../../api/system.ts'
 import { Device, StopUpdateBar } from '../../store/store' // 你需要创建对应的CSS文件
 import './index.less'
 
@@ -22,6 +22,7 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, lyrics 
     const sliderRef = useRef<HTMLDivElement>(null)
     const [deviceId] = useAtom(Device)
     const lastUpdateTimeRef = useRef(Date.now())
+    const { mutate: seekToPosition } = useSeekToPosition()
     const formatTrackTime = (value: number) => {
         return `${Math.floor(value / 60)}:${String(Math.floor(value % 60)).padStart(2, '0')}`
     }
@@ -42,7 +43,7 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, lyrics 
         })
         return percentage / 100 * player.currentTrackDuration
     }
-    const seekToPosition = async (positionSec: number) => {
+    const seekToPositionDemo = async (positionSec: number) => {
         if (!deviceId)
             return
         try {
@@ -52,7 +53,16 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, lyrics 
                 progress: positionSec,
             })
             lastUpdateTimeRef.current = Date.now()
-            await seekToPositionPut(positionMs, deviceId)
+            seekToPosition({ positionMs, deviceId }, {
+                onSuccess: () => {
+                    console.log('Seek successful')
+                    // 可以在这里更新本地播放状态或执行其他操作
+                },
+                onError: (error) => {
+                    console.error('Failed to seek:', error)
+                    // 错误处理
+                },
+            })
         }
         catch (error) {
             console.error('调整进度失败:', error)
@@ -69,7 +79,7 @@ export const CustomSlider: React.FC<SliderProps> = ({ player, setPlayer, lyrics 
     const handleMouseUp = (e: { clientX: number }) => {
         const percentage = updateProgressFromClientX(e.clientX)
         if (percentage) {
-            seekToPosition(percentage)
+            seekToPositionDemo(percentage).then()
             setTimeout(() => {
                 setStopUpdateBar(false)
             }, 1000) // 延时1秒恢复更新

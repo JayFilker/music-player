@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
-import { getMusic } from '../../api/movie.ts'
-import { fetchProfile } from '../../api/search'
+import { useMovie } from '../../api/movie.ts'
+import { useFetchProfile } from '../../api/search'
 import { Movie } from '../../components/Movie'
 import { SongerList } from '../../components/SongerList'
 import { SongList } from '../../components/SongList'
@@ -15,23 +15,19 @@ export default function Search() {
     const [content, setContent] = useState<any>()
     const [movie, setMovie] = useState<any>()
     const { t } = useTranslation()
-
+    const { data } = useMovie()
     useEffect(() => {
-        const currentQuery = searchParams.get('q') || ''
-        const a = async () => {
-            try {
-                const s = await fetchProfile(currentQuery)
-                setContent(s)
-            }
-            catch (error) {
-                console.error('获取数据失败:', error)
-            }
+        if (data) {
+            setMovie(data)
         }
-        a()
-        getMusic().then((res) => {
-            setMovie(res)
-        })
-    }, [searchParams])
+    }, [data])
+
+    const { data: fetchProfile } = useFetchProfile(searchParams.get('q'))
+    useEffect(() => {
+        if (fetchProfile) {
+            setContent(fetchProfile)
+        }
+    }, [fetchProfile])
     return (
         <div className="search-page">
             <div className="row">
