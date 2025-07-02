@@ -17,32 +17,11 @@ export default function MoviePage() {
     const { t } = useTranslation()
     const [twoShow, setTowShow] = useState(false)
     const [searchParams] = useSearchParams()
-    const [movieDemo, setMovie] = useState<Array<any>>([])
     const [moviesList, setMoviesList] = useState<any>([])
     const [btnShow, setBtnShow] = useState(true)
     const videoRef = useRef(null)
-    const [movieDetail, setMovieDetail] = useState<{
-        'x-qn-meta'?: { time: string, views: string }
-        'mimeType': string
-    }>({ 'x-qn-meta': { time: '', views: '' }, 'mimeType': '' })
-
     const { data: currentMovieOne } = useCurrentMovieOne(videoKey)
     const { data: movie } = useMovie()
-    useEffect(() => {
-        if (movie) {
-            setMovie(movie)
-            movie.forEach((video: any) => {
-                forEachTitle(video)
-            })
-            setMoviesList(movie.filter((item: any) => item.title !== searchParams.get('title')))
-        }
-    }, [movie])
-    useEffect(() => {
-        if (currentMovieOne) {
-            setMovieDetail(currentMovieOne)
-        }
-    }, [currentMovieOne])
-
     function forEachTitle(video: any) {
         if (video.title === searchParams.get('title')) {
             setCurrentMovie({
@@ -64,13 +43,13 @@ export default function MoviePage() {
         return () => document.removeEventListener('click', handleClickOutside)
     }, [twoShow])
     useEffect(() => {
-        if (currentMovie && searchParams.get('title') !== currentMovie.title) {
-            movieDemo.forEach((videoDemo: any) => {
+        if ((currentMovie && searchParams.get('title') !== currentMovie.title) || movie) {
+            movie.forEach((videoDemo: any) => {
                 forEachTitle(videoDemo)
             })
-            setMoviesList(movieDemo.filter((item: any) => item.title !== searchParams.get('title')))
+            setMoviesList(movie.filter((item: any) => item.title !== searchParams.get('title')))
         }
-    }, [searchParams.get('title')])
+    }, [searchParams.get('title'), movie])
     return (
         currentMovie
             ? (
@@ -169,9 +148,9 @@ export default function MoviePage() {
                                     </div>
                                 </div>
                                 <div className="info">
-                                    {movieDetail?.['x-qn-meta']?.views || '暂无'}
+                                    {currentMovieOne?.['x-qn-meta']?.views || '暂无'}
                                     Views ·
-                                    {movieDetail?.['x-qn-meta']?.time || '暂无时间'}
+                                    {currentMovieOne?.['x-qn-meta']?.time || '暂无时间'}
                                 </div>
                             </div>
                         </div>

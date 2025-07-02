@@ -20,6 +20,9 @@ import { svgList } from './svg.tsx'
 import './index.less'
 
 export function Foryou() {
+    const [randomLetter, setRandomLetter] = useState<any>()
+    const { data } = useAlbum(randomLetter)
+    const { data: albumSong } = useAlbumSong(data?.albums?.items?.[0].id)
     const [, setFirstPlay] = useAtom(FirstPlay)
     const [, setCount] = useAtom(CountDemo)
     const navigate = useNavigate()
@@ -29,67 +32,44 @@ export function Foryou() {
     const [linkDemo, setLinkDemo] = useAtom(Link)
     const [countL, setCountL] = useState(0)
     const [, setCurrentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
-    const [randomAlbum, setRandomAlbum] = useState<any>()
-    const [randomLetter, setRandomLetter] = useState<any>()
-    const [randomAlbumSong, setRandomAlbumSong] = useState<any>()
     const randomGradient = useMemo(() =>
         `linear-gradient(to left top,
    rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}),
    rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}))`, [])
-
-    const { data } = useAlbum(randomLetter)
-    const [id, setId] = useState()
-    const { data: albumSong } = useAlbumSong(id)
-    useEffect(() => {
-        if (albumSong) {
-            setRandomAlbumSong(albumSong)
-        }
-    }, [albumSong])
-    useEffect(() => {
-        if (data) {
-            setRandomAlbum(data)
-            if (data?.albums?.items?.length > 0) {
-                // 随机选择一个专辑
-                const albumId = data.albums.items[0].id
-                setId(albumId)
-            }
-        }
-    }, [data])
-
     function nextSong() {
         setFirstPlay(false)
         setLinkDemo(true)
         setIsPlayingTwo(true)
         setBadLikeDemo(true)
         setCurrentSong({
-            ...randomAlbumSong,
-            imgPic: randomAlbum?.albums?.items[0].images[0].url,
+            ...albumSong,
+            imgPic: data?.albums?.items[0].images[0].url,
         })
-        if (countL < randomAlbumSong?.items.length - 1) {
+        if (countL < albumSong?.items.length - 1) {
             // @ts-ignore
-            eventBus.emit('play-track', randomAlbumSong?.items[countL + 1].uri)
+            eventBus.emit('play-track', albumSong?.items[countL + 1].uri)
             setCountL(countL + 1)
             setCount(countL + 1)
         }
         else {
             // @ts-ignore
-            eventBus.emit('play-track', randomAlbumSong?.items[countL].uri)
+            eventBus.emit('play-track', albumSong?.items[countL].uri)
             setCount(countL)
         }
     }
 
     const getRandomAlbumFirstTrack = async (play?: boolean) => {
-        if (randomAlbumSong) {
+        if (albumSong) {
             if (play === true) {
                 if (!linkDemo) {
                     setFirstPlay(false)
                     setCurrentSong({
-                        ...randomAlbumSong,
-                        imgPic: randomAlbum?.albums?.items[0].images[0].url,
+                        ...albumSong,
+                        imgPic: data?.albums?.items[0].images[0].url,
                     })
                     setCount(0)
                     // @ts-ignore
-                    eventBus.emit('play-track', randomAlbumSong?.items[0].uri)
+                    eventBus.emit('play-track', albumSong?.items[0].uri)
                     setLinkDemo(true)
                 }
                 else {
@@ -125,16 +105,16 @@ export function Foryou() {
             >
                 <img src="undefined?param=512y512" loading="lazy" style={{ display: 'none' }} alt="" />
                 <img
-                    src={randomAlbum?.albums?.items[0].images[0].url}
+                    src={data?.albums?.items[0].images[0].url}
                     loading="lazy"
                     className="cover"
                     alt=""
                     onClick={() => {
-                        navigate(`/playsList?id=${randomAlbum?.albums?.items[0].id}&type=albums`)
+                        navigate(`/playsList?id=${data?.albums?.items[0].id}&type=albums`)
                     }}
                 />
                 <div className="right-part">
-                    <Info randomAlbum={randomAlbum}></Info>
+                    <Info randomAlbum={data}></Info>
                     <div className="controls" style={{ paddingLeft: '0px', paddingRight: '0px' }}>
                         <div className="buttons">
                             <ButtonIcon

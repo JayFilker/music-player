@@ -39,7 +39,7 @@ export default function Discover() {
                 setAlbumList(updatedList)
             }
         }
-    }, [data])
+    }, [data, currentNumber])
 
     useEffect(() => {
         const keyFromUrl = searchParams.get('key')

@@ -6,7 +6,7 @@ import { TItemSvgList } from './TItemSvgList.tsx'
 import './index.less'
 
 export function TrackListItem(track: any) {
-    const { content, playingTrack, index, setPlayingTrack, songList } = track
+    const { content, playingTrack, index, setPlayingTrack, songList, setFirst } = track
     const [searchParams] = useSearchParams()
     const [showIcon, setShowIcon] = useState(false)
     const [showRow, setShowRow] = useState(false)
@@ -37,6 +37,7 @@ export function TrackListItem(track: any) {
                     img: searchParams.get('type') === 'playlists' ? content?.track?.album.images[0].url : songList?.images[0].url,
                     count: index,
                 })
+                setFirst(false)
             }}
         >
             {searchParams.get('type') === 'playlists'

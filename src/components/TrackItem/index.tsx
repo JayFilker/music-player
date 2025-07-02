@@ -8,10 +8,12 @@ interface Props {
     track?: any
     index: number
     tracks?: any
+    songFirst: boolean
+    setSongFirst: (arg0: boolean) => void
 }
 
 export function TrackItem(props: Props) {
-    const { track, index, tracks } = props
+    const { track, index, tracks, songFirst, setSongFirst } = props
     const [play, setPlay] = useAtom(Playing)
     const [focus, setFocus] = useState(false)
     const [, setCurrentSong] = useAtom<{ items: Array<any>, imgPic: string }>(CurrentSongList)
@@ -25,15 +27,15 @@ export function TrackItem(props: Props) {
             return newPlay
         })
     }, [count])
-
     return (
         <div
-            className={`track tracklist ${focus ? 'focus' : ''} ${play[index] ? 'track-playing' : ''}`}
+            className={`track tracklist ${focus ? 'focus' : ''} ${play[index] && !songFirst ? 'track-playing' : ''}`}
             onDoubleClick={() => {
                 setCurrentSong({ items: [...tracks], imgPic: track.album.images[0].url })
                 setCount(index)
                 // @ts-ignore
                 eventBus.emit('play-track', track.uri)
+                setSongFirst(false)
             }}
             onMouseEnter={() => {
                 setFocus(true)

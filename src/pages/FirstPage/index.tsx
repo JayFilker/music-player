@@ -1,5 +1,5 @@
 import { useAtom } from 'jotai'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useFirstFetchProfile, useRecommendedArtists } from '../../api/search.ts'
 import defaultImg from '../../assets/img/default.png'
@@ -22,27 +22,13 @@ export default function FirstPage() {
         name: set.linkMusic === 'all' || set.linkMusic === 'ea' ? 'new' : set.linkMusic === 'zh' ? '新' : set.linkMusic === 'jp' ? '新しい' : '새로운',
         limit: 10,
     }])
-    const [contentList, setContentList] = useState<Array<any>>([])
     const { t } = useTranslation()
-    const [artists, setArtists] = useState<{ artists: { items: Array<any> } }>()
     const searchTerms = ['recommended', 'popular', 'top']
     const randomTerm = searchTerms[Math.floor(Math.random() * searchTerms.length)]
-
     const { data: apple } = useFirstFetchProfile(keyList[0].name, keyList[0].limit, 'playlist')
     const { data: recommend } = useFirstFetchProfile(keyList[1].name, keyList[1].limit, 'playlist')
     const { data: linkMusic } = useFirstFetchProfile(keyList[2].name, keyList[2].limit, 'album')
     const { data: recommendedArtists } = useRecommendedArtists(randomTerm)
-    useEffect(() => {
-        if (recommendedArtists) {
-            setArtists(recommendedArtists)
-        }
-    }, [recommendedArtists])
-    useEffect(() => {
-        if (apple && recommend && linkMusic) {
-            const results = [apple, recommend, linkMusic]
-            setContentList(results)
-        }
-    }, [apple, recommend, linkMusic])
     return (
         <div className="home">
             {set.showApple && (
@@ -52,7 +38,7 @@ export default function FirstPage() {
                         by Apple Music
                     </div>
                     <SongList
-                        songList={contentList[0]?.playlists.items.filter((_itemDemo: any) => _itemDemo !== null).filter((_itemDemo: any, index: number) => index < 12).map((item: {
+                        songList={apple?.playlists.items.filter((_itemDemo: any) => _itemDemo !== null).filter((_itemDemo: any, index: number) => index < 12).map((item: {
                             id: string
                             name: string
                             images: Array<any>
@@ -75,7 +61,7 @@ export default function FirstPage() {
                     <a href="/discover?key=推荐歌单" className="title-all">{t('查看全部')}</a>
                 </div>
                 <SongList
-                    songList={contentList[1]?.playlists.items.filter((_itemDemo: any) => _itemDemo !== null).filter((_itemDemo: any, index: number) => index < 12).map((item: {
+                    songList={recommend?.playlists.items.filter((_itemDemo: any) => _itemDemo !== null).filter((_itemDemo: any, index: number) => index < 12).map((item: {
                         id: string
                         name: string
                         images: Array<any>
@@ -100,7 +86,7 @@ export default function FirstPage() {
                 </div>
                 <SongerList
                     artist={
-                        artists?.artists?.items?.map((item: any) => {
+                        recommendedArtists?.artists?.items?.map((item: any) => {
                             return {
                                 name: item.name,
                                 personSongList: [],
@@ -118,7 +104,7 @@ export default function FirstPage() {
                     <a href={`/more?key=${keyList[2].name}`} className="title-all">{t('查看全部')}</a>
                 </div>
                 <SongList
-                    songList={contentList[2]?.albums.items.map((item: {
+                    songList={linkMusic?.albums.items.map((item: {
                         id: string
                         name: string
                         images: Array<any>

@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai'
-import { useEffect } from 'react'
-import { PlayingTrack } from '../../store/store.ts'
+import { useEffect, useState } from 'react'
+import { CountDemo, PlayingTrack } from '../../store/store.ts'
 import { TrackListDemo } from './TrackListDemo'
 import { TrackListItem } from './TrackListItem'
 import './index.less'
@@ -13,9 +13,13 @@ export function TrackList(props: {
     extraContextMenuItem?: string[]
     songList?: any
     trackDemo?: any
+    first?: boolean
+    setFirst?: (arg0: boolean) => void
 }) {
-    const { songListInfo, songList, trackDemo } = props
+    const { songListInfo, songList, trackDemo, first, setFirst } = props
     const [playingTrack, setPlayingTrack] = useAtom(PlayingTrack)
+    const [count] = useAtom(CountDemo)
+    const [songFirst, setSongFirst] = useState(true)
     useEffect(() => {
         if (songListInfo) {
             setPlayingTrack(Array.from({ length: songListInfo?.items?.length }).fill(false))
@@ -24,6 +28,13 @@ export function TrackList(props: {
             setPlayingTrack(Array.from({ length: trackDemo?.items?.length }).fill(false))
         }
     }, [songListInfo, trackDemo])
+    useEffect(() => {
+        if (!first) {
+            const demo = Array.from({ length: playingTrack.length }).fill(false)
+            demo[count] = true
+            setPlayingTrack(demo)
+        }
+    }, [count])
     return (
         <div className="track-list">
             <div>
@@ -36,6 +47,7 @@ export function TrackList(props: {
                             playingTrack={playingTrack}
                             index={index}
                             setPlayingTrack={setPlayingTrack}
+                            setFirst={setFirst}
                         >
                         </TrackListItem>
                     )
@@ -49,6 +61,8 @@ export function TrackList(props: {
                             playingTrack={playingTrack}
                             index={index}
                             setPlayingTrack={setPlayingTrack}
+                            songFirst={songFirst}
+                            setSongFirst={setSongFirst}
                         >
                         </TrackListDemo>
                     )

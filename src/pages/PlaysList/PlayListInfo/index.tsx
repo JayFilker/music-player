@@ -19,6 +19,7 @@ export function PlayListInfo(props: any) {
         setTowShow,
         twoShow,
         demo,
+        setFirst,
     } = props
     const [showSearch, setShowSearch] = useState(false)
     const [inputFocus, setInputFocus] = useState(false)
@@ -38,7 +39,7 @@ export function PlayListInfo(props: any) {
     return (
         <div className="playlist-info">
             <SongListImg
-                img={songList?.images[0]?.url || defaultImg}
+                img={songList?.images?.[0]?.url || defaultImg}
                 id={songList?.id}
                 index={666}
                 size="290px"
@@ -83,7 +84,7 @@ export function PlayListInfo(props: any) {
                         : songList?.release_date?.split('-')[0]}
 
                     {' · '}
-                    {songList?.tracks.items.length}
+                    {songList?.tracks?.items?.length}
                     {t('首歌')}
                     {songList?.time ? `,${songList?.time} ${t('分钟')}` : ''}
                 </div>
@@ -109,6 +110,7 @@ export function PlayListInfo(props: any) {
                             const demo = playingTrack.map(() => false)
                             demo[0] = true
                             setPlayingTrack(demo)
+                            setFirst(false)
                         }}
                     >
                         <SvgIcon sty={{ marginRight: '8px' }}>

@@ -14,7 +14,6 @@ import './index.less'
 
 export default function SearchDemo() {
     const [searchParams] = useSearchParams()
-    const [movie, setMovie] = useState<any>()
     const [contentList, setContentList] = useState<any>()
     const [title, setTitle] = useState<any>()
     const [currentNumber, setCurrentNumber] = useState(0)
@@ -36,12 +35,7 @@ export default function SearchDemo() {
             }
             setContentList(contentListDemo)
         }
-    }, [content])
-    useEffect(() => {
-        if (data) {
-            setMovie(data)
-        }
-    }, [data])
+    }, [content, currentNumber])
     useEffect(() => {
         const demo = async () => {
             if (searchParams.get('type') && searchParams.get('key')) {
@@ -101,7 +95,7 @@ export default function SearchDemo() {
                 <TrackList trackDemo={contentList?.tracks}></TrackList>
             </div>
             <div style={{ display: searchParams.get('type') === 'movie' ? '' : 'none' }}>
-                <Movie movie={movie} keyValue={searchParams.get('key') || ''} limitNumber={0}></Movie>
+                <Movie movie={data} keyValue={searchParams.get('key') || ''} limitNumber={0}></Movie>
             </div>
             <div style={{ display: searchParams.get('type') === 'playlist' ? '' : 'none' }}>
                 <SongList

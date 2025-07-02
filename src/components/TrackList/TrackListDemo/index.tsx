@@ -6,7 +6,7 @@ import { SvgIcon } from '../../SvgIcon'
 import './index.less'
 
 export function TrackListDemo(track: any) {
-    const { content, playingTrack, index, setPlayingTrack, songList } = track
+    const { content, playingTrack, index, setPlayingTrack, songList, songFirst, setSongFirst } = track
     const [showIcon, setShowIcon] = useState(false)
     const [, setBadLikeDemo] = useAtom(BadLike)
     const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
@@ -39,7 +39,7 @@ export function TrackListDemo(track: any) {
     }, [count])
     return (
         <div
-            className={`track playlist ${showRow ? 'focus' : ''} ${playingTrack[index] ? 'playing' : ''}`}
+            className={`track playlist ${showRow ? 'focus' : ''} ${playingTrack[index] && !songFirst ? 'playing' : ''}`}
             onMouseEnter={() => {
                 setShowIcon(true)
                 setShowRow(true)
@@ -58,6 +58,7 @@ export function TrackListDemo(track: any) {
                 demo[index] = true
                 setPlayingTrack(demo)
                 initTwo(index)
+                setSongFirst(false)
             }}
         >
 

@@ -36,22 +36,12 @@ export function SongerList(props: Props) {
     const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
     const [, setLinkDemo] = useAtom(Link)
     const [, setFirstPlay] = useAtom(FirstPlay)
-    const [albumId, setAlbumId] = useState()
     const [artistId, setArtistId] = useState<any>()
     const navigate = useNavigate()
     const [songList, setSongList] = useState<Array<any>>([{}, {}, {}, {}, {}, {}])
     const [number, setNumber] = useState(0)
-    const { data } = useAlbumSong(albumId)
     const { data: artistAlbum } = useArtistAlbum(artistId)
-    useEffect(() => {
-        if (artistAlbum) {
-            // 检查是否有专辑
-            if (artistAlbum?.items?.length > 0) {
-                const albumId = artistAlbum.items[0].id
-                setAlbumId(albumId)
-            }
-        }
-    }, [artistAlbum])
+    const { data } = useAlbumSong(artistAlbum?.items?.[0]?.id)
     useEffect(() => {
         if (data) {
             const tracksData = data
@@ -71,7 +61,7 @@ export function SongerList(props: Props) {
             // @ts-ignore
             eventBus.emit('play-track', tracksData.items[0].uri)
         }
-    }, [data])
+    }, [data, number])
 
     const getArtistSongList = async (artistId: string, index: number) => {
         setNumber(index)

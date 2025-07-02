@@ -1,12 +1,16 @@
+import { useState } from 'react'
 import { TrackItem } from '../TrackItem'
 import './index.less'
 
 interface Props {
     tracks?: any
+    songFirstDemo?: boolean
+    setSongFirstDemo?: (value: boolean) => void
 }
 
 export function Track(props: Props) {
-    const { tracks } = props
+    const { tracks, songFirstDemo, setSongFirstDemo } = props
+    const [songFirst, setSongFirst] = useState(true)
     return (
         <div className="track-list">
             <div className="context-menu" style={{ display: 'none' }}>
@@ -33,8 +37,18 @@ export function Track(props: Props) {
                 </div>
             </div>
             <div style={{ display: 'grid', gap: '4px', gridTemplateColumns: 'repeat(4, 1fr)' }}>
-                {tracks?.items.map((track: any, index: number) => {
-                    return <TrackItem tracks={tracks?.items} track={track} key={index} index={index}></TrackItem>
+                {tracks?.items?.map((track: any, index: number) => {
+                    return (
+                        <TrackItem
+                            tracks={tracks?.items}
+                            track={track}
+                            key={index}
+                            index={index}
+                            songFirst={songFirstDemo ?? songFirst}
+                            setSongFirst={setSongFirstDemo ?? setSongFirst}
+                        >
+                        </TrackItem>
+                    )
                 })}
             </div>
         </div>

@@ -41,8 +41,6 @@ export const PlayerDemo = atom({
     progress: 0,
     currentTrackDuration: 100,
 })
-
-export const CurrentAlum = atom<any>()
 export const MusicList = atom<any>([true, true, true, true])
 
 export const PlayingTrack = atom(Array.from({ length: 100 }).fill(false))

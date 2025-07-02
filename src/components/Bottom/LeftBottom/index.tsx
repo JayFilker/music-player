@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePlaysList } from '../../../api/check.ts'
 import { usePausePlaybackPut, useResumePlaybackPut } from '../../../api/system.ts'
-import { CountDemo, CurrentAlum, CurrentSongList, Device, IsPlayingDemo } from '../../../store/store.ts'
+import { CountDemo, CurrentSongList, Device, IsPlayingDemo } from '../../../store/store.ts'
 import eventBus from '../../../utils/eventBus'
 import { ButtonIcon } from '../../ButtonIcon'
 import { SvgIcon } from '../../SvgIcon'
@@ -71,13 +71,7 @@ export function LeftBottom(props: Props) {
             eventBus.off('play-stop', handleStop)
         }
     }, [deviceId])
-    const [currentAlbum, setCurrentAlbum] = useAtom<any>(CurrentAlum)
     const { data } = usePlaysList('tracks', currentSong?.items?.[count]?.id)
-    useEffect(() => {
-        if (data) {
-            setCurrentAlbum(data)
-        }
-    }, [data])
     return (
         <div className="playing">
             <div className="container">
@@ -87,7 +81,7 @@ export function LeftBottom(props: Props) {
                     // src={currentSong?.items ? currentSong.imgPic : ''}
                     src={currentSong?.items ? currentSong?.items?.[count]?.album?.images[0]?.url ? currentSong?.items[count]?.album?.images[0]?.url : currentSong.imgPic : ''}
                     onClick={() => {
-                        navigate(`/playsList?id=${currentAlbum?.album?.id}&type=albums`)
+                        navigate(`/playsList?id=${data?.album?.id}&type=albums`)
                     }}
                 />
                 <div className="track-info">

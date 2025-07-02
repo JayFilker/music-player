@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useMovie } from '../../api/movie.ts'
@@ -12,22 +11,9 @@ import '../../components/SongListImg/index.less'
 
 export default function Search() {
     const [searchParams] = useSearchParams()
-    const [content, setContent] = useState<any>()
-    const [movie, setMovie] = useState<any>()
     const { t } = useTranslation()
     const { data } = useMovie()
-    useEffect(() => {
-        if (data) {
-            setMovie(data)
-        }
-    }, [data])
-
     const { data: fetchProfile } = useFetchProfile(searchParams.get('q'))
-    useEffect(() => {
-        if (fetchProfile) {
-            setContent(fetchProfile)
-        }
-    }, [fetchProfile])
     return (
         <div className="search-page">
             <div className="row">
@@ -43,7 +29,7 @@ export default function Search() {
                         gap="34px 24px"
                         gridTemplateColumns="repeat(3, 1fr)"
                         artist={
-                            content?.artists?.items
+                            fetchProfile?.artists?.items
                                 ?.filter((_itemDemo: any, index: number) => index < 3)
                                 ?.map((item: any) => ({
                                     name: item.name,
@@ -63,7 +49,7 @@ export default function Search() {
                     </div>
                     <SongList
                         style={{ gridTemplateColumns: 'repeat(3, 1fr)', gap: '34px 24px' }}
-                        songList={content?.albums.items?.filter((_itemDemo: any, index: number) => index < 3)
+                        songList={fetchProfile?.albums.items?.filter((_itemDemo: any, index: number) => index < 3)
                             ?.map((item: {
                                 id: string
                                 name: string
@@ -72,7 +58,7 @@ export default function Search() {
                                 return {
                                     id: item.id,
                                     title: item.name,
-                                    des: content.albums.items[index].artists[0].name,
+                                    des: fetchProfile.albums.items[index].artists[0].name,
                                     imgPic: item.images[0].url,
                                     content: [],
                                 }
@@ -87,7 +73,7 @@ export default function Search() {
                     {t('歌曲')}
                     <Link to={`/searchDemo?type=track&key=${searchParams.get('q')}`}>{t('查看全部')}</Link>
                 </div>
-                <Track tracks={content?.tracks}></Track>
+                <Track tracks={fetchProfile?.tracks}></Track>
             </div>
 
             <div className="music-videos">
@@ -95,7 +81,7 @@ export default function Search() {
                     {t('视频')}
                     <Link to={`/searchDemo?type=movie&key=${searchParams.get('q')}`}>{t('查看全部')}</Link>
                 </div>
-                <Movie movie={movie} keyValue={searchParams.get('q') || ''}></Movie>
+                <Movie movie={data} keyValue={searchParams.get('q') || ''}></Movie>
             </div>
 
             <div className="playlists">
@@ -105,7 +91,7 @@ export default function Search() {
                 </div>
                 <SongList
                     style={{ gridTemplateColumns: 'repeat(6, 1fr)', gap: '34px 24px' }}
-                    songList={content?.playlists.items.filter((_itemDemo: any) => _itemDemo !== null).filter((_itemDemo: any, index: number) => index < 12).map((item: {
+                    songList={fetchProfile?.playlists.items.filter((_itemDemo: any) => _itemDemo !== null).filter((_itemDemo: any, index: number) => index < 12).map((item: {
                         id: string
                         name: string
                         images: Array<any>

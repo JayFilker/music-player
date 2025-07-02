@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai'
 import { useNavigate } from 'react-router-dom'
-import { CountDemo, CurrentAlum, CurrentSongList, ShowLyrics, TemporaryVolume } from '../../../store/store.ts'
+import { usePlaysList } from '../../../api/check.ts'
+import { CountDemo, CurrentSongList, ShowLyrics, TemporaryVolume } from '../../../store/store.ts'
 import { CustomSlider } from '../../Bar'
 import { ButtonIcon } from '../../ButtonIcon'
 import { SvgIcon } from '../../SvgIcon'
@@ -49,7 +50,7 @@ export function LyricsButtom(props: any) {
         },
     ]
     const navigate = useNavigate()
-    const [currentAlbum] = useAtom<any>(CurrentAlum)
+    const { data: currentAlbum } = usePlaysList('tracks', currentSong?.items?.[count]?.id)
     const formatTrackTime = (value: number) => {
         return `${Math.floor(value / 60)}:${String(Math.floor(value % 60)).padStart(2, '0')}`
     }

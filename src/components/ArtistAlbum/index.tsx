@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+// import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useArtistAlbum, useArtistDetails, useSearchArtist } from '../../api/artist.ts'
+import { useArtistAlbum, useSearchArtist } from '../../api/artist.ts'
 import { SongListImg } from '../SongListImg'
 import '../SongList/index.less'
 
@@ -11,35 +11,15 @@ interface Props {
 
 export function ArtistAlbum(props: Props) {
     const { artist, style } = props
-    const [id, setId] = useState()
-    const [album, setAlbum] = useState<any>(null)
-    const [, setAlbumArtist] = useState([])
-    const { data } = useArtistDetails(id)
-    const { data: artistAlbumDate } = useArtistAlbum(id, 5)
     const { data: searchArtist } = useSearchArtist(artist)
-    useEffect(() => {
-        if (artistAlbumDate) {
-            setAlbum(artistAlbumDate)
-        }
-    }, [artistAlbumDate])
-    useEffect(() => {
-        if (data) {
-            setAlbumArtist(data)
-        }
-    }, [data])
-    useEffect(() => {
-        if (searchArtist) {
-            setId(searchArtist.artists.items[0].id)
-        }
-    }, [searchArtist])
+    const { data: artistAlbumDate } = useArtistAlbum(searchArtist?.artists?.items?.[0]?.id, 5)
     return (
-
         <div
             className="cover-row"
             style={style || { gridTemplateColumns: 'repeat(5, 1fr)', gap: '44px 24px' }}
         >
             {
-                album?.items.map((item: any, index: number) => {
+                artistAlbumDate?.items.map((item: any, index: number) => {
                     return (
                         <div
                             key={index}

@@ -7,9 +7,8 @@ import eventBus from '../../../utils/eventBus.ts'
 import { artistSvgList } from '../artistSvgList.tsx'
 
 export function ArtistInfo(props: any) {
-    const { albumsArtist, hotSongs, album, setShowShade, setTowShow, twoShow } = props
+    const { albumsArtist, hotSongs, album, setShowShade, setTowShow, twoShow, setSongFirst } = props
     const { t } = useTranslation()
-    const list = ['复制链接', '在浏览器中打开'] // todo 只用一次，可以内联到参数上
     const [, setPlay] = useAtom(Playing)
     const [, setCount] = useAtom(CountDemo)
     const [, setCurrentSong] = useAtom<{ items: Array<any>, imgPic: string }>(CurrentSongList)
@@ -64,6 +63,7 @@ export function ArtistInfo(props: any) {
                                 return newPlay
                             })
                             console.log(hotSongs?.tracks[0].url)
+                            setSongFirst(false)
                             // @ts-ignore
                             eventBus.emit('play-track', hotSongs?.tracks[0].uri)
                         }}
@@ -97,7 +97,7 @@ export function ArtistInfo(props: any) {
                             position: 'absolute',
                         }}
                         setShow={setTowShow}
-                        list={list}
+                        list={['复制链接', '在浏览器中打开']}
                     >
                     </ContextMenu>
                 </div>

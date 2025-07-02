@@ -25,23 +25,17 @@ export function Movie(props: Props) {
             }),
         )
     }, [movie, keyValue])
-    const [img, setImg] = useState<Array<any>>([])
     const { data } = useMovieImg()
     useEffect(() => {
-        if (data) {
-            setImg(data)
-        }
-    }, [data])
-    useEffect(() => {
         // 如果任一数据为空，直接返回
-        if (!img?.length || !currentMovie?.length || !movieList?.length) {
+        if (!data?.length || !currentMovie?.length || !movieList?.length) {
             return
         }
         // 创建需要更新的项的映射
         let needUpdate = false
         const updatedMovieList = movieList.map((mv) => {
             // 查找匹配的图片
-            const matchedImg = img.find(item => item.title === mv.name)
+            const matchedImg = data.find((item: any) => item.title === mv.name)
 
             // 如果找到匹配且当前项的img不是videoUrl (避免重复更新)
             if (matchedImg && !mv.img) {
@@ -60,7 +54,7 @@ export function Movie(props: Props) {
         }
 
         // 添加所有依赖项
-    }, [img, movieList, currentMovie])
+    }, [data, movieList, currentMovie])
     return (
         <div className="mv-row">
             {currentMovie?.map((mv: any, index: number) => (

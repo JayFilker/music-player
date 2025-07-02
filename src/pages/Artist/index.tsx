@@ -11,13 +11,10 @@ import './index.less'
 
 export default function Artist() {
     const [searchParams] = useSearchParams()
-    const [albumsArtist, setAlbumArtist] = useState<any>()
     const [showShade, setShowShade] = useState(false)
     const [twoShow, setTowShow] = useState(false)
-    const [album, setAlbum] = useState<any>()
-    const [hotSongs, setHotSongs] = useState<any>()
-    const [hotSongsDemo, setHotSongsDemo] = useState<any>()
-    const [newAlbums, setNewAlbums] = useState<any>()
+    const [addTrue, setAddTrue] = useState(false)
+    const [songFirst, setSongFirst] = useState(true)
     const { t } = useTranslation()
     const handleClickOutside = () => {
         if (twoShow) {
@@ -30,72 +27,52 @@ export default function Artist() {
     const { data: newAlbumsDemo } = useNewAlbums(searchParams.get('id') as string)
     const { data: artistAlbums } = useArtistAlbums(searchParams.get('id') as string)
     useEffect(() => {
-        if (artistDetails) {
-            setAlbumArtist(artistDetails)
-        }
-    }, [artistDetails])
-    useEffect(() => {
-        if (artistSongs) {
-            setHotSongs(artistSongs)
-            setHotSongsDemo({ items: artistSongs.tracks })
-        }
-    }, [artistSongs])
-    useEffect(() => {
-        if (newAlbumsDemo) {
-            setNewAlbums(newAlbumsDemo)
-        }
-    }, [newAlbumsDemo])
-    useEffect(() => {
-        if (artistAlbums) {
-            setAlbum(artistAlbums)
-        }
-    }, [artistAlbums])
-    useEffect(() => {
         document.addEventListener('click', handleClickOutside)
         return () => document.removeEventListener('click', handleClickOutside)
     }, [twoShow])
     return (
         <div className="artist-page">
             <ArtistInfo
-                albumsArtist={albumsArtist}
-                hotSongs={hotSongs}
-                album={album}
+                albumsArtist={artistDetails}
+                hotSongs={artistSongs}
+                album={artistAlbums}
                 setShowShade={setShowShade}
                 setTowShow={setTowShow}
                 twoShow={twoShow}
+                setSongFirst={setSongFirst}
             >
             </ArtistInfo>
             <div className="latest-release">
                 <div className="section-title">
                     {t('最新发布')}
                 </div>
-                {newAlbums?.items.length > 0
+                {newAlbumsDemo?.items.length > 0
                     ? (
                             <div className="release">
                                 <div className="container">
 
                                     <SongListImg
-                                        img={newAlbums?.items[0].images[0].url}
+                                        img={newAlbumsDemo?.items[0].images[0].url}
                                         size="128px"
                                         newAlbum={true}
-                                        id={newAlbums?.items[0].id}
+                                        id={newAlbumsDemo?.items[0].id}
                                         index={1}
                                     >
                                     </SongListImg>
                                     <div className="info">
                                         <div className="name">
                                             <Link
-                                                to={`/playsList?id=${newAlbums?.items[0].id}&type=albums`}
+                                                to={`/playsList?id=${newAlbumsDemo?.items[0].id}&type=albums`}
                                             >
-                                                {newAlbums?.items[0]?.name}
+                                                {newAlbumsDemo?.items[0]?.name}
                                             </Link>
                                         </div>
                                         <div className="date">
-                                            {newAlbums?.items[0]?.release_date.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1年$2月$3日')}
+                                            {newAlbumsDemo?.items[0]?.release_date.replace(/(\d{4})-(\d{2})-(\d{2})/, '$1年$2月$3日')}
                                         </div>
                                         <div className="type">
                                             Album ·
-                                            {`${newAlbums?.items.length}`}
+                                            {`${newAlbumsDemo?.items.length}`}
                                             {t('首歌')}
                                         </div>
                                     </div>
@@ -123,23 +100,28 @@ export default function Artist() {
                 <div className="section-title">
                     {t('热门歌曲')}
                 </div>
-                <Track tracks={hotSongsDemo}></Track>
+                <Track
+                    songFirstDemo={songFirst}
+                    setSongFirstDemo={setSongFirst}
+                    tracks={{ items: addTrue ? artistSongs?.tracks : artistSongs?.tracks?.slice(0, 12) }}
+                >
+                </Track>
 
                 <div id="seeMore" className="show-more">
                     <button
                         onClick={() => {
-                            if (hotSongsDemo.items.length <= 12) {
-                                setHotSongsDemo({ items: hotSongs?.tracks })
+                            if (artistSongs?.tracks?.length <= 12) {
+                                setAddTrue(true)
                             }
                             else {
-                                setHotSongsDemo({ items: hotSongs?.tracks.slice(0, 12) })
+                                setAddTrue(false)
                             }
                         }}
                     >
-                        <span style={{ display: hotSongsDemo?.items.length <= 12 ? '' : 'none' }}>
+                        <span style={{ display: artistSongs?.tracks?.length <= 12 ? '' : 'none' }}>
                             {t('显示更多')}
                         </span>
-                        <span style={{ display: hotSongsDemo?.items.length > 12 ? '' : 'none' }}>
+                        <span style={{ display: artistSongs?.tracks?.length > 12 ? '' : 'none' }}>
                             {t('收起')}
                         </span>
                     </button>
@@ -150,7 +132,7 @@ export default function Artist() {
                     {t('专辑')}
                 </div>
                 <SongList
-                    songList={album?.items?.map((item: {
+                    songList={artistAlbums?.items?.map((item: {
                         id: string
                         name: string
                         images: Array<any>

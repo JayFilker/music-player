@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useFetchProfileByName, useFetchProfileByNation } from '../../api/ranking.ts'
 import { SongListImg } from '../SongListImg'
@@ -6,7 +6,7 @@ import { rankingListImgList, rankingListName, rankingUpDate } from './rankingLis
 import './index.less'
 
 export function RankingList() {
-    const [songList, setSongList] = useState<Array<any>>()
+    // const [songList, setSongList] = useState<Array<any>>()
     const [imgList] = useState<Array<any>>(rankingListImgList)
     const [rankName] = useState<Array<string>>(rankingListName)
     const [upDate] = useState<Array<string>>(rankingUpDate)
@@ -18,19 +18,12 @@ export function RankingList() {
     const { data: uK } = useFetchProfileByNation(keyList[1].nation)
     const { data: uSA } = useFetchProfileByNation(keyList[2].nation)
     const { data: japan } = useFetchProfileByNation(keyList[4].nation)
-
-    useEffect(() => {
-        if (rank && electronic && uK && uSA && japan) {
-            const results = [rank, uK, uSA, electronic, japan]
-            setSongList(results)
-        }
-    }, [rank, electronic, uK, uSA, japan])
     return (
         <div
             className="cover-row"
             style={{ gridTemplateColumns: 'repeat(5, 1fr)', gap: '44px 24px' }}
         >
-            {songList?.map((item, index) => {
+            {[rank, uK, uSA, electronic, japan]?.map((item, index) => {
                 return (
                     <div
                         key={index}
@@ -40,7 +33,7 @@ export function RankingList() {
                             img={imgList[index]}
                             index={index}
                             check={true}
-                            id={item.playlists.items.filter((item: any) => item !== null)[0].id}
+                            id={item?.playlists?.items?.filter((item: any) => item !== null)[0].id}
                         >
                         </SongListImg>
                         <div className="text">
@@ -49,7 +42,7 @@ export function RankingList() {
                                 style={{ fontSize: '16px', margin: '0 0' }}
                             >
                                 <Link
-                                    to={`/playsList?id=${item.playlists.items.filter((item: any) => item !== null)[0].id}&type=playlists`}
+                                    to={`/playsList?id=${item?.playlists?.items?.filter((item: any) => item !== null)[0].id}&type=playlists`}
                                     style={{ color: 'white' }}
                                 >
                                     {rankName[index]}
