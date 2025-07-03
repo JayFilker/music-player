@@ -34,6 +34,7 @@ export function RightControlButtons(props: Props) {
             icon: svgList.volumeTwo,
             meth: () => {
                 if (audioRef) {
+                    console.log(volume)
                     setTemporaryVolume(volume)
                 }
 

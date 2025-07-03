@@ -20,7 +20,6 @@ export function MiddleTwo(props: any) {
         setPlayer,
         Logo,
         setShowLyrics,
-        setIsPlayingTwo,
         set,
     } = props
     const navigate = useNavigate()
@@ -62,15 +61,10 @@ export function MiddleTwo(props: any) {
             {lyrics
                 ? (
                         <LyricsButtom
-                            audioRef={audioRef.current}
                             volume={volume}
                             setVolume={setVolume}
-                            musicList={musicList}
-                            setMusicList={setMusicList}
-                            setShowLyrics={setShowLyrics}
                             player={player}
                             setPlayer={setPlayer}
-                            setIsPlayingTwo={setIsPlayingTwo}
                             Logo={Logo}
                             functions={functions}
                         >

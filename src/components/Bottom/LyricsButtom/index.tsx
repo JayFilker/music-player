@@ -11,7 +11,7 @@ import { lyricsButtomSvg } from './lyricsButtomSvg.tsx'
 import './index.less'
 
 export function LyricsButtom(props: any) {
-    const { audioRef, volume, setVolume, player, setPlayer, Logo, functions } = props
+    const { volume, setVolume, player, setPlayer, Logo, functions } = props
     const [currentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
     const [, setShowLyrics] = useAtom(ShowLyrics)
     const [count] = useAtom(CountDemo)
@@ -30,7 +30,7 @@ export function LyricsButtom(props: any) {
             style: { display: (volume <= 0.5 && volume !== 0) ? '' : 'none' },
             icon: svgList.volumeTwo,
             meth: () => {
-                if (audioRef) {
+                if (currentSong?.items?.length > 0) {
                     setTemporaryVolume(volume)
                 }
 
@@ -41,7 +41,7 @@ export function LyricsButtom(props: any) {
             style: { display: volume > 0.5 ? '' : 'none' },
             icon: svgList.volumeThree,
             meth: () => {
-                if (audioRef) {
+                if (currentSong?.items?.length > 0) {
                     setTemporaryVolume(volume)
                 }
 
@@ -60,7 +60,6 @@ export function LyricsButtom(props: any) {
         const seconds = totalSeconds % 60
         return `${minutes}:${String(seconds).padStart(2, '0')}`
     }
-
     return (
         <div className="controls" style={{ padding: '0 0' }}>
             <div className="top-part">
@@ -143,7 +142,6 @@ export function LyricsButtom(props: any) {
             </div>
             <div className="progress-bar">
                 <span>
-                    {' '}
                     {formatTrackTime(player.progress)}
                 </span>
                 <CustomSlider

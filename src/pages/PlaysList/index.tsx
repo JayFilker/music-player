@@ -68,7 +68,15 @@ export default function PlaysList() {
                         >
                         </TrackList>
                     )
-                : <TrackList first={first} setFirst={setFirst} songListInfo={songListInfo} songList={{ ...playList, time: getTime() }}></TrackList>}
+                : (
+                        <TrackList
+                            first={first}
+                            setFirst={setFirst}
+                            songListInfo={songListInfo}
+                            songList={{ ...playList, time: getTime() }}
+                        >
+                        </TrackList>
+                    )}
             <div className="extra-info" style={{ display: searchParams.get('type') === 'playlists' ? 'none' : '' }}>
                 <div className="album-time"></div>
                 <div className="release-date" style={{ color: '#fff' }}>
