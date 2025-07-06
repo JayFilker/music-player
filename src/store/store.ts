@@ -124,3 +124,7 @@ export const Active = atom([{
 export const TemporaryVolume = atom(0)
 export const Volume = atom(0.7)
 export const ShowLyrics = atom(false)
+export const IdDemo = atom<any>()
+export const PlayCountDemo = atom<any>()
+export const ImgDemo = atom<any>()
+export const PlayDemo = atom<any>()
