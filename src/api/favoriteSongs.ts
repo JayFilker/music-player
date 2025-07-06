@@ -6,7 +6,7 @@ async function getFavoriteSongs() {
     return demo.data
 }
 // async function getFavoriteSongs() {
-//     const demo = await axios.get('http://localhost:3000/mySongs')
+//     const demo = await axios.get('http://localhost:3000/my-songs')
 //     return demo.data
 // }
 
@@ -20,12 +20,13 @@ export function useFavoriteSongs(change: boolean) {
 
 // async function updateFavoriteSongs(check: boolean, currentSong: any) {
 //     if (check) {
-//         await axios.post('http://localhost:3000/removeLikeSong', currentSong)
+//         await axios.post('http://localhost:3000/remove-like-song', currentSong)
 //     }
 //     else {
-//         await axios.post('http://localhost:3000/addLikeSong', currentSong)
+//         await axios.post('http://localhost:3000/add-like-song', currentSong)
 //     }
 // }
+
 async function updateFavoriteSongs(check: boolean, currentSong: any) {
     if (check) {
         await axios.post('https://musicplayernodejs-production.up.railway.app/remove-like-song', currentSong)
@@ -35,9 +36,21 @@ async function updateFavoriteSongs(check: boolean, currentSong: any) {
     }
 }
 
+// export function useUpdateFavoriteSongs() {
+//     return useMutation({
+//         mutationFn: ({ check, currentSong }: { check: boolean, currentSong: any }) =>
+//             updateFavoriteSongs(check, currentSong),
+//     })
+// }
 export function useUpdateFavoriteSongs() {
     return useMutation({
         mutationFn: ({ check, currentSong }: { check: boolean, currentSong: any }) =>
             updateFavoriteSongs(check, currentSong),
+        onSuccess: (data) => {
+            console.log('Mutation succeeded:', data)
+        },
+        onError: (error) => {
+            console.error('Mutation failed:', error)
+        },
     })
 }

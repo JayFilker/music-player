@@ -29,8 +29,8 @@ export function LeftBottom(props: Props) {
     const { data } = usePlaysList('tracks', currentSong?.items?.[count]?.id)
     const [currentSL] = useAtom(CurrentSongList)
     const [change, setChange] = useState(true)
-    const { data: favoriteSongs, refetch } = useFavoriteSongs(change)
-    const { mutate: updateFavoriteSongs } = useUpdateFavoriteSongs()
+    const { data: favoriteSongs } = useFavoriteSongs(change)
+    const { mutateAsync: updateFavoriteSongs } = useUpdateFavoriteSongs()
     const pausePlayback = async () => {
         if (!deviceId)
             return
@@ -78,7 +78,6 @@ export function LeftBottom(props: Props) {
             eventBus.off('play-stop', handleStop)
         }
     }, [deviceId])
-
     return (
         <div className="playing">
             <div className="container">
@@ -98,23 +97,23 @@ export function LeftBottom(props: Props) {
                         {
                             currentSong?.items
                                 ? currentSong.items[count]?.artists.map((item: {
-                                    name: string
-                                    id: string
-                                }, index: number) => {
-                                    return (
-                                        <span key={index}>
-                                            <span
-                                                className="ar"
-                                                onClick={() => {
-                                                    navigate(`/artist?id=${item.id}`)
-                                                }}
-                                            >
-                                                {item.name}
+                                        name: string
+                                        id: string
+                                    }, index: number) => {
+                                        return (
+                                            <span key={index}>
+                                                <span
+                                                    className="ar"
+                                                    onClick={() => {
+                                                        navigate(`/artist?id=${item.id}`)
+                                                    }}
+                                                >
+                                                    {item.name}
+                                                </span>
+                                                {index !== currentSong.items[count]?.artists.length - 1 && <span>, </span>}
                                             </span>
-                                            {index !== currentSong.items[count]?.artists.length - 1 && <span>, </span>}
-                                        </span>
-                                    )
-                                })
+                                        )
+                                    })
                                 : ''
                         }
                     </div>
@@ -127,13 +126,12 @@ export function LeftBottom(props: Props) {
                             const currentSong = currentSL?.items?.[count]
                             if (currentSong) {
                                 try {
-                                    updateFavoriteSongs({ check, currentSong })
+                                    console.log(1)
+                                    await updateFavoriteSongs({ check, currentSong })
                                     setChange(!change)
-                                    await refetch()
                                 }
                                 catch (e) {
-                                    // eslint-disable-next-line no-alert
-                                    alert('收藏失败')
+                                    console.log(e)
                                 }
                             }
                         }}
