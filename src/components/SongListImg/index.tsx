@@ -37,14 +37,12 @@ export function SongListImg(props: {
     const [, setCurrentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
     const [show, setShow] = useState<boolean>(false)
     const [idDemo, setIdDemo] = useAtom(IdDemo)
-    // const [idDemo, setIdDemo] = useState<any>()
-    const { data } = useInternalInit(idDemo, check || false)
+    const { data } = useInternalInit(idDemo === id ? idDemo : null, check || false)
     const [imgDemo, setImgDemo] = useAtom(ImgDemo)
     const [countDemo, setCountDemo] = useAtom(PlayCountDemo)
     const [playDemo, setPlayDemo] = useAtom(PlayDemo)
     useEffect(() => {
         if (data && idDemo === id) {
-            console.log(1)
             countDemo ? setCount(countDemo) : setCount(0)
             setCurrentSong({
                 ...data,
@@ -86,12 +84,20 @@ export function SongListImg(props: {
         }
     }, [])
     useEffect(() => {
+        // function demo(e: any, id: any, img: any, count: any) {
+        //     handleClick({ e, id, index: 1, img, count })
+        // }
+
         eventBus.on('playList-playing', ({ e, id, img, count }) => {
             handleClick({ e, id, index: 1, img, count })
         })
+        // eventBus.on('playList-playing', demo)
         return () => {
             eventBus.off('playList-playing') // 记得清理
         }
+        // return () => {
+        //     eventBus.off('playList-playing', demo) // 记得清理
+        // }
     }, [])
     return (
         <div

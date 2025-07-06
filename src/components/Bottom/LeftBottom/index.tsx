@@ -98,23 +98,23 @@ export function LeftBottom(props: Props) {
                         {
                             currentSong?.items
                                 ? currentSong.items[count]?.artists.map((item: {
-                                        name: string
-                                        id: string
-                                    }, index: number) => {
-                                        return (
-                                            <span key={index}>
-                                                <span
-                                                    className="ar"
-                                                    onClick={() => {
-                                                        navigate(`/artist?id=${item.id}`)
-                                                    }}
-                                                >
-                                                    {item.name}
-                                                </span>
-                                                {index !== currentSong.items[count]?.artists.length - 1 && <span>, </span>}
+                                    name: string
+                                    id: string
+                                }, index: number) => {
+                                    return (
+                                        <span key={index}>
+                                            <span
+                                                className="ar"
+                                                onClick={() => {
+                                                    navigate(`/artist?id=${item.id}`)
+                                                }}
+                                            >
+                                                {item.name}
                                             </span>
-                                        )
-                                    })
+                                            {index !== currentSong.items[count]?.artists.length - 1 && <span>, </span>}
+                                        </span>
+                                    )
+                                })
                                 : ''
                         }
                     </div>
