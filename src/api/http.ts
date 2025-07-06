@@ -1,4 +1,5 @@
-import axios, { type AxiosInstance } from 'axios'
+import type { AxiosInstance } from 'axios'
+import axios from 'axios'
 
 // // 创建带认证的 axios 实例
 // function createClient(): AxiosInstance {

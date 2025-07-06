@@ -13,6 +13,7 @@ export function usePlaysList(type: any, id: any) {
         staleTime: 5 * 60 * 1000, // 数据5分钟内被视为新鲜
     })
 }
+
 export function internalInit(id: any, check: boolean): Promise<any> {
     if (check) {
         return get(`/playlists/${id}/tracks`)
