@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai/index'
 import { useEffect, useRef, useState } from 'react'
-import { Device, IsPlayingDemo, PlayerDemo, StopUpdateBar } from '../../store/store'
+import { useNavigate } from 'react-router-dom'
+import { Device, IsPlayingDemo, navigationRequestAtom, PlayerDemo, StopUpdateBar } from '../../store/store'
 import 'vscode-codicons/dist/codicon.css'
 import './index.less'
 
@@ -14,6 +15,8 @@ export function TopSpace() {
     const [, setPlayer] = useAtom(PlayerDemo)
     const [isPlaying] = useAtom(IsPlayingDemo)
     const [stopUpdateBar] = useAtom(StopUpdateBar)
+    const navigate = useNavigate()
+    const [navigationRequest, setNavigationRequest] = useAtom(navigationRequestAtom)
     const logo = [
         {
             className: 'button minimize codicon codicon-chrome-minimize',
@@ -75,6 +78,16 @@ export function TopSpace() {
             clearInterval(syncInterval)
         }
     }, [deviceId, isPlaying, stopUpdateBar])
+    useEffect(() => {
+        if (navigationRequest.path) {
+            navigate(navigationRequest.path)
+            setNavigationRequest({ path: null, action: null }) // 重置请求
+        }
+        else if (navigationRequest.action === 'back') {
+            navigate(-1)
+            setNavigationRequest({ path: null, action: null }) // 重置请求
+        }
+    }, [navigationRequest, navigate, setNavigationRequest])
     return (
         <div className="win32-titlebar">
             <div className="title"> MyYesPlayMusic</div>

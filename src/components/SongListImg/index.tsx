@@ -1,19 +1,5 @@
-import { useAtom } from 'jotai'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useInternalInit } from '../../api/check.ts'
-import {
-    BadLike,
-    CountDemo,
-    CurrentSongList,
-    FirstPlay,
-    IdDemo,
-    ImgDemo,
-    IsPlayingDemoTwo,
-    Link,
-    PlayCountDemo,
-    PlayDemo,
-} from '../../store/store.ts'
 import eventBus from '../../utils/eventBus.ts'
 import { SvgIcon } from '../SvgIcon'
 import './index.less'
@@ -27,78 +13,14 @@ export function SongListImg(props: {
     size?: string
     newAlbum?: boolean
 }) {
-    const { img, id, index, number, check, size, newAlbum } = props
-    const [, setCount] = useAtom(CountDemo)
-    const [, setFirstPlay] = useAtom(FirstPlay)
-    const [, setBadLikeDemo] = useAtom(BadLike)
-    const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
-    const [, setLinkDemo] = useAtom(Link)
+    const { img, id, check, size, newAlbum } = props
     const navigate = useNavigate()
-    const [, setCurrentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
     const [show, setShow] = useState<boolean>(false)
-    const [idDemo, setIdDemo] = useAtom(IdDemo)
-    const { data } = useInternalInit(idDemo === id ? idDemo : null, check || false)
-    const [imgDemo, setImgDemo] = useAtom(ImgDemo)
-    const [countDemo, setCountDemo] = useAtom(PlayCountDemo)
-    const [playDemo, setPlayDemo] = useAtom(PlayDemo)
-    useEffect(() => {
-        if (data && idDemo === id) {
-            countDemo ? setCount(countDemo) : setCount(0)
-            setCurrentSong({
-                ...data,
-                items: data.items.map((item: any) => item.track || item),
-                imgPic: imgDemo,
-            })
-            if (playDemo) {
-                setFirstPlay(false)
-                if (countDemo) {
-                    // @ts-ignore
-                    check ? eventBus.emit('play-track', data?.items[countDemo].track.uri) : eventBus.emit('play-track', data?.items[countDemo].uri)
-                }
-                else {
-                    // @ts-ignore
-                    check ? eventBus.emit('play-track', data?.items[0].track.uri) : eventBus.emit('play-track', data?.items[0].uri)
-                }
-            }
-        }
-    }, [data])
-    const initTwo = async (id: string, imgDemo: string, play: any, count?: number) => {
-        // 注意每个都相互独立
-        setIdDemo(id)
-        setImgDemo(imgDemo)
-        setCountDemo(count)
-        setPlayDemo(play)
-    }
-
-    function handleClick(data: { e: React.MouseEvent, id: any, index: any, img: string, count?: number }) {
-        data.e.stopPropagation()
-        setLinkDemo(false)
-        setBadLikeDemo(false)
-        setIsPlayingTwo(false)
-        data.count ? initTwo(data.id, data.img, true, data.count) : initTwo(data.id, data.img, true)
-    }
-
-    useEffect(() => {
-        if (number === 0 && index === 0) {
-            initTwo(id, img, false)
-        }
-    }, [])
-    useEffect(() => {
-        // function demo(e: any, id: any, img: any, count: any) {
-        //     handleClick({ e, id, index: 1, img, count })
-        // }
-
-        eventBus.on('playList-playing', ({ e, id, img, count }) => {
-            handleClick({ e, id, index: 1, img, count })
-        })
-        // eventBus.on('playList-playing', demo)
-        return () => {
-            eventBus.off('playList-playing') // 记得清理
-        }
-        // return () => {
-        //     eventBus.off('playList-playing', demo) // 记得清理
-        // }
-    }, [])
+    // useEffect(() => {
+    //     if (number === 0 && index === 0) {
+    //         initTwo(id, img, false).then()
+    //     }
+    // }, [])
     return (
         <div
             className="cover cover-hover"
@@ -116,7 +38,8 @@ export function SongListImg(props: {
                 className="cover-container"
                 onClick={(e) => {
                     if (size && !newAlbum) {
-                        handleClick({ e, id, index, img })
+                        eventBus.emit('playList-playing', { e, id, img, check: !!check })
+                        // handleClick({ e, id, index, img })
                     }
                 }}
             >
@@ -139,7 +62,8 @@ export function SongListImg(props: {
                         }
 
                         onClick={(e) => {
-                            handleClick({ e, id, index, img })
+                            // handleClick({ e, id, index, img })
+                            eventBus.emit('playList-playing', { e, id, img, check: !!check })
                         }}
                     >
                         <SvgIcon sty={{ width: '65%', height: '65%' }}>

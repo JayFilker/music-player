@@ -35,6 +35,7 @@ export function TrackListItem(track: any) {
                     e,
                     id: songList?.id,
                     img: searchParams.get('type') === 'playlists' ? content?.track?.album.images[0].url : songList?.images[0].url,
+                    check: searchParams.get('type') === 'playlists',
                     count: index,
                 })
                 setFirst(false)

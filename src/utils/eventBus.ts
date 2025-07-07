@@ -9,7 +9,7 @@ export interface EventTypes {
     'set-volume': { volume: number }
     'toggle-repeat': void
     'toggle-shuffle': void
-    'playList-playing': { e: React.MouseEvent, id: string, img: string, count?: number }
+    'playList-playing': { e: React.MouseEvent, id: string, img: string, check: boolean, count?: number }
     // 添加更多事件类型...
 }
 

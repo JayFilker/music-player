@@ -1,10 +1,10 @@
 import { useAtom } from 'jotai/index'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { usePlaysList } from '../../../api/check.ts'
 import { useFavoriteSongs, useUpdateFavoriteSongs } from '../../../api/favoriteSongs.ts'
 import { usePausePlaybackPut, useResumePlaybackPut } from '../../../api/system.ts'
-import { CountDemo, CurrentSongList, Device, IsPlayingDemo } from '../../../store/store.ts'
+import { CountDemo, CurrentSongList, Device, IsPlayingDemo, navigationRequestAtom } from '../../../store/store.ts'
 import eventBus from '../../../utils/eventBus'
 import { ButtonIcon } from '../../ButtonIcon'
 import { SvgIcon } from '../../SvgIcon'
@@ -18,8 +18,9 @@ export function LeftBottom(props: Props) {
     const [count] = useAtom(CountDemo)
     const { playTrack } = props
     const [deviceId] = useAtom(Device)
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
     const [, setIsPlaying] = useAtom(IsPlayingDemo)
+    const [, setNavigationRequest] = useAtom(navigationRequestAtom)
     const { mutate: pausePlaybackPut } = usePausePlaybackPut()
     const { mutate: resumePlaybackPut } = useResumePlaybackPut()
     const [currentSong] = useAtom<{
@@ -86,7 +87,8 @@ export function LeftBottom(props: Props) {
                     alt=""
                     src={currentSong?.items ? currentSong?.items?.[count]?.album?.images[0]?.url ? currentSong?.items[count]?.album?.images[0]?.url : currentSong.imgPic : ''}
                     onClick={() => {
-                        navigate(`/playsList?id=${data?.album?.id}&type=albums`)
+                        setNavigationRequest({ path: `/playsList?id=${data?.album?.id}&type=albums` })
+                        // navigate(`/playsList?id=${data?.album?.id}&type=albums`)
                     }}
                 />
                 <div className="track-info">
@@ -105,7 +107,8 @@ export function LeftBottom(props: Props) {
                                                 <span
                                                     className="ar"
                                                     onClick={() => {
-                                                        navigate(`/artist?id=${item.id}`)
+                                                        setNavigationRequest({ path: `/artist?id=${item.id}` })
+                                                        // navigate(`/artist?id=${item.id}`)
                                                     }}
                                                 >
                                                     {item.name}
@@ -126,7 +129,6 @@ export function LeftBottom(props: Props) {
                             const currentSong = currentSL?.items?.[count]
                             if (currentSong) {
                                 try {
-                                    console.log(1)
                                     await updateFavoriteSongs({ check, currentSong })
                                     setChange(!change)
                                 }

@@ -5,8 +5,8 @@ import eventBus from '../../../utils/eventBus.ts'
 import { SvgIcon } from '../../SvgIcon'
 import './index.less'
 
-export function TrackListDemo(track: any) {
-    const { content, playingTrack, index, setPlayingTrack, songList, songFirst, setSongFirst } = track
+export function TrackListDemo(props: any) {
+    const { content, playingTrack, index, setPlayingTrack, songList, songFirst, setSongFirst } = props
     const [showIcon, setShowIcon] = useState(false)
     const [, setBadLikeDemo] = useAtom(BadLike)
     const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)

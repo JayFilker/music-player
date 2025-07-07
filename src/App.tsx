@@ -23,11 +23,11 @@ function App() {
                     <main>
                         <Router></Router>
                     </main>
-
-                    <Player></Player>
+                    {/* <Player></Player> */}
                     {showLyrics && <Lyrics></Lyrics>}
                 </div>
             </BrowserRouter>
+            <Player></Player>
             {/* <ReactQueryDevtools /> */}
         </QueryClientProvider>
     )

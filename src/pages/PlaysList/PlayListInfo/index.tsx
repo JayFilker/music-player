@@ -106,6 +106,7 @@ export function PlayListInfo(props: any) {
                                 e,
                                 id: songList?.id,
                                 img: searchParams.get('type') === 'playlists' ? songListInfo.items[0].track?.album.images[0].url : songList?.images[0].url,
+                                check: searchParams.get('type') === 'playlists',
                             })
                             const demo = playingTrack.map(() => false)
                             demo[0] = true

@@ -1,4 +1,22 @@
-import { useNavigate } from 'react-router-dom'
+import { useAtom } from 'jotai/index'
+import React, { useEffect } from 'react'
+// import { useNavigate } from 'react-router-dom'
+import { useInternalInit } from '../../../api/check.ts'
+import {
+    BadLike,
+    CheckDemo,
+    CountDemo,
+    CurrentSongList,
+    FirstPlay,
+    IdDemo,
+    ImgDemo,
+    IsPlayingDemoTwo,
+    Link,
+    navigationRequestAtom,
+    PlayCountDemo,
+    PlayDemo,
+} from '../../../store/store.ts'
+import eventBus from '../../../utils/eventBus.ts'
 import { CustomSlider } from '../../Bar'
 import { ShortKey } from '../../ShortKey'
 import { LeftBottom } from '../LeftBottom'
@@ -22,16 +40,16 @@ export function MiddleTwo(props: any) {
         setShowLyrics,
         set,
     } = props
-    const navigate = useNavigate()
+    const [, setNavigationRequest] = useAtom(navigationRequestAtom)
     const functions = [
         {
             title: '播放列表',
             meth: () => {
                 if (musicList[0]) {
-                    navigate('/nextTracks')
+                    setNavigationRequest({ path: '/nextTracks' })
                 }
                 else {
-                    navigate(-1)
+                    setNavigationRequest({ action: 'back' })
                 }
                 setMusicList(musicList.map((item: any, index: any) => index === 0 ? !item : item))
             },
@@ -55,6 +73,72 @@ export function MiddleTwo(props: any) {
             icon: svgList.randomPlay,
         },
     ]
+    const [idDemo, setIdDemo] = useAtom(IdDemo)
+    const [imgDemo, setImgDemo] = useAtom(ImgDemo)
+    const [countDemo, setCountDemo] = useAtom(PlayCountDemo)
+    const [playDemo, setPlayDemo] = useAtom(PlayDemo)
+    const [, setBadLikeDemo] = useAtom(BadLike)
+    const [, setIsPlayingTwo] = useAtom(IsPlayingDemoTwo)
+    const [, setLinkDemo] = useAtom(Link)
+    const [, setCount] = useAtom(CountDemo)
+    const [, setCurrentSong] = useAtom<{ items: Array<any> }>(CurrentSongList)
+    const [check, setCheck] = useAtom(CheckDemo)
+    const [, setFirstPlay] = useAtom(FirstPlay)
+    const { data } = useInternalInit(idDemo, check || false)
+
+    useEffect(() => {
+        if (data) {
+            countDemo ? setCount(countDemo) : setCount(0)
+            setCurrentSong({
+                ...data,
+                items: data.items.map((item: any) => item.track || item),
+                imgPic: imgDemo,
+            })
+            if (playDemo) {
+                setFirstPlay(false)
+                if (countDemo) {
+                    // @ts-ignore
+                    check ? eventBus.emit('play-track', data?.items[countDemo].track.uri) : eventBus.emit('play-track', data?.items[countDemo].uri)
+                }
+                else {
+                    // @ts-ignore
+                    check ? eventBus.emit('play-track', data?.items[0].track.uri) : eventBus.emit('play-track', data?.items[0].uri)
+                }
+            }
+        }
+    }, [data, countDemo])
+
+    const initTwo = async (id: string, imgDemo: string, play: any, checkDemo: boolean, count?: number) => {
+        // 注意每个都相互独立
+        setIdDemo(id)
+        setCheck(checkDemo)
+        setImgDemo(imgDemo)
+        setCountDemo(count)
+        setPlayDemo(play)
+    }
+
+    function handleClick(data: {
+        e: React.MouseEvent
+        id: any
+        img: string
+        check: boolean
+        count?: number
+    }) {
+        data.e.stopPropagation()
+        setLinkDemo(false)
+        setBadLikeDemo(false)
+        setIsPlayingTwo(false)
+        data.count ? initTwo(data.id, data.img, true, data.check, data.count) : initTwo(data.id, data.img, true, data.check)
+    }
+
+    useEffect(() => {
+        eventBus.on('playList-playing', ({ e, id, img, check, count }) => {
+            handleClick({ e, id, img, check, count })
+        })
+        return () => {
+            eventBus.off('playList-playing') // 记得清理
+        }
+    }, [])
 
     return (
         <>
