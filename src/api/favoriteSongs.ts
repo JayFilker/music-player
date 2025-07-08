@@ -1,14 +1,14 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-// async function getFavoriteSongs() {
-//     const demo = await axios.get('https://musicplayernodejs-production.up.railway.app/my-songs')
-//     return demo.data
-// }
 async function getFavoriteSongs() {
-    const demo = await axios.get('http://localhost:3000/my-songs')
+    const demo = await axios.get('https://musicplayernodejs-production.up.railway.app/my-songs')
     return demo.data
 }
+// async function getFavoriteSongs() {
+//     const demo = await axios.get('http://localhost:3000/my-songs')
+//     return demo.data
+// }
 
 export function useFavoriteSongs(change: boolean) {
     return useQuery({
@@ -18,23 +18,23 @@ export function useFavoriteSongs(change: boolean) {
     })
 }
 
-async function updateFavoriteSongs(check: boolean, currentSong: any) {
-    if (check) {
-        await axios.post('http://localhost:3000/remove-like-song', currentSong)
-    }
-    else {
-        await axios.post('http://localhost:3000/add-like-song', currentSong)
-    }
-}
-
 // async function updateFavoriteSongs(check: boolean, currentSong: any) {
 //     if (check) {
-//         await axios.post('https://musicplayernodejs-production.up.railway.app/remove-like-song', currentSong)
+//         await axios.post('http://localhost:3000/remove-like-song', currentSong)
 //     }
 //     else {
-//         await axios.post('https://musicplayernodejs-production.up.railway.app/add-like-song', currentSong)
+//         await axios.post('http://localhost:3000/add-like-song', currentSong)
 //     }
 // }
+
+async function updateFavoriteSongs(check: boolean, currentSong: any) {
+    if (check) {
+        await axios.post('https://musicplayernodejs-production.up.railway.app/remove-like-song', currentSong)
+    }
+    else {
+        await axios.post('https://musicplayernodejs-production.up.railway.app/add-like-song', currentSong)
+    }
+}
 
 // export function useUpdateFavoriteSongs() {
 //     return useMutation({
