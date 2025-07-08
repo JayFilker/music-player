@@ -16,7 +16,7 @@
   </p>
 </p>
 
-[![Library][library-screenshot]](./public/img_1.png)
+[![Library][library-screenshot]](https://music-player-rho-seven.vercel.app/img_1.png)
 
 
 ## 全新版本
