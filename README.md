@@ -36,7 +36,7 @@
 目前该项目仅适配Windows系统。
 
 项目本地下载：
-```json
+```sh
 //克隆指令
 git clone https://github.com/JayFilker/music-player.git
 //进入项目
@@ -48,7 +48,7 @@ npm run dev
 ```
 后端下载：
 该项目除了项目本体之外，若想在本地运行，需要另外下载配套的后端服务器代码以提供后端服务
-```json
+```sh
 //克隆指令
 git clone https://github.com/JayFilker/music_player_nodejs.git
 //进入后端文件夹
