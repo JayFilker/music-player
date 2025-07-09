@@ -82,7 +82,7 @@ const response = await axios.post('https://musicplayernodejs-production.up.railw
 //解除注释
 const response = await axios.post('http://localhost:3000/api/exchange-token', { code })
 ```
-接下来便能成功运行项目了，使用http://localhost:3000/login在浏览器中打开并完成spotify登陆，即可使用该音乐播放器。
+接下来便能成功运行项目了，使用 http://localhost:3000/login 在浏览器中打开并完成spotify登陆，即可使用该音乐播放器。
 
 注：如果你想把该项目挂载到网站上运行，就需要把上面提到要注释的内容解除注释，解除注释的内容重新注释，然后将地址改为你挂载的地址。这里推荐使用vercel挂载前端，railway挂载后端，本项目线上访问音乐播放器所采取的挂载方案就是vercel+railway
 
@@ -99,8 +99,6 @@ const response = await axios.post('http://localhost:3000/api/exchange-token', { 
 本项目仅供个人学习研究使用，禁止用于商业及非法用途。
 
 ## 🖼️ 项目截图展示
-
-[//]: # (<img src="./public/img_2.png" alt="Logo" width="100%" height="100%">)
 <img src="./public/suchImg/联想截图_20250709155256.png" alt="Logo" width="100%">
 <img src="./public/suchImg/联想截图_20250709155333.png" alt="Logo" width="100%">
 <img src="./public/suchImg/联想截图_20250709155414.png" alt="Logo" width="100%">
