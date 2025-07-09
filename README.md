@@ -1,6 +1,6 @@
 <br />
 <p align="center">
-  <a href="https://music.qier222.com" target="blank">
+  <a href="https://musicplayernodejs-production.up.railway.app/login" target="blank">
     <img src="./public/img.png" alt="Logo" width="156" height="156">
   </a>
   <h2 align="center" style="font-weight: 600">MusicPlayer</h2>
@@ -8,44 +8,31 @@
   <p align="center">
     一个普通的第三方spotify播放器
     <br />
-    <a href="https://music.qier222.com" target="blank"><strong>🌎 访问DEMO</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
-    <a href="#%EF%B8%8F-安装" target="blank"><strong>📦️ 下载安装包</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
-    <a href="https://t.me/yesplaymusic" target="blank"><strong>💬 加入交流群</strong></a>
+    <a href="https://musicplayernodejs-production.up.railway.app/login" target="blank"><strong>访问音乐播放器</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="#%EF%B8%8F-安装" target="blank"><strong>使用指南</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="https://t.me/yesplaymusic" target="blank"><strong>API介绍</strong></a>
     <br />
     <br />
   </p>
 </p>
 
-[![Library][library-screenshot]](https://music-player-rho-seven.vercel.app/img_1.png)
+<img src="./public/img_2.png" alt="Logo" width="100%" height="100%">
 
+## ✨ 项目介绍
 
-## 全新版本
-全新2.0 Alpha测试版已发布，欢迎前往 [Releases](https://github.com/qier222/YesPlayMusic/releases) 页面下载。
-当前版本将会进入维护模式，除重大bug修复外，不会再更新新功能。
-
-## ✨ 特性
-
-- ✅ 使用 Vue.js 全家桶开发
-- 🔴 网易云账号登录（扫码/手机/邮箱登录）
+这是一个基于React + TypeScript + Vite，面向spotify用户的音乐播放器应用。以下为该播放器所具备的基础特性：
+- 🔴 spotify账号登陆
+- ![img.png](img.png)
 - 📺 支持 MV 播放
 - 📃 支持歌词显示
-- 📻 支持私人 FM / 每日推荐歌曲
-- 🚫🤝 无任何社交功能
-- 🌎️ 海外用户可直接播放（需要登录网易云账号）
-- 🔐 支持 [UnblockNeteaseMusic](https://github.com/UnblockNeteaseMusic/server#音源清单)，自动使用[各类音源](https://github.com/UnblockNeteaseMusic/server#音源清单)替换变灰歌曲链接 （网页版不支持）
-    - 「各类音源」指默认启用的音源。
-    - YouTube 音源需自行安装 `yt-dlp`。
-- ✔️ 每日自动签到（手机端和电脑端同时签到）
-- 🌚 Light/Dark Mode 自动切换
-- 👆 支持 Touch Bar
-- 🖥️ 支持 PWA，可在 Chrome/Edge 里点击地址栏右边的 ➕ 安装到电脑
-- 🟥 支持 Last.fm Scrobble
-- ☁️ 支持音乐云盘
-- ⌨️ 自定义快捷键和全局快捷键
-- 🎧 支持 Mpris
-- 🛠 更多特性开发中
+- 📻 每日推荐歌曲
+- 🎵 支持播放、暂停、上一首、下一首等基本操作
+- 📱 支持收藏喜欢的歌曲
+- 🌙 支持浅色/深色主题切换
+- 🔍 快速查找歌曲、艺术家和专辑
+- 🛠️ 个性化播放体验
 
-## 📦️ 安装
+## 📦️ 使用手册
 
 Electron 版本由 [@hawtim](https://github.com/hawtim) 和 [@qier222](https://github.com/qier222) 适配并维护，支持 macOS、Windows、Linux。
 
@@ -125,7 +112,7 @@ yarn run build
 
 7. 将 `/dist` 目录下的文件上传到你的 Web 服务器
 
-## ⚙️ 宝塔面板 docker应用商店 部署
+## ⚙️ API详情
 
 1. 安装宝塔面板，前往[宝塔面板官网](https://www.bt.cn/new/download.html) ，选择正式版的脚本下载安装。
 
