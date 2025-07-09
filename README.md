@@ -16,7 +16,7 @@
   </p>
 </p>
 
-<img src="./public/img_2.png" alt="Logo" width="100%" height="100%">
+<img src="./public/img_2.png" alt="Logo" width="100%">
 
 ## ✨ 项目介绍
 
@@ -100,10 +100,11 @@ const response = await axios.post('http://localhost:3000/api/exchange-token', { 
 
 ## 🖼️ 项目截图展示
 
-- ![img_1.png](img_1.png)
-- ![img_2.png](img_2.png)
-- ![img_4.png](img_4.png)
-- ![img_6.png](img_6.png)
-- ![img_8.png](img_8.png)
-- ![img_9.png](img_9.png)
-- ![img_10.png](img_10.png)
+[//]: # (<img src="./public/img_2.png" alt="Logo" width="100%" height="100%">)
+<img src="./public/suchImg/联想截图_20250709155256.png" alt="Logo" width="100%">
+<img src="./public/suchImg/联想截图_20250709155333.png" alt="Logo" width="100%">
+<img src="./public/suchImg/联想截图_20250709155414.png" alt="Logo" width="100%">
+<img src="./public/suchImg/联想截图_20250709155550.png" alt="Logo" width="100%">
+<img src="./public/suchImg/联想截图_20250709160631.png" alt="Logo" width="100%">
+<img src="./public/suchImg/联想截图_20250709160738.png" alt="Logo" width="100%">
+<img src="./public/suchImg/联想截图_20250709160815.png" alt="Logo" width="100%">
