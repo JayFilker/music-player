@@ -1,5 +1,8 @@
 import { useAtom } from 'jotai/index'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
+import { useFavoriteArtist, useUpdateFavoriteArtist } from '../../../api/favoriteSongs.ts'
 import { SvgIcon } from '../../../components/SvgIcon'
 import { ContextMenu } from '../../../components/TopList/ContextMenu'
 import { CountDemo, CurrentSongList, Playing } from '../../../store/store.ts'
@@ -9,9 +12,13 @@ import { artistSvgList } from '../artistSvgList.tsx'
 export function ArtistInfo(props: any) {
     const { albumsArtist, hotSongs, album, setShowShade, setTowShow, twoShow, setSongFirst } = props
     const { t } = useTranslation()
+    const [searchParams] = useSearchParams()
     const [, setPlay] = useAtom(Playing)
     const [, setCount] = useAtom(CountDemo)
     const [, setCurrentSong] = useAtom<{ items: Array<any>, imgPic: string }>(CurrentSongList)
+    const [like] = useState<any>(false)
+    const { data: favoriteArtist, refetch } = useFavoriteArtist(like)
+    const { mutateAsync: updateFavoriteArtist } = useUpdateFavoriteArtist()
     return (
         <div className="artist-info">
             <div className="head">
@@ -73,9 +80,49 @@ export function ArtistInfo(props: any) {
                         </SvgIcon>
                         {` ${t('播放')} `}
                     </button>
-                    <button className="grey" style={{ borderRadius: '8px', padding: '8px 0px', width: 'auto' }}>
-                        <SvgIcon sty={{ marginRight: '0px' }}>
+                    <button
+                        className="grey"
+                        style={{ borderRadius: '8px', padding: '8px 0px', width: 'auto' }}
+                        onClick={async () => {
+                            const check = favoriteArtist?.songs?.some((item: any) => item.name === albumsArtist?.name)
+                            if (albumsArtist && hotSongs) {
+                                await updateFavoriteArtist({
+                                    check,
+                                    currentSong: {
+                                        ...albumsArtist,
+                                        artistId: searchParams.get('id'),
+                                        items: [...hotSongs?.tracks.filter((_item: any, index: number) => index < 10)],
+                                        imgPic: hotSongs?.tracks[0]?.album.images[0]?.url,
+                                    },
+                                })
+                                // setLike(!like)
+                                await refetch()
+                            }
+                        }}
+                    >
+                        <SvgIcon
+                            sty={{
+                                marginRight: '0px',
+                                display: favoriteArtist?.songs?.some(
+                                    (item: any) => item.name === albumsArtist?.name,
+                                )
+                                    ? ''
+                                    : 'none',
+                            }}
+                        >
                             {artistSvgList.like}
+                        </SvgIcon>
+                        <SvgIcon
+                            sty={{
+                                marginRight: '0px',
+                                display: favoriteArtist?.songs?.some(
+                                    (item: any) => item.name === albumsArtist?.name,
+                                )
+                                    ? 'none'
+                                    : '',
+                            }}
+                        >
+                            {artistSvgList.noLike}
                         </SvgIcon>
                     </button>
                     <button

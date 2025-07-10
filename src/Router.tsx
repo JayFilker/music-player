@@ -6,6 +6,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 const FirstPage = lazy(() => import('./pages/FirstPage/index.tsx'))
 const Discover = lazy(() => import('./pages/Discover'))
 const Artist = lazy(() => import('./pages/Artist/index.tsx'))
+const MusicLibrary = lazy(() => import('./pages/MusicLibrary/index.tsx'))
 const More = lazy(() => import('./pages/More/index.tsx'))
 const NextTracks = lazy(() => import('./pages/NextTracks/index.tsx'))
 const Set = lazy(() => import('./pages/Set/index.tsx'))
@@ -35,6 +36,7 @@ export const Router: React.FC = () => {
                 <Route path="/more/*" element={<More />} />
                 <Route path="/nextTracks/*" element={<NextTracks />} />
                 <Route path="/set/*" element={<Set />} />
+                <Route path="/musicLibrary/*" element={<MusicLibrary />} />
                 <Route path="/artist/*" element={<Artist />} />
                 <Route path="/moviePage/*" element={<MoviePage />} />
                 <Route path="/search/*" element={<Search />} />

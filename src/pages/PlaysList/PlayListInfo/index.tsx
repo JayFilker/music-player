@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai/index'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useFavoriteList, useUpdateFavoriteList } from '../../../api/favoriteSongs.ts'
 import defaultImg from '../../../assets/img/default.png'
 import { SongListImg } from '../../../components/SongListImg'
 import { SvgIcon } from '../../../components/SvgIcon'
@@ -27,6 +28,15 @@ export function PlayListInfo(props: any) {
     const [playingTrack, setPlayingTrack] = useAtom(PlayingTrack)
     const list = ['保存到音乐库', '歌单内搜索']
     const { t } = useTranslation()
+    const [like, setLike] = useState<any>()
+    const { data: favoriteList } = useFavoriteList(like, searchParams.get('type') === 'playlists' ? 'playList' : 'album')
+    const { mutateAsync: updateFavoriteList } = useUpdateFavoriteList()
+
+    useEffect(() => {
+        if (favoriteList) {
+            console.log(favoriteList?.songs)
+        }
+    }, [favoriteList])
 
     function handleFocusInput() {
         if (inputRef.current) {
@@ -119,9 +129,56 @@ export function PlayListInfo(props: any) {
                         </SvgIcon>
                         {` ${t('播放')} `}
                     </button>
-                    <button className="grey" style={{ borderRadius: '8px', padding: '8px 0px', width: 'auto' }}>
-                        <SvgIcon sty={{ marginRight: '0px' }}>
+                    <button
+                        className="grey"
+                        style={{ borderRadius: '8px', padding: '8px 0px', width: 'auto' }}
+                        onClick={async () => {
+                            const check = favoriteList?.songs?.some((item: any) => item.name === songList?.name)
+                            if (songList) {
+                                try {
+                                    await updateFavoriteList({
+                                        check,
+                                        currentSong: check
+                                            ? { name: songList?.name, type: searchParams.get('type') === 'playlists' ? 'playList' : 'album' }
+                                            : {
+                                                    ...songList,
+                                                    tracks: {
+                                                        ...songList?.tracks,
+                                                        items: songList?.tracks?.items?.filter((_item: any, index: number) => index < 10),
+                                                    },
+                                                },
+                                    })
+                                    setLike(!like)
+                                }
+                                catch (e) {
+                                    console.log(e)
+                                }
+                            }
+                        }}
+                    >
+                        <SvgIcon
+                            sty={{
+                                marginRight: '0px',
+                                display: favoriteList?.songs?.some(
+                                    (item: any) => item.name === songList?.name,
+                                )
+                                    ? 'none'
+                                    : '',
+                            }}
+                        >
                             {playListSvg.likeSure}
+                        </SvgIcon>
+                        <SvgIcon
+                            sty={{
+                                marginRight: '0px',
+                                display: favoriteList?.songs?.some(
+                                    (item: any) => item.name === songList?.name,
+                                )
+                                    ? ''
+                                    : 'none',
+                            }}
+                        >
+                            {playListSvg.noLike}
                         </SvgIcon>
                     </button>
                     <button

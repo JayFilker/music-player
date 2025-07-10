@@ -25,7 +25,7 @@ export function TopList() {
         },
         {
             name: '音乐库',
-            link: '/login',
+            link: '/musicLibrary',
         },
     ]
     // 根据当前路径更新选中状态

@@ -32,6 +32,7 @@ export function Lyrics() {
 
         setBackgroundGradient(`linear-gradient(to left top, ${color1}, ${color2})`)
     }
+
     // 更新 useEffect
     useEffect(() => {
         if (showLyrics && currentSongList?.items?.[count]) {
@@ -117,20 +118,20 @@ export function Lyrics() {
                     </div>
                     {lyricsByUrl
                         ? lyricsByUrl?.result?.lyrics?.split('\n')?.filter((item: string) => item !== '')?.map((item: string, index: number) => {
-                            return (
-                                <div
-                                    id={`line${index + 2}`}
-                                    className={`line ${currentLyricIndex === index + 2 ? 'highlight' : ''}`}
-                                >
-                                    <div className="content">
-                                        <span>
-                                            {item}
-                                        </span>
-                                        <br />
+                                return (
+                                    <div
+                                        id={`line${index + 2}`}
+                                        className={`line ${currentLyricIndex === index + 2 ? 'highlight' : ''}`}
+                                    >
+                                        <div className="content">
+                                            <span>
+                                                {item}
+                                            </span>
+                                            <br />
+                                        </div>
                                     </div>
-                                </div>
-                            )
-                        })
+                                )
+                            })
                         : (
                                 <div id="line2" className="line">
                                     <div className="content">

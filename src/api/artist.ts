@@ -60,7 +60,7 @@ export function getArtistAlbum(artistId: any, limit = 1) {
 
 export function useArtistAlbum(artistId: any, limit = 1) {
     return useQuery({
-        queryKey: ['artistDetails', artistId, limit], // 唯一标识这个查询的键
+        queryKey: ['artistAlbum', artistId, limit], // 唯一标识这个查询的键
         queryFn: () => getArtistAlbum(artistId, limit),
         enabled: !!artistId, // 只有当token和key存在时才执行查询
         staleTime: 5 * 60 * 1000, // 数据5分钟内被视为新鲜
