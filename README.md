@@ -9,8 +9,8 @@
     一个普通的第三方spotify播放器
     <br />
     <a href="https://musicplayernodejs-production.up.railway.app/login" target="blank"><strong>访问音乐播放器</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
-    <a href="## 📦️ 使用手册" target="blank"><strong>使用指南</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
-    <a href="https://t.me/yesplaymusic" target="blank"><strong>API介绍</strong></a>
+    <a href="#使用手册" target="blank"><strong>使用指南</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="#介绍" target="blank"><strong>API介绍</strong></a>
     <br />
     <br />
   </p>
@@ -86,7 +86,7 @@ const response = await axios.post('http://localhost:3000/api/exchange-token', { 
 
 注：如果你想把该项目挂载到网站上运行，就需要把上面提到要注释的内容解除注释，解除注释的内容重新注释，然后将地址改为你挂载的地址。这里推荐使用vercel挂载前端，railway挂载后端，本项目线上访问音乐播放器所采取的挂载方案就是vercel+railway
 
-<h2>⚙️ API详情</h2>
+<h2 id="介绍">⚙️ API详情</h2>
 本项目整合了多个数据源和服务，为音乐播放器提供全面的功能支持：
 
 1. 音乐数据和播放功能通过 Spotify Web API 实现
