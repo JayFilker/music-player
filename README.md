@@ -9,7 +9,7 @@
     一个普通的第三方spotify播放器
     <br />
     <a href="https://musicplayernodejs-production.up.railway.app/login" target="blank"><strong>访问音乐播放器</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
-    <a href="#%EF%B8%8F-安装" target="blank"><strong>使用指南</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="## 📦️ 使用手册" target="blank"><strong>使用指南</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;
     <a href="https://t.me/yesplaymusic" target="blank"><strong>API介绍</strong></a>
     <br />
     <br />
@@ -18,7 +18,7 @@
 
 <img src="./public/img_2.png" alt="Logo" width="100%">
 
-## ✨ 项目介绍
+<h2>✨ 项目介绍</h2>
 
 这是一个基于React + TypeScript + Vite，涉及jotai 原子化状态管理、@tanstack/react-query等技术栈,面向spotify用户的现代化音乐播放器应用，以下是该播放器所具备的几个主要特性：
 - 🔴 spotify账号登陆
@@ -31,7 +31,7 @@
 - 🔍 快速查找歌曲、艺术家和专辑
 - 🛠️ 个性化播放体验
 
-## 📦️ 使用手册
+<h2 id="使用手册">📦️ 使用手册</h2>
 
 目前该项目仅适配Windows系统。
 
@@ -86,7 +86,7 @@ const response = await axios.post('http://localhost:3000/api/exchange-token', { 
 
 注：如果你想把该项目挂载到网站上运行，就需要把上面提到要注释的内容解除注释，解除注释的内容重新注释，然后将地址改为你挂载的地址。这里推荐使用vercel挂载前端，railway挂载后端，本项目线上访问音乐播放器所采取的挂载方案就是vercel+railway
 
-## ⚙️ API详情
+<h2>⚙️ API详情</h2>
 本项目整合了多个数据源和服务，为音乐播放器提供全面的功能支持：
 
 1. 音乐数据和播放功能通过 Spotify Web API 实现
@@ -94,11 +94,12 @@ const response = await axios.post('http://localhost:3000/api/exchange-token', { 
 3. 歌词数据通过 Happi.dev API 获取
 4. 用户收藏数据存储在 MongoDB Atlas，与 MV 视频一样，都是通过自建后端 API 进行管理
 
-## 📜 开源许可
+<h2>📜 开源许可</h2>
 
 本项目仅供个人学习研究使用，禁止用于商业及非法用途。
 
-## 🖼️ 项目截图展示
+<h2> 🖼️ 项目截图展示</h2>
+
 [//]: # ()
 <img src="./public/suchImg/联想截图_20250709155333.png" alt="Logo" width="100%">
 <img src="./public/suchImg/img.png" alt="Logo" width="100%">
