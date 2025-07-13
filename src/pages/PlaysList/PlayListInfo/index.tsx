@@ -82,22 +82,25 @@ export function PlayListInfo(props: any) {
                                 )
                             })}
                 </div>
-                <div className="date-and-count">
-                    {searchParams.get('type') === 'playlists'
-                        ? '最后更新于 '
-                        : ''}
-                    {searchParams.get('type') === 'playlists'
-                        ? songList?.tracks.items[songList?.tracks.items.length - 1].added_at?.split('T')[0].split('-').map((part: any, index: number) => {
-                                const units = ['年', '月', '日']
-                                return part ? `${part}${units[index] || ''}` : ''
-                            }).join('')
-                        : songList?.release_date?.split('-')[0]}
-
-                    {' · '}
-                    {songList?.tracks?.items?.length}
-                    {t('首歌')}
-                    {songList?.time ? `,${songList?.time} ${t('分钟')}` : ''}
-                </div>
+                {songList
+                    ? (
+                            <div className="date-and-count">
+                                {searchParams.get('type') === 'playlists'
+                                    ? '最后更新于 '
+                                    : ''}
+                                {searchParams.get('type') === 'playlists'
+                                    ? songList?.tracks?.items[songList?.tracks?.items?.length - 1]?.added_at?.split('T')[0].split('-').map((part: any, index: number) => {
+                                            const units = ['年', '月', '日']
+                                            return part ? `${part}${units[index] || ''}` : ''
+                                        }).join('')
+                                    : songList?.release_date?.split('-')[0]}
+                                {' · '}
+                                {songList?.tracks?.items?.length}
+                                {t('首歌')}
+                                {songList?.time ? `,${songList?.time} ${t('分钟')}` : ''}
+                            </div>
+                        )
+                    : ''}
                 <div
                     className="description"
                     onClick={() => {
@@ -139,7 +142,10 @@ export function PlayListInfo(props: any) {
                                     await updateFavoriteList({
                                         check,
                                         currentSong: check
-                                            ? { name: songList?.name, type: searchParams.get('type') === 'playlists' ? 'playList' : 'album' }
+                                            ? {
+                                                    name: songList?.name,
+                                                    type: searchParams.get('type') === 'playlists' ? 'playList' : 'album',
+                                                }
                                             : {
                                                     ...songList,
                                                     tracks: {

@@ -1,0 +1,300 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/img.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+    <script>
+      // function getMax(str) {
+      //   let count = {}
+      //   for (let i = 0; i < str.length; i++) {
+      //     const char = str.charAt(i)
+      //     if (count[char] === undefined) {
+      //       count[char] = {
+      //         number: 1,
+      //         id:i,
+      //       }
+      //     } else {
+      //       count[char].number=count[char].number+1
+      //     }
+      //   }
+      //   console.log(count)
+      //   let max = 0
+      //   let maxChar = ''
+      //   for (let key in count) {
+      //     if (count[key].number > max) {
+      //       max = count[key].number
+      //       maxChar = key
+      //     }else if (count[key].number === max) {
+      //       if (count[key].id < count[maxChar].id) {
+      //         max = count[key].number
+      //         maxChar = key
+      //       }
+      //     }
+      //   }
+      //   return maxChar
+      // }
+      //
+      // console.log(getMax('hello world'))
+      // console.log(getMax('javascript'))
+      // console.log(getMax('Programming'))
+      // console.log(getMax('abc123'))
+      // function twoSum(nums, target){
+      //   let twoSumDemo=[]
+      //   for(let i=0;i<nums.length;i++){
+      //     for(let j=0;j<nums.length;j++){
+      //       if(nums[i]+nums[j]===target&&i!==j) {
+      //         // console.log(nums[i],nums[j],target,i,j)
+      //         twoSumDemo.push([i, j])}
+      //     }
+      //   }
+      //
+      //   return twoSumDemo[0]
+      // }
+      // console.log(twoSum([3,2,4],6));
+
+      // function twoSum(nums, target){
+      //   for(let i=0;i<nums.length;i++){
+      //     let complement=target-nums[i]
+      //     if(nums.indexOf(complement)!==-1&&nums.indexOf(complement)!==i){
+      //       return [i,nums.indexOf(complement)]
+      //     }
+      //   }
+      // }
+      // console.log(twoSum([3,2,4],6));
+
+      // function isPalindrome(x){
+      //   let charX = x.toString()
+      //   for (let i = 0; i < charX.length/2; i++) {
+      //       if (charX[i] !== charX[charX.length - 1 - i]) {
+      //           return false
+      //       }
+      //   }
+      //   return true
+      // }
+      // console.log(isPalindrome(-121));
+      // ai的补充是除以2
+
+      // function romanToInt(str){
+      //   let s=parseInt(str);
+      //   return 'M'.repeat(s / 1000) +
+      //     'CM'.repeat((s % 1000) / 900) +
+      //     'D'.repeat((s % 1000 % 900) / 500) +
+      //     'CD'.repeat((s % 1000 % 900 % 500) / 400) +
+      //     'C'.repeat((s % 1000 % 900 % 500 % 400) / 100) +
+      //     'XC'.repeat((s % 1000 % 900 % 500 % 400 % 100) / 90) +
+      //     'L'.repeat((s % 1000 % 900 % 500 % 400 % 100 % 90) / 50) +
+      //     'XL'.repeat((s % 1000 % 900 % 500 % 400 % 100 % 90 % 50) / 40) +
+      //     'X'.repeat((s % 1000 % 900 % 500 % 400 % 100 % 90 % 50 % 40) / 10) +
+      //     'IX'.repeat((s % 1000 % 900 % 500 % 400 % 100 % 90 % 50 % 40 % 10) / 9) +
+      //     'V'.repeat((s % 1000 % 900 % 500 % 400 % 100 % 90 % 50 % 40 % 10 % 9) / 5) +
+      //     'IV'.repeat((s % 1000 % 900 % 500 % 400 % 100 % 90 % 50 % 40 % 10 % 9) % 5 / 4) +
+      //     'I'.repeat((s % 1000 % 900 % 500 % 400 % 100 % 90 % 50 % 40 % 10 % 9) % 5 % 4)
+      //
+      // }
+// console.log(romanToInt('3'))
+
+      // function romanToInt(s){
+      //   let content=new Map([['M',0],['CM',0],['D',0],['CD',0],['C',0],['XC',0],['L',0],['XL',0],['X',0],['IX',0],['V',0],['IV',0],['I',0]])
+      //   let j
+      //   for(let i=0;i<s.length;i++){
+      //     j=s[i]+s[i+1]
+      //
+      //     if(j===('CM'||'CD'||'XL'||'XC'||'IV'||'IX')){
+      //       // console.log(j)
+      //       content.has(j)?content.set(j,content.get(j)+1):content.set(j,1)
+      //       i++
+      //     }else{
+      //       // console.log(s[i])
+      //       content.has(s[i])?content.set(s[i],content.get(s[i])+1):content.set(s[i],1)
+      //     }
+      //   }
+      //   return content.get('M') * 1000 + content.get('CM') * 900 + content.get('D') *500+ content.get('CD') * 400 +
+      //     content.get('C') * 100 + content.get('XC') * 90 + content.get('L') * 50 + content.get('XL') * 40 +
+      //     content.get('X') * 10 + content.get('IX') * 9 + content.get('V') * 5 + content.get('IV') * 4 +content.get('I')
+      // }
+      // console.log(romanToInt('DCXXI'))
+
+
+
+
+
+      //   function ListNode(val) {
+      //      this.val = val;
+      //      this.next = null;
+      //   }
+      // function hasCycle(head) {
+      //     let headDemo=new Map()
+      //     for (let i = 0;i<head.length; i++){
+      //       if(i<head.length-1){
+      //         headDemo.set(head[i],new ListNode(head[i+1]))
+      //       }else{
+      //         headDemo.set(head[i],undefined)
+      //       }
+      //     }
+      //   let contentMap=new Map()
+      //   let contHead=head
+      //   while(contHead!==undefined){
+      //     contentMap.set(contHead.val,1)
+      //     contHead=contHead.next
+      //     if(contentMap.has(contHead.val))return true;
+      //   }
+      //   return false
+      // }
+      // console.log(new ListNode([3,2,0,-4]))
+
+    //   function isHappy(n) {
+    //     if(n===0||n<0||!Number.isInteger(n))return false;
+    //     let nDemo=new Map()
+    //     let num=n
+    //     while(!nDemo.has(num)){
+    //       nDemo.set(num,1)
+    //       let numStr=num.toString()
+    //         num=0
+    //       for(let j=0;j<numStr.length;j++){
+    //         console.log(numStr[j])
+    //         console.log(1**2)
+    //         num=num+parseInt(numStr[j])**2
+    //         console.log(num)
+    //       }
+    //       if(num===1)return true
+    //     }
+    //     return false
+    //   }
+    // console.log(isHappy(19))
+
+      // function isIsomorphic(s, t) {
+      //   if(s.length!==t.length) return false;
+      //   let content=new Map()
+      //   for(let i=0;i<s.length;i++){
+      //     if(!content.has(s[i])){
+      //       content.set(s[i],[i])
+      //     } else{
+      //       content.set(s[i],content.get(s[i]).push(i))
+      //     }
+      //   }
+      //   let contentT=new Map()
+      //   for(let j=0;j<t.length;j++){
+      //     if(!contentT.has(t[j])){
+      //       contentT.set(t[j],[j])
+      //     }else{
+      //       contentT.set(t[j],contentT.get(t[j]).push(j))
+      //     }
+      //   }
+      //   for(let z=0;z<t.length;z++){
+      //     console.log(content.get(s[z])!==contentT.get(t[z]))
+      //     console.log(content.get(s[z]),contentT.get(t[z]))
+      //     if(content.get(s[z])!==contentT.get(t[z]))return false
+      //   }
+      //   return true
+      // }
+      //   console.log(isIsomorphic('egg','foo'))
+
+
+     //  function containsNearbyDuplicate(nums, k) {
+     //    let content=new Map()
+     //    for(let i=0;i<nums.length;i++){
+     //      if(content.has(nums[i])){
+     //        content.set(nums[i],[...content.get(nums[i]),i])
+     //      }else{
+     //        content.set(nums[i],[i])
+     //      }
+     //    }
+     //    for(let j=0;j<nums.length;j++){
+     //      let  contentArr=content.get(nums[j])
+     //      for(let z=0;z<contentArr.length;z++){
+     //       let demo= contentArr.filter((item)=>{
+     //          if((item!==contentArr[z])&&(Math.abs(contentArr[z]-item)<=k)){
+     //            return true
+     //          }
+     //        })
+     //        if(demo.length>0)return true
+     //      }
+     //    }
+     //    return false
+     //  }
+     // console.log(containsNearbyDuplicate([1,2,3,1],3))
+
+      /**
+       * @param {number[]} nums1
+       * @param {number[]} nums2
+       * @return {number[]}
+       */
+      var intersect = function(nums1, nums2) {
+        let contentNums=new Set(nums1)
+        let contentNums2=new Map()
+        for(let i=0;i<nums2.length;i++){
+          if(contentNums.has(nums2[i])){
+
+            if(contentNums2.has(nums2[i])){
+              contentNums2.set(nums2[i],contentNums2.get(nums2[i])+i)
+            }else{
+              contentNums2.set(nums2[i],1)
+            }
+          }
+        }
+        let strNum=''
+        for(let [key,value] of contentNums2.entries() ){
+          console.log(key,value)
+          strNum=strNum+key.toString().repeat(value)
+        }
+        return strNum.split('').map(item => parseInt(item))
+      };
+     console.log(intersect([1,2,3],[2,2]))
+      // function isIsomorphic(s: string, t: string): boolean {
+      //   if (s.length !== t.length) return false;
+      //
+      //   const mapS = new Map<string, string>();
+      //   const mapT = new Map<string, string>();
+      //
+      //   for (let i = 0; i < s.length; i++) {
+      //     // 检查 s->t 的映射
+      //     if (mapS.has(s[i])) {
+      //       if (mapS.get(s[i]) !== t[i]) return false;
+      //   如果有，就拿已存储的和新的t[i]对比
+      //     } else {
+      //       mapS.set(s[i], t[i]);
+      //     }
+      //
+      //     // 检查 t->s 的映射
+      //     if (mapT.has(t[i])) {
+      //       if (mapT.get(t[i]) !== s[i]) return false;
+      //     } else {
+      //       mapT.set(t[i], s[i]);
+      //     }
+      //   }
+      //
+      //   return true;
+      // }
+
+
+      // hasCycle(new ListNode([3,2,0,-4]))
+
+      // function findMaxDuplicateChar(str): {
+      //   let count = []
+      //   for (i = 0; i < str.length; i++) {
+      //   const char = str.charAt(i)
+      //   for (let j = 0; j < char.length; j++) {
+      //     if (char === char[j]) {
+      //       count[i]++
+      //     }
+      //   }
+      // }
+      //
+      // let max = 0
+      // for (s = 0; s < count.length; s++) {
+      //   for (z = 0; z < count.length; z++) {
+      //     if (count[s] > count[z]) {
+      //       max = count[s]
+      //     }
+      //   }
+      // }
+      // return str[max]
+      // }
+    </script>
+</head>
+<body>
+<div id="root"></div>
+</body>
+</html>
