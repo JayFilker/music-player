@@ -30,7 +30,7 @@ export default function MusicLibrary() {
             <h1>
                 <img
                     className="avatar"
-                    src="http://img01.yohoboys.com/contentimg/2018/11/22/13/0187be5a52edcdc999f749b9e24c7815fb.jpg"
+                    src="https://c-ssl.dtstatic.com/uploads/blog/202303/20/20230320145706_07ca5.thumb.400_0.jpeg"
                     loading="lazy"
                 />
                 路人甲
