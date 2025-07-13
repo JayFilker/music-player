@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useFavoriteArtist, useFavoriteList, useFavoriteSongs } from '../../api/favoriteSongs.ts'
+import imgPic from '../../assets/img.png'
 import defaultImg from '../../assets/img/default.png'
 import { SongerList } from '../../components/SongerList'
 import { SongList } from '../../components/SongList'
@@ -30,7 +31,7 @@ export default function MusicLibrary() {
             <h1>
                 <img
                     className="avatar"
-                    src="https://c-ssl.dtstatic.com/uploads/blog/202303/20/20230320145706_07ca5.thumb.400_0.jpeg"
+                    src={imgPic}
                     loading="lazy"
                 />
                 路人甲
