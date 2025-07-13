@@ -28,11 +28,6 @@ export default function MusicLibrary() {
     return (
         <div className="library">
             <h1>
-                <img
-                    className="avatar"
-                    src="https://c-ssl.dtstatic.com/uploads/blog/202303/20/20230320145706_07ca5.thumb.400_0.jpeg"
-                    loading="lazy"
-                />
                 路人甲
                 {' '}
                 {t('的音乐库')}
